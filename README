@@ -1,0 +1,15 @@
+﻿/**
+@page git Git Cheat Sheet
+* Использование Git <br>
+* Можно посмотреть книжку ProGit http://progit.org/book/ch2-2.html <br>
+* git init - инициализация репозитория <br>
+* git status - узнать, что происходит <br>
+* git add - добавить файл - начать его отслеживать (перевести из untracked в tracked) <br>
+* или если файл уже tracked, то из unstaged в staged <br>
+* git commit -m 'comment' - закоммитить файлы, находящиеся в состоянии staged с комментарием <br>
+* git remote add origin git@github.com:username/Hello-World.git Sets the origin for the Hello-World repo <br>
+* git push -u origin master - отправить свою ветку master на сервер <br>
+* git diff - просмотр изменений, которые unstage <br>
+* git diff --cached - изменения, которые попадут в commit <br>
+* git commit -a - автоматически сделать все tracked файлы staged перед commit <br>
+*/
