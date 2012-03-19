@@ -1,0 +1,4 @@
+# Visual Studio User Preferences #
+##################################
+*.vcxproj.filters
+*.vcxproj.user
