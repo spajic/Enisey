@@ -1,4 +1,6 @@
-# Visual Studio User Preferences #
+# Visual Studio #
 ##################################
-*.vcxproj.filters
-*.vcxproj.user
+*.vcxproj.filters # User preferences
+*.vcxproj.user    # User preferences
+*.sdf             # Intellisense database
+ipch/             # Intellisense folders
