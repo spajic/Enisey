@@ -12,4 +12,113 @@
 * git diff - просмотр изменений, которые unstage <br>
 * git diff --cached - изменения, которые попадут в commit <br>
 * git commit -a - автоматически сделать все tracked файлы staged перед commit <br>
+
+@page Backlog Backlog
+\todo Готово - Сделать папку Sandbox - для мини-проектов proof-of-concept
+\todo В папке SandBox сделать проект ICE-сервера для расчёта Тпк 
+(вычисления не на CUDA)
+\todo Сделать ICE-клиента, использующего разработанный сервер
+\todo Сделать вычисления сервера на CUDA
+\todo Сделать так-же CUDA сервер для Pпк
+\todo Использовать второй сервер из клиента
+\todo Сделать сервер, создающий оба класса, и использующий их 
+\todo Возможность взаимодействовать через память CUDA
+\todo Использовать из клиента аггрегирующий сервер
+\todo Сделать сервер, использующий классы удалённо, через proxy
+\todo Использовать этот сервер
+\todo ICE-box -изация разработанных компонентов - сервера, клиента
+\todo Сделать, чтобы всё настраивалось через конфигурацию
+\todo Остальные сервисы расчёта свойств газа
+\todo Сервис расчёта трубы
+\todo Реализация и отладка сервиса расчёта ГТС на примере Саратов-Горький
+\todo Удалённый доступ к сервису расчёта ГТС (передача данных в виде файлов)
+\todo Тестирование работы нескольких ГТС параллельно
+\todo Тестирование работы с AWS
+\todo Оформление на основе опыта и реализация концепции пулов типизированных ресурсов
+\todo Тестирование разрабатываемого функционала в Google Test Framework
+\todo Приведение в полный порядок документации - использовать формулы
+
+@page Conventions Соглашения о стиле
+Самое главное - consistency - последовательность соблюдения соглашений.
+Пример соглашения о стилях - Google c++ style guide
+Многое представляет собой выдержки оттуда
+@section Header-файлы
+Как правило каждому cpp файлу соответствует header
+В каждом хедере делается #include guard
+All header files should have #define guards to prevent multiple inclusion. The format of the symbol name should be <PROJECT>_<PATH>_<FILE>_H_.
+To guarantee uniqueness, they should be based on the full path in a project's source tree. For example, the file foo/src/bar/baz.h in project foo should have the following guard:
+
+#ifndef FOO_BAR_BAZ_H_
+#define FOO_BAR_BAZ_H_
+
+...
+
+#endif  // FOO_BAR_BAZ_H_
+
+Не использовать #include, если достаточно forward-declaration
+Включчать все необходимые cpp файлу хедеры явно - не полагаться на то, что необходимый хедер будет включён в какой-то другой уже включённый
+
+Порядок включения заголовочных файлов 
+1. dir2/foo2.h (preferred location — see details below).
+2. C system files.
+3. C++ system files.
+4. Other libraries' .h files.
+5. Your project's .h files.
+
+@section Классы
+Конструкторы - в основном для установки параметров, сложная инициализация - в init
+Лучше использовать композицию, нежели наследование. Наследоваться лучше как public
+Данные члены - private, foo_, getter - foo(), setter - set_foo()
+@section Общие правила
+Код должен быть читаем почти как текст. Каждый уровень должен содержать наименования соответствующего уровня абстракции - т.е. детали должны быть уровнем ниже, а на екущем уровне должен быть смысл.
+Наименования должны отражать смысл объекта.
+Функции должны быть короткие и форкусированные.
+Соблюдение принципа DRY - Dont Repeat Yourself.
+Соблюдение принципа KISS - Keep It Simple, Stupid.
+Соблюдение принципов SOLID - Single Responsibility, Open Closed, Liskov Substitution, Interface Segregation, Dependency Inversion
+@section const
+Использовать const - по максимуму, где это имеет смысл
+@section именование
+Избегать сокращений
+Переменные - существительные
+Функции - командные глаголы
+Имена файлов - lowercase, через подчёркивание my_useful_class.cpp
+Имена типов - MyUsefullType
+Имена переменных - lowercase через подчеркивание my_usefull_var
+Члены классов - подчёркивание на конце - class_data_member_
+Константы - kDayInWeeks
+Имена функций - AddTableEntry(); для get/set - foo(), set_foo() [foo_]
+enum - как константы - UrlTableErrors {kOk, kErrorOutOfMemory, kErrorMailformedInput}
+@section Комментарии
+Комментарии делаются с прицелом на использование Doxygen - http://www.stack.nl/~dimitri/doxygen/docblocks.html
+Комментарии необходимо писать грамотно, включая орфографию и пунктуацию.
+Дополнительно необходимо добиваться аккуратного представления в doxygen.
+@section Оформление кода - пробелы, фигурные скобочки, отступы...
+как в Google style guide
+Ограничение длины строки - 80 символов. Это, кстати, позволяет октрыть на мониторе несколько окон по горизонтали
+В целом стретиться писать код поплотнее, но читаемо
+@section форматирование класса
+class MyClass : public OtherClass {
+ public:      // Note the 1 space indent!
+  MyClass();  // Regular 2 space indent.
+  explicit MyClass(int var);
+  ~MyClass() {}
+
+  void SomeFunction();
+  void SomeFunctionThatDoesNothing() {
+  }
+
+  void set_some_var(int var) { some_var_ = var; }
+  int some_var() const { return some_var_; }
+
+ private:
+  bool SomeInternalFunction();
+
+  int some_var_;
+  int some_other_var_;
+  DISALLOW_COPY_AND_ASSIGN(MyClass);
+};
+
 */
+
+
