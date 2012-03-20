@@ -12,6 +12,7 @@
 * git diff - просмотр изменений, которые unstage <br>
 * git diff --cached - изменения, которые попадут в commit <br>
 * git commit -a - автоматически сделать все tracked файлы staged перед commit <br>
+http://stackoverflow.com/questions/927358/git-undo-last-commit <br>
 
 @page Backlog Backlog
 \todo Готово - Сделать папку Sandbox - для мини-проектов proof-of-concept
