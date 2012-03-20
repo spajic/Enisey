@@ -83,13 +83,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\ice_server\finder_pressure_pseudo_critical.ice" />
     <None Include="..\ICE_server\finder_temperature_pseudo_critical.ice" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="finder_pressure_pseudo_critical.cpp" />
     <ClCompile Include="finder_temperature_pseudo_critical.cpp" />
     <ClCompile Include="ICE_Client.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="finder_pressure_pseudo_critical.h" />
     <ClInclude Include="finder_temperature_pseudo_critical.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

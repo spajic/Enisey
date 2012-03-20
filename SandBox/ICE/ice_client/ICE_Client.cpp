@@ -1,5 +1,6 @@
 // ICE_Client.cpp : Defines the entry point for the console application.
 #include <finder_temperature_pseudo_critical.h>
+#include <finder_pressure_pseudo_critical.h>
 #include "Ice/Ice.h"
 
 int main(int argc, char* argv[]) {
@@ -30,6 +31,19 @@ int main(int argc, char* argv[]) {
 		finder_proxy->Find(Densities, Nitrogens, Hydrocarbones, Temperatures);
 		for(unsigned int i = 0; i < Temperatures.size(); ++i) {
 			std::cout << "Temps[" << i << "] = " << Temperatures[i] << std::endl;
+		}
+
+		Ice::ObjectPrx base_proxy_pressure = ic->stringToProxy("Pressure:default -p 10000");
+		Enisey::FinderPressurePseudoCriticalPrx pressure_proxy = 
+			Enisey::FinderPressurePseudoCriticalPrx::checkedCast(base_proxy_pressure);
+		if(!pressure_proxy) {
+			throw "Invalid proxy";
+		}
+
+		Enisey::NumberSequence Pressures(0);
+		pressure_proxy->Find(Densities, Nitrogens, Hydrocarbones, Pressures);
+		for(unsigned int i = 0; i < Pressures.size(); ++i) {
+			std::cout << "Pressures[" << i << "] = " << Pressures[i] << std::endl;
 		}
 	}
 	catch(const Ice::Exception& ex)

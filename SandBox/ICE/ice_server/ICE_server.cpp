@@ -1,7 +1,9 @@
 // ICE_server.cpp : Defines the entry point for the console application.
 //
-
+#include <finder_temperature_pseudo_critical.h>
 #include <finder_temperature_pseudo_criticalI.h>
+#include <finder_pressure_pseudo_critical.h>
+#include <finder_pressure_pseudo_criticalI.h>
 #include <Ice/Ice.h>
 
 class Server : public Ice::Application
@@ -15,9 +17,12 @@ int	Server::run(int, char*[]) {
 	  communicator()->createObjectAdapterWithEndpoints(
 	      "SandboxServerAdapter", // Имя адаптера.
 	      "default -p 10000");    // Endpoint.
-  Enisey::FinderTemperaturePseudoCriticalIPtr serv = 
+  Enisey::FinderTemperaturePseudoCriticalIPtr server_temperature = 
 	  new Enisey::FinderTemperaturePseudoCriticalI();
-  serv->Activate(adapter); // Регистрируем servant в ASM адаптера.
+  server_temperature->Activate(adapter); // Регистрируем servant в ASM адаптера.
+  Enisey::FinderPressurePseudoCriticalIPtr server_pressure = 
+	  new Enisey::FinderPressurePseudoCriticalI();
+  server_pressure->Activate(adapter);
   adapter->activate(); // All objects are created, allow client requests now.  
   communicator()->waitForShutdown(); // Wait until we are done.
   if(interrupted())

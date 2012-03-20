@@ -6,17 +6,21 @@
 namespace Enisey
 {
 
-class FinderPressurePseudoCriticalI : virtual public FinderPressurePseudoCritical
-{
-public:
-
-    virtual void Find(const ::Enisey::NumberSequence&,
-                      const ::Enisey::NumberSequence&,
-                      const ::Enisey::NumberSequence&,
-                      ::Enisey::NumberSequence&,
-                      const Ice::Current&);
+class FinderPressurePseudoCriticalI : virtual public FinderPressurePseudoCritical {
+ public:
+  virtual void Find(
+      const ::Enisey::NumberSequence& DensityInStandartConditions,
+      const ::Enisey::NumberSequence& Nitrogen,
+      const ::Enisey::NumberSequence& Hydrocarbon,
+      ::Enisey::NumberSequence& PressurePseudoCritical,
+	  const Ice::Current& current
+  );
+	// Добавление себя в ASM (ActiveServantsMap переданного адаптера.
+	void Activate(const Ice::ObjectAdapterPtr& adapter);
 };
 
+typedef IceUtil::Handle<FinderPressurePseudoCriticalI> 
+	FinderPressurePseudoCriticalIPtr;
 }
 
 #endif

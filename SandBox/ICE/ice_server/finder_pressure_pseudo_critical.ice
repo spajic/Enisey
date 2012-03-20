@@ -1,7 +1,7 @@
 #ifndef _FINDER_TEMPERATURE_PSEUDO_CRITICAL_ICE
 #define _FINDER_TEMPERATURE_PSEUDO_CRITICAL_ICE
 
-#include <common_types.ice>
+#include <C:\Enisey\src\SandBox\ICE\ICE_server\common_types.ice>
 
 module Enisey {
   interface FinderPressurePseudoCritical {
@@ -9,7 +9,7 @@ module Enisey {
 	    NumberSequence DensityInStandartConditions,
 		NumberSequence Nitrogen,
 		NumberSequence Hydrocarbon,
-		out NumberSequence TemperaturePseudoCritical);
+		out NumberSequence PressurePseudoCritical);
   };
 };
 

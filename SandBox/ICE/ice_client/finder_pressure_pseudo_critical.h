@@ -18,8 +18,8 @@
 // </auto-generated>
 //
 
-#ifndef __C__Enisey_src_SandBox_ICE_ICE_server_finder_pressure_pseudo_critical_h__
-#define __C__Enisey_src_SandBox_ICE_ICE_server_finder_pressure_pseudo_critical_h__
+#ifndef __C__Enisey_src_SandBox_ICE_ICE_Client_finder_pressure_pseudo_critical_h__
+#define __C__Enisey_src_SandBox_ICE_ICE_Client_finder_pressure_pseudo_critical_h__
 
 #include <Ice/LocalObjectF.h>
 #include <Ice/ProxyF.h>
@@ -34,7 +34,7 @@
 #include <Ice/Direct.h>
 #include <IceUtil/ScopedArray.h>
 #include <Ice/StreamF.h>
-#include <common_types.h>
+#include <C:/Enisey/src/SandBox/ICE/ICE_server/common_types.h>
 #include <Ice/UndefSysMacros.h>
 
 #ifndef ICE_IGNORE_VERSION
