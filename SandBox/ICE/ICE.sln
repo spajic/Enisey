@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ICE_server", "ICE_server\ICE_server.vcxproj", "{9D21FC0C-E8F9-46FE-B031-CFA410D19153}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ICE_Client", "ICE_Client\ICE_Client.vcxproj", "{A006DF17-DF8D-48CD-BC47-4BD91F377FBA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9D21FC0C-E8F9-46FE-B031-CFA410D19153}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9D21FC0C-E8F9-46FE-B031-CFA410D19153}.Debug|Win32.Build.0 = Debug|Win32
+		{9D21FC0C-E8F9-46FE-B031-CFA410D19153}.Release|Win32.ActiveCfg = Release|Win32
+		{9D21FC0C-E8F9-46FE-B031-CFA410D19153}.Release|Win32.Build.0 = Release|Win32
+		{A006DF17-DF8D-48CD-BC47-4BD91F377FBA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A006DF17-DF8D-48CD-BC47-4BD91F377FBA}.Debug|Win32.Build.0 = Debug|Win32
+		{A006DF17-DF8D-48CD-BC47-4BD91F377FBA}.Release|Win32.ActiveCfg = Release|Win32
+		{A006DF17-DF8D-48CD-BC47-4BD91F377FBA}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
