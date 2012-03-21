@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cuda_worker", "cuda_worker\cuda_worker.vcxproj", "{186589FD-F0FC-4720-9937-B03A99C38A6E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cuda_consumer", "cuda_consumer\cuda_consumer.vcxproj", "{1E5108DF-A9E8-400A-B0EA-5E68C7A752B0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{186589FD-F0FC-4720-9937-B03A99C38A6E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{186589FD-F0FC-4720-9937-B03A99C38A6E}.Debug|Win32.Build.0 = Debug|Win32
+		{186589FD-F0FC-4720-9937-B03A99C38A6E}.Release|Win32.ActiveCfg = Release|Win32
+		{186589FD-F0FC-4720-9937-B03A99C38A6E}.Release|Win32.Build.0 = Release|Win32
+		{1E5108DF-A9E8-400A-B0EA-5E68C7A752B0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1E5108DF-A9E8-400A-B0EA-5E68C7A752B0}.Debug|Win32.Build.0 = Debug|Win32
+		{1E5108DF-A9E8-400A-B0EA-5E68C7A752B0}.Release|Win32.ActiveCfg = Release|Win32
+		{1E5108DF-A9E8-400A-B0EA-5E68C7A752B0}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
