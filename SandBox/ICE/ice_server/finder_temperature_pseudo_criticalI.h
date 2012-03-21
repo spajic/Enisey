@@ -10,10 +10,10 @@ class FinderTemperaturePseudoCriticalI :
 	virtual public FinderTemperaturePseudoCritical {
  public:
   virtual void Find(
-      const ::Enisey::NumberSequence&,
-      const ::Enisey::NumberSequence&,
-      const ::Enisey::NumberSequence&,
-      ::Enisey::NumberSequence&,
+      const ::Enisey::NumberSequence& DensityInStandartConditions,
+      const ::Enisey::NumberSequence& Nitrogen,
+      const ::Enisey::NumberSequence& Hydrocarbon,
+      ::Enisey::NumberSequence& TemperaturePseudoCritical,
       const Ice::Current&);
   // Добавление себя в ASM (ActiveServantsMap переданного адаптера.
   void Activate(const Ice::ObjectAdapterPtr& adapter);
