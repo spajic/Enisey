@@ -1,5 +1,7 @@
 #include <finder_temperature_pseudo_criticalI.h>
+
 #include <Ice/Ice.h>
+#include "finder_temperature_pseudo_critical_worker_cuda.h"
 
 void Enisey::FinderTemperaturePseudoCriticalI::Find(
     const ::Enisey::NumberSequence& DensityInStandartConditions,
@@ -12,11 +14,16 @@ void Enisey::FinderTemperaturePseudoCriticalI::Find(
   //for(unsigned int i = 0; i < TemperaturePseudoCritical.size(); ++i) {
   //  TemperaturePseudoCritical[i] = 99;
   //}
-		std::cout << "Server Called!\n";
-		TemperaturePseudoCritical.resize(DensityInStandartConditions.size());
-		for(unsigned int i = 0; i < DensityInStandartConditions.size(); ++i) {
-			  TemperaturePseudoCritical[i] = 99;
-			}
+		std::cout << "Server Called! CALL CUDA!\n";
+    FinderPressurePseudoCriticalWorkerCuda *worker_cuda = 
+      new FinderPressurePseudoCriticalWorkerCuda();
+    worker_cuda->Find(DensityInStandartConditions,Nitrogen, Hydrocarbon, TemperaturePseudoCritical);
+
+    delete worker_cuda;
+		//TemperaturePseudoCritical.resize(DensityInStandartConditions.size());
+		//for(unsigned int i = 0; i < DensityInStandartConditions.size(); ++i) {
+		//	  TemperaturePseudoCritical[i] = 99;
+		//	}
   return;
 }
 

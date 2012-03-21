@@ -29,6 +29,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 4.1.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -59,9 +60,13 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(IceHome)\lib\vc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Iced.lib;IceUtild.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(IceHome)\lib\vc100;%(AdditionalLibraryDirectories);$(CudaToolkitLibDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cudart.lib;Iced.lib;IceUtild.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+	<PostBuildEvent>
+      <Command>echo copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
+copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -86,6 +91,9 @@
     <None Include="common_types.ice" />
     <None Include="finder_pressure_pseudo_critical.ice" />
     <None Include="finder_temperature_pseudo_critical.ice" />
+    <CudaCompile Include="finder_temperature_pseudo_critical_worker_cuda.cu">
+      <FileType>Document</FileType>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common_types.h" />
@@ -93,6 +101,8 @@
     <ClInclude Include="finder_pressure_pseudo_criticalI.h" />
     <ClInclude Include="finder_temperature_pseudo_critical.h" />
     <ClInclude Include="finder_temperature_pseudo_criticalI.h" />
+    <ClInclude Include="finder_temperature_pseudo_critical_worker_cuda.h" />
+    <ClInclude Include="finder_temperature_pseudo_critical_worker_interface.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="common_types.cpp" />
@@ -104,6 +114,7 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 4.1.targets" />
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>

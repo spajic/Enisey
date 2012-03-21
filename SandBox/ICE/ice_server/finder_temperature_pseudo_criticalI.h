@@ -17,6 +17,8 @@ class FinderTemperaturePseudoCriticalI :
       const Ice::Current&);
   // Добавление себя в ASM (ActiveServantsMap переданного адаптера.
   void Activate(const Ice::ObjectAdapterPtr& adapter);
+ private:
+   
 };
 
 typedef IceUtil::Handle<FinderTemperaturePseudoCriticalI> 
