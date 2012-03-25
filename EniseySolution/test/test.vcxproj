@@ -80,6 +80,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Enisey\edge_model_pipe_sequential.cpp" />
+    <ClCompile Include="..\Enisey\manager_edge_model_pipe_sequential.cpp" />
     <ClCompile Include="..\Enisey\model_pipe_sequential.cpp" />
     <ClCompile Include="..\Enisey\passport_pipe.cpp" />
     <ClCompile Include="test.cpp" />

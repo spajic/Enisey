@@ -94,16 +94,20 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="edge_model_pipe_sequential.cpp" />
     <ClCompile Include="Enisey.cpp" />
+    <ClCompile Include="manager_edge_model_pipe_sequential.cpp" />
     <ClCompile Include="model_pipe_sequential.cpp" />
     <ClCompile Include="passport_pipe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="edge.h" />
+    <ClInclude Include="edge_model_pipe_sequential.h" />
     <ClInclude Include="functions_gas.h" />
     <ClInclude Include="functions_pipe.h" />
     <ClInclude Include="gas.h" />
     <ClInclude Include="manager_edge.h" />
+    <ClInclude Include="manager_edge_model_pipe_sequential.h" />
     <ClInclude Include="manager_edge_model_pipe_sequential_cuda.cuh" />
     <ClInclude Include="model_pipe_sequential.h" />
     <ClInclude Include="passport_pipe.h" />

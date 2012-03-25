@@ -36,6 +36,8 @@
 #include "gas.h"
 #include "functions_pipe.h"
 #include "passport_pipe.h"
+#include "edge.h"
+#include "manager_edge_model_pipe_sequential.h"
 TEST(Gas, GasCountFunctions)
 {
   // Тестируем правильность работы газовых функций.
@@ -201,6 +203,52 @@ TEST(PipeSequential, Count)
   ASSERT_LE(abs(pipe.q() - 385.83), eps);
 }
 
+TEST(ManagerEdgeModelPipeSequential, LoadTest)
+{
+  // Создадим в менеджере 50 000 труб, и рассчитаем их 100 раз
+  // Подготовим трубу для расчёта
+  PassportPipe passport;
+  FillTestPassportPipe(&passport);
+
+  // Задаём свойства газа на входе.
+  GasCompositionReduced composition;
+  composition.density_std_cond = 0.6865365; // [кг/м3]
+  composition.co2 = 0;
+  composition.n2 = 0;
+  GasWorkParameters params_in;
+  params_in.p = 5; // [МПа]
+  params_in.t = 293.15; // [К]
+  params_in.q = 387.843655734; // [м3/сек]
+  Gas gas_in;
+  gas_in.composition = composition;
+  gas_in.work_parameters = params_in;
+
+  // задаём параметры газа на выходе
+  Gas gas_out = gas_in;
+  gas_out.work_parameters.p = 3;
+  gas_out.work_parameters.t = 0;
+  gas_out.work_parameters.q = 0;
+
+  Edge *edge;
+  ManagerEdgeModelPipeSequential manager;
+
+  // Заполняем менеджер объектами
+  for(int i = 50000; i > 0; --i)
+  {
+    edge = manager.CreateEdge(&passport);
+    edge->set_gas_in(&gas_in);
+    edge->set_gas_out(&gas_out);
+  }
+
+  // Имитируем расчёт 10 итераций
+  std::cout << "Performing 10 iterations..." << std::endl;
+  for(int i = 1; i <= 10; ++i)
+  {
+    manager.CountAll();
+    std::cout << i << " iterations performed" << std::endl;
+  }
+}
+
  int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
@@ -272,51 +320,51 @@ TEST(Cuda, Cuda)
 }
 
 
-//TEST(ManagerEdgeModelPipeSequential, LoadTest)
-//{
-//	// Создадим в менеджере 50 000 труб, и рассчитаем их 100 раз
-//	// Подготовим трубу для расчёта
-//	PassportPipe &passport;
-//	FillTestPassportPipe(PassportPipe* passport)
+TEST(ManagerEdgeModelPipeSequential, LoadTest)
+{
+	// Создадим в менеджере 50 000 труб, и рассчитаем их 100 раз
+	// Подготовим трубу для расчёта
+	PassportPipe &passport;
+	FillTestPassportPipe(PassportPipe* passport)
 
-//	// Задаём свойства газа на входе.
-//	GasCompositionReduced composition;
-//	GasWorkParameters params_in;
-//	composition.density_std_cond = 0.6865365; // [кг/м3]
-//	composition.co2 = 0;
-//	composition.n2 = 0;
-//	params_in.p = 5; // [МПа]
-//	params_in.t = 293.15; // [К]
-//	params_in.q = 387.843655734; // [м3/сек]
-//	Gas gas_in;
-//	gas_in.composition = composition;
-//	gas_in.work_parameters = params_in;
+	// Задаём свойства газа на входе.
+	GasCompositionReduced composition;
+	GasWorkParameters params_in;
+	composition.density_std_cond = 0.6865365; // [кг/м3]
+	composition.co2 = 0;
+	composition.n2 = 0;
+	params_in.p = 5; // [МПа]
+	params_in.t = 293.15; // [К]
+	params_in.q = 387.843655734; // [м3/сек]
+	Gas gas_in;
+	gas_in.composition = composition;
+	gas_in.work_parameters = params_in;
 
-//	// задаём параметры газа на выходе
-//	Gas gas_out = gas_in;
-//	gas_out.work_parameters.p = 3;
-//	gas_out.work_parameters.t = 0;
-//	gas_out.work_parameters.q = 0;
+	// задаём параметры газа на выходе
+	Gas gas_out = gas_in;
+	gas_out.work_parameters.p = 3;
+	gas_out.work_parameters.t = 0;
+	gas_out.work_parameters.q = 0;
 
-//	Edge *edge;
-//	ManagerEdgeModelPipeSequential manager;
+	Edge *edge;
+	ManagerEdgeModelPipeSequential manager;
 
-//	// Заполняем менеджер объектами
-//	for(int i = 50000; i > 0; --i)
-//	{
-//		edge = manager.CreateEdge(&passport);
-//		edge->set_gas_in(&gas_in);
-//		edge->set_gas_out(&gas_out);
-//	}
+	// Заполняем менеджер объектами
+	for(int i = 50000; i > 0; --i)
+	{
+		edge = manager.CreateEdge(&passport);
+		edge->set_gas_in(&gas_in);
+		edge->set_gas_out(&gas_out);
+	}
 
-//	// Имитируем расчёт 100 итераций
-//	std::cout << "Performing 10 iterations..." << std::endl;
-//	for(int i = 1; i <= 10; ++i)
-//	{
-//		manager.CountAll();
-//		std::cout << i << " iterations performed" << std::endl;
-//	}
-//}
+	// Имитируем расчёт 100 итераций
+	std::cout << "Performing 10 iterations..." << std::endl;
+	for(int i = 1; i <= 10; ++i)
+	{
+		manager.CountAll();
+		std::cout << i << " iterations performed" << std::endl;
+	}
+}
 
 
 //TEST(LoaderSardan, LoaderSardan)
