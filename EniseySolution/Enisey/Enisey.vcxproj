@@ -88,11 +88,14 @@
     </CudaCompile>
     <None Include="edge_model_pipe_sequential_cuda.cuh" />
     <None Include="functions_pipe_cuda.cuh" />
+    <None Include="gas_count_functions.cuh" />
     <None Include="gas_count_functions_cuda.cuh" />
+    <None Include="model_pipe_sequential_functions.cuh" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Enisey.cpp" />
+    <ClCompile Include="model_pipe_sequential.cpp" />
     <ClCompile Include="passport_pipe.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -102,6 +105,7 @@
     <ClInclude Include="gas.h" />
     <ClInclude Include="manager_edge.h" />
     <ClInclude Include="manager_edge_model_pipe_sequential_cuda.cuh" />
+    <ClInclude Include="model_pipe_sequential.h" />
     <ClInclude Include="passport_pipe.h" />
     <ClInclude Include="passport.h" />
   </ItemGroup>

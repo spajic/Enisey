@@ -32,6 +32,7 @@
 #include "gtest/gtest.h"
 #include "test_utils.h"
 
+#include "model_pipe_sequential.h"
 #include "gas.h"
 #include "functions_pipe.h"
 #include "passport_pipe.h"
@@ -123,6 +124,7 @@ TEST(Gas, GasCountFunctions)
   EXPECT_LE(abs(lambda - 0.010797811), eps);
 }
 
+
 TEST(PipeSequential, CountSequentialOut)
 {
   // Тест расчёта трубы методом последовательного счёта
@@ -168,6 +170,37 @@ TEST(PipeSequential, CountSequentialOut)
   ASSERT_LE(abs(t_out - 280.14999), eps);
 }
 
+TEST(PipeSequential, Count)
+{
+  // Тестируем расчёт трубы.
+  // Методика тестирования поянтна - сравнить с Вестой, если похоже - 
+  // сохранить полученный результат и принять за эталон.
+  // Задаём пасспортные свойства трубы.
+  PassportPipe passport;
+  FillTestPassportPipe(&passport);
+
+  // Задаём свойства газа на входе.
+  Gas gas_in;
+  FillTestGasIn(&gas_in);
+
+  // задаём параметры газа на выходе
+  Gas gas_out;
+  FillTestGasOut(&gas_out);
+
+  // Создаём объект трубы
+  ModelPipeSequential pipe(&passport);
+  pipe.set_gas_in(&gas_in);
+  pipe.set_gas_out(&gas_out);
+  pipe.Count();
+
+  // Результат Весты для данной конфигурации - q = 387.84
+  // результат моего расчёта - 385.8383, что похоже на Весту, но не совпадает.
+  // Сохраняем это решение в качестве эталонного - при дальнейших изменениях, тест
+  // будет сигнализировать, что что-то изменилось, будем смотреть и разбираться.
+  float eps = 0.1;
+  ASSERT_LE(abs(pipe.q() - 385.83), eps);
+}
+
  int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
@@ -199,81 +232,9 @@ TEST(PipeSequential, CountSequentialOut)
 
 #include "utils.h"
 
-TEST(PipeSequential, CountSequentialOut)
-{
-	// Тест расчёта трубы методом последовательного счёта
-	// Тестировать будем так - зададим входные данные, получим расчётные рез-ты
-	// и сравним их с рез-ми Весты для таких же входных данных.
-	// Если результаты окажутся похожими, сохраним их и в дальнейшем будем
-	// использовать в качестве эталона.
 
-	// Задаём пасспортные свойства трубы.
- 	PassportPipe passport;
-	FillTestPassportPipe(&passport);
 
-	// Задаём свойства газа на входе.
-	GasCompositionReduced composition;
-	GasWorkParameters params_in;
-	composition.density_std_cond = 0.6865365; // [кг/м3]
-	composition.co2 = 0;
-	composition.n2 = 0;
-	params_in.p = 5; // [МПа]
-	params_in.t = 293.15; // [К]
-	params_in.q = 387.843655734; // [м3/сек]
 
-	// Производим расчёт параметров газа на выходе.
-	float p_out;
-	float t_out;
-
-	float number_of_segments = 10;
-	float length_of_segment = passport.length_ / number_of_segments;
-	// Получены результаты p_out = 2.9721224, t_out = 280.14999 (В Весте - p_out = 2.9769, t_out = 279.78)
-	// Результаты очень похожи на Весту, принимаем их за эталон.
-	// Видна особенность - у меня температура выходит на Тос, а в Весте - продолжает падать.
-	// ToDo: разобраться точно с этой особенностью.
-	FindSequentialOut(
-		params_in.p, params_in.t, params_in.q,  // рабочие параметры газового потока на входе
-		composition.density_std_cond, composition.co2, composition.n2, // состав газа
-		passport.d_inner_, passport.d_outer_, passport.roughness_coeff_, passport.hydraulic_efficiency_coeff_, // св-ва трубы
-		passport.t_env_, passport.heat_exchange_coeff_, // св-ва внешней среды (тоже входят в пасспорт трубы)
-		length_of_segment, number_of_segments, // длина сегмента и кол-во сегментов
-		&t_out, &p_out); 
-
-	float eps = 1.0e-4;
-	ASSERT_LE(abs(p_out - 2.9721224), eps);
-	ASSERT_LE(abs(t_out - 280.14999), eps);
-}
-
-TEST(PipeSequential, Count)
-{
-	// Тестируем расчёт трубы.
-	// Методика тестирования поянтна - сравнить с Вестой, если похоже - 
-	// сохранить полученный результат и принять за эталон.
-	// Задаём пасспортные свойства трубы.
- 	PassportPipe passport;
-	FillTestPassportPipe(&passport);
-
-	// Задаём свойства газа на входе.
-	Gas gas_in;
-	FillTestGasIn(&gas_in);
-
-	// задаём параметры газа на выходе
-	Gas gas_out;
-	FillTestGasOut(&gas_out);
-
-	// Создаём объект трубы
-	ModelPipeSequential pipe(&passport);
-	pipe.set_gas_in(&gas_in);
-	pipe.set_gas_out(&gas_out);
-	pipe.Count();
-
-	// Результат Весты для данной конфигурации - q = 387.84
-	// результат моего расчёта - 385.8383, что похоже на Весту, но не совпадает.
-	// Сохраняем это решение в качестве эталонного - при дальнейших изменениях, тест
-	// будет сигнализировать, что что-то изменилось, будем смотреть и разбираться.
-	float eps = 0.1;
-	ASSERT_LE(abs(pipe.q() - 385.83), eps);
-}
 
 TEST(Cuda, Cuda)
 {

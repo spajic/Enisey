@@ -1,12 +1,14 @@
+#pragma once
 /*! \file functions_pipe.h
  *  \brief Функции расчёта трубы.
  *
  *  Более подробное описание файла может быть размещено здесь.
  */
-#pragma once
+
 #include "math.h"
 #include "functions_gas.h"
 
+inline
 float ReturnPNextSequential(
     float p_work, 
     float t_work, 
@@ -36,6 +38,7 @@ float ReturnPNextSequential(
   return p_next;
 };
 
+inline
 float ReturnTNextSequential(
     float p_next, // результат рабботы ReturnPNextSequential
     float p_work, 
@@ -65,6 +68,7 @@ float ReturnTNextSequential(
 
 // Рассчитать параметры газового потока на выходе трубы
 // по свойствам газа, рабочим параметрам на входе трубы, свойствам трубы, св-вам внешней среды, количеству разбиений
+inline
 void FindSequentialOut(
     float p_work, 
     float t_work, 
@@ -132,6 +136,7 @@ void FindSequentialOut(
 // Нужно, чтобы функция по q возрастала
 // И чтобы вначале отрезка была отрицательна, проходила через ноль,
 // и в конце отрезка была положительна. (Для решения методом деления отрезка пополам).
+inline
 float EquationToSolve(
     float p_target,
     float p_work, 
@@ -172,6 +177,7 @@ float EquationToSolve(
 
 // Параметры для этой функции - p_target + все те е, что для FindSequentialOut
 // за следующим исключением - q - теперь out-параметр, убираем парметр p_out
+inline
 int FindSequentialQ(
   float p_target, // давление, которое должно получиться в конце
   float p_work, float t_work,  // рабочие параметры газового потока на входе
