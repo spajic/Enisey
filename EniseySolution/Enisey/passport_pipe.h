@@ -11,6 +11,7 @@
 struct PassportPipe: public Passport
 {
 public:
+  PassportPipe();
   std::string GetName(); 
 
   float length_;						// Длина [км]
