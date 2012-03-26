@@ -1,3 +1,6 @@
+// ASSERT_FLOAT_EQ(expected, actual); Ч неточное сравнение float
+// ASSERT_DOUBLE_EQ(expected, actual); Ч неточное сравнение double
+// ASSERT_NEAR(val1, val2, abs_error); Ч разница между val1 и val2 не превышает погрешность abs_error
 // EXPECT(expected,actual) - не фатальна€ ошибка, предпочтительно использовать.
 // ASSERT - фатальна€ ошибка, использовать, когда продолжение не имеет смысла.
 //TEST(test_case_name, test_name) {
@@ -38,6 +41,7 @@
 #include "passport_pipe.h"
 #include "edge.h"
 #include "manager_edge_model_pipe_sequential.h"
+#include "loader_vesta.h"
 TEST(Gas, GasCountFunctions)
 {
   // “естируем правильность работы газовых функций.
@@ -203,7 +207,7 @@ TEST(PipeSequential, Count)
   ASSERT_LE(abs(pipe.q() - 385.83), eps);
 }
 
-TEST(ManagerEdgeModelPipeSequential, LoadTest)
+TEST(DISABLED_ManagerEdgeModelPipeSequential, LoadTest)
 {
   // —оздадим в менеджере 50 000 труб, и рассчитаем их 100 раз
   // ѕодготовим трубу дл€ расчЄта
@@ -247,6 +251,16 @@ TEST(ManagerEdgeModelPipeSequential, LoadTest)
     manager.CountAll();
     std::cout << i << " iterations performed" << std::endl;
   }
+}
+
+TEST(LoadFromVesta, MatrixConnectionsLoad) {
+  VestaFilesData vsd;
+  LoadMatrixConnections(
+      "C:\\Enisey\\data\\saratov_gorkiy\\MatrixConnections.dat", &vsd);
+  LoadPipeLines(
+      "C:\\Enisey\\data\\saratov_gorkiy\\PipeLine.dat", &vsd);
+  LoadInOutGRS(
+    "C:\\Enisey\\data\\saratov_gorkiy\\InOutGRS.dat", &vsd);
 }
 
  int main(int argc, char **argv) {
