@@ -380,6 +380,45 @@ TEST(GraphBoostTest, GraphBoostTest)
 
 }
 
+#include "writer_graphviz.h"
+TEST(WriterGraphvizTest, WriterGraphvizTest)
+{
+  GraphBoost graph;
+  GraphBoostVertex dummy_vertex;
+
+  int id_vertex_0 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_1 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_2 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_3 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_4 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_5 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_6 = graph.AddVertex(&dummy_vertex);
+
+  GraphBoostEdge edge_0(id_vertex_2, id_vertex_3);
+  GraphBoostEdge edge_1(id_vertex_5, id_vertex_3);
+  GraphBoostEdge edge_2(id_vertex_5, id_vertex_1);
+  //GraphBoostEdge edge_3(id_vertex_3, id_vertex_1);
+  GraphBoostEdge edge_4(id_vertex_3, id_vertex_0);
+  GraphBoostEdge edge_5(id_vertex_1, id_vertex_0);
+  GraphBoostEdge edge_6(id_vertex_0, id_vertex_4);
+  //GraphBoostEdge edge_7(id_vertex_1, id_vertex_4);
+  GraphBoostEdge edge_8(id_vertex_6, id_vertex_2);
+  GraphBoostEdge edge_9(id_vertex_6, id_vertex_5);
+
+  graph.AddEdge(&edge_0);
+  graph.AddEdge(&edge_1);
+  graph.AddEdge(&edge_2);
+  //graph.AddEdge(&edge_3);
+  graph.AddEdge(&edge_4);
+  graph.AddEdge(&edge_5);
+  graph.AddEdge(&edge_6);
+  //graph.AddEdge(&edge_7);
+  graph.AddEdge(&edge_8);
+  graph.AddEdge(&edge_9);
+  WriterGraphviz writer;
+  writer.WriteGraphToFile(graph, "C:\\Enisey\\out\\test_graphviz.dot");
+}
+
  int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
