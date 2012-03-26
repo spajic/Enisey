@@ -263,6 +263,123 @@ TEST(LoadFromVesta, MatrixConnectionsLoad) {
     "C:\\Enisey\\data\\saratov_gorkiy\\InOutGRS.dat", &vsd);
 }
 
+#include "graph_boost.h"
+#include "graph_boost_vertex.h"
+#include "graph_boost_edge.h"
+#include "graph_boost_engine.h"
+#include <opqit/opaque_iterator.hpp>
+#include <functional>
+#include <algorithm>
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/dominator_tree.hpp>
+TEST(GraphBoostTest, GraphBoostTest)
+{
+  GraphBoost graph;
+  GraphBoostVertex dummy_vertex;
+
+  int id_vertex_0 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_1 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_2 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_3 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_4 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_5 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_6 = graph.AddVertex(&dummy_vertex);
+
+  GraphBoostEdge edge_0(id_vertex_2, id_vertex_3);
+  GraphBoostEdge edge_1(id_vertex_5, id_vertex_3);
+  GraphBoostEdge edge_2(id_vertex_5, id_vertex_1);
+  //GraphBoostEdge edge_3(id_vertex_3, id_vertex_1);
+  GraphBoostEdge edge_4(id_vertex_3, id_vertex_0);
+  GraphBoostEdge edge_5(id_vertex_1, id_vertex_0);
+  GraphBoostEdge edge_6(id_vertex_0, id_vertex_4);
+  //GraphBoostEdge edge_7(id_vertex_1, id_vertex_4);
+  GraphBoostEdge edge_8(id_vertex_6, id_vertex_2);
+  GraphBoostEdge edge_9(id_vertex_6, id_vertex_5);
+
+  graph.AddEdge(&edge_0);
+  graph.AddEdge(&edge_1);
+  graph.AddEdge(&edge_2);
+  //graph.AddEdge(&edge_3);
+  graph.AddEdge(&edge_4);
+  graph.AddEdge(&edge_5);
+  graph.AddEdge(&edge_6);
+  //graph.AddEdge(&edge_7);
+  graph.AddEdge(&edge_8);
+  graph.AddEdge(&edge_9);
+
+  // Тестируем итераторы
+  GraphBoost::iterator iter = graph.VertexBeginNative();
+
+  GraphBoostVertex& ref_vertex = *iter;
+  //ref_vertex.set_id_in_graph(100);
+  dummy_vertex = *iter;
+
+  dummy_vertex = *(++iter);
+  dummy_vertex = *(--iter);
+
+  std::for_each(graph.VertexBeginNative(), graph.VertexEndNative(), [](GraphBoostVertex& v)
+  {
+    std::cout << v.id_in_graph() << ' ';
+  } );
+  std::cout << std::endl;
+
+  iter = graph.VertexBeginTopological();
+  dummy_vertex = *(++iter);
+  dummy_vertex = *(--iter);
+  iter = graph.VertexEndTopological();
+
+  std::for_each(graph.VertexBeginTopological(), graph.VertexEndTopological(), [](GraphBoostVertex& v)
+  {
+    std::cout << v.id_in_graph() << ' ';
+  } );
+  std::cout << std::endl;
+
+  // Тестируем построение дерева доминаторов
+  // Lengauer-Tarjan dominator tree algorithm
+  typedef boost::graph_traits<GraphBoostEngine::graph_type>::vertex_descriptor Vertex;
+  typedef boost::property_map<GraphBoostEngine::graph_type, boost::vertex_index_t>::type IndexMap;
+  typedef	boost::iterator_property_map<std::vector<Vertex>::iterator, IndexMap> PredMap;
+
+  std::vector<Vertex> domTreePredVector =
+    std::vector<Vertex>(boost::num_vertices(graph.engine()->graph_), 
+    boost::graph_traits<GraphBoostEngine::graph_type>::null_vertex()
+    );
+
+  IndexMap indexMap(boost::get(boost::vertex_index, graph.engine()->graph_));
+
+  PredMap domTreePredMap =
+    boost::make_iterator_property_map(domTreePredVector.begin(), indexMap);
+
+  boost::lengauer_tarjan_dominator_tree(graph.engine()->graph_, id_vertex_6, domTreePredMap); 
+
+  std::vector<int> idom(boost::num_vertices(graph.engine()->graph_));
+
+  boost::graph_traits<GraphBoostEngine::graph_type>::vertex_iterator uItr, uEnd;
+
+  for (boost::tie(uItr, uEnd) = boost::vertices(graph.engine()->graph_); uItr != uEnd; ++uItr)
+  {
+    if (boost::get(domTreePredMap, *uItr) != boost::graph_traits<GraphBoostEngine::graph_type>::null_vertex())
+    {
+      idom[boost::get(indexMap, *uItr)] =	boost::get(indexMap, boost::get(domTreePredMap, *uItr));
+    }
+    else
+    {
+      idom[boost::get(indexMap, *uItr)] = (std::numeric_limits<int>::max)();
+    }
+  }
+
+  copy(idom.begin(), idom.end(), std::ostream_iterator<int>(std::cout, " "));
+  std::cout << std::endl;
+
+  // Пробуем итератор обхода дочерних вершин
+  GraphBoostVertex v = *(graph.VertexBeginTopological());
+  for(GraphBoostVertex::iterator it = v.ChildVertexIteratorBegin(); it != v.ChildVertexIteratorEnd(); ++it)
+  {
+    GraphBoostVertex retrievd_vertex = *it;
+  }
+
+}
+
  int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

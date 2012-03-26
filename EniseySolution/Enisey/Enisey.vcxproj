@@ -53,6 +53,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -96,17 +97,31 @@
   <ItemGroup>
     <ClCompile Include="edge_model_pipe_sequential.cpp" />
     <ClCompile Include="Enisey.cpp" />
+    <ClCompile Include="graph_boost.cpp" />
+    <ClCompile Include="graph_boost_edge.cpp" />
+    <ClCompile Include="graph_boost_vertex.cpp" />
+    <ClCompile Include="graph_boost_vertex_child_vertex_iterator.cpp" />
+    <ClCompile Include="graph_boost_vertex_iterator_native.cpp" />
+    <ClCompile Include="graph_boost_vertex_iterator_topological.cpp" />
     <ClCompile Include="loader_vesta.cpp" />
     <ClCompile Include="manager_edge_model_pipe_sequential.cpp" />
     <ClCompile Include="model_pipe_sequential.cpp" />
     <ClCompile Include="passport_pipe.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="choice.h" />
     <ClInclude Include="edge.h" />
     <ClInclude Include="edge_model_pipe_sequential.h" />
     <ClInclude Include="functions_gas.h" />
     <ClInclude Include="functions_pipe.h" />
     <ClInclude Include="gas.h" />
+    <ClInclude Include="graph_boost.h" />
+    <ClInclude Include="graph_boost_edge.h" />
+    <ClInclude Include="graph_boost_engine.h" />
+    <ClInclude Include="graph_boost_vertex.h" />
+    <ClInclude Include="graph_boost_vertex_child_vertex_iterator.h" />
+    <ClInclude Include="graph_boost_vertex_iterator_native.h" />
+    <ClInclude Include="graph_boost_vertex_iterator_topological.h" />
     <ClInclude Include="loader_vesta.h" />
     <ClInclude Include="manager_edge.h" />
     <ClInclude Include="manager_edge_model_pipe_sequential.h" />
