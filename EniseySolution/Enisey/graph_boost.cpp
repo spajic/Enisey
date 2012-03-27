@@ -45,7 +45,7 @@ void GraphBoost::AddEdge(GraphBoostEdge* graph_boost_edge)
   bool result_of_adding_edge;
   boost::graph_traits<GraphBoostEngine::graph_type>::edge_descriptor created_edge_descriptor;
   boost::tie(created_edge_descriptor, result_of_adding_edge) = 
-    boost::add_edge(graph_boost_edge->in_vertex_id(), graph_boost_edge->out_vertex_id(), engine_->graph_);
+     boost::add_edge(graph_boost_edge->in_vertex_id(), graph_boost_edge->out_vertex_id(), engine_->graph_);
   GraphBoostEdge& created_edge = (engine_->graph_)[created_edge_descriptor];
   // Заполняем свойства и записываем в граф
   created_edge = *graph_boost_edge;

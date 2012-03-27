@@ -419,6 +419,21 @@ TEST(WriterGraphvizTest, WriterGraphvizTest)
   writer.WriteGraphToFile(graph, "C:\\Enisey\\out\\test_graphviz.dot");
 }
 
+#include "graph_boost_load_from_vesta.h"
+TEST(LoadGraphFromVestaFiles, LoadGraphFromVestaFiles) {
+  VestaFilesData vfd;
+  LoadMatrixConnections(
+    "C:\\Enisey\\data\\saratov_gorkiy\\MatrixConnections.dat", &vfd);
+  LoadPipeLines(
+    "C:\\Enisey\\data\\saratov_gorkiy\\PipeLine.dat", &vfd);
+  LoadInOutGRS(
+    "C:\\Enisey\\data\\saratov_gorkiy\\InOutGRS.dat", &vfd);
+  GraphBoost graph;
+  GraphBoostLoadFromVesta(&graph, &vfd);
+  WriterGraphviz writer;
+  writer.WriteGraphToFile(graph, "C:\\Enisey\\out\\test_load_from_vesta.dot");
+}
+
  int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

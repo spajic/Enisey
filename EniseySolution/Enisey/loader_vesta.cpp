@@ -45,6 +45,8 @@ void LoadMatrixConnections(std::string file_name, VestaFilesData *vsd) {
         // Ставим исходящему из узла ребру этот узел как in_vertex.
         vsd->edges_hash[in_out_edge_id].in_vertex_id = vertex.id_vesta;
       }
+      // Запоминаем заполненный vertex в хеше vsd.
+      vsd->vertices_hash[vertex.id_vesta] = vertex;
     }
   }
 }
