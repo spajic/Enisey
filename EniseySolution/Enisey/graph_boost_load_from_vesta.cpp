@@ -27,7 +27,7 @@ void GraphBoostLoadFromVesta(GraphBoost* graph, VestaFilesData *vfd) {
         composition.density_std_cond = iter->den_sc;
         composition.co2 = iter->co2;
         composition.n2 = iter->n2;
-        // Должно быть задано либо давление, либо расход
+        // Должно быть задано либо давление, либо расход.
         if(iter->pressure > 0) {
           vertex_to_add.AddInputWithSetP(iter->id_in_out, iter->pressure, 
               iter->temp, composition);
@@ -55,7 +55,7 @@ void GraphBoostLoadFromVesta(GraphBoost* graph, VestaFilesData *vfd) {
     vfd->vertices_hash[id_vertex].id_graph = added_vertex_id;
   }
   // 2. По информации из edges_hash - для каждого ребра есть начало и конец -
-  // заполняем граф рёбрами
+  // заполняем граф рёбрами.
   for(auto iter = vfd->edges_hash.begin(); iter != vfd->edges_hash.end(); 
       iter++) {
     int edge_id_vesta = iter->first;
@@ -73,7 +73,7 @@ void GraphBoostLoadFromVesta(GraphBoost* graph, VestaFilesData *vfd) {
     ребра.*/
     edge.set_p_max_passport(edge_data.passport.p_max_);
     edge.set_p_min_passport(edge_data.passport.p_min_);
-    // Добавляем ребро в граф
+    // Добавляем ребро в граф.
     graph->AddEdge(&edge);
   }
 }
