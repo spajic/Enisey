@@ -95,6 +95,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="graph_boost_initial_approx.cpp" />
     <ClCompile Include="graph_boost_load_from_vesta.cpp" />
     <ClCompile Include="edge_model_pipe_sequential.cpp" />
     <ClCompile Include="Enisey.cpp" />
@@ -111,6 +112,7 @@
     <ClCompile Include="writer_graphviz.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="graph_boost_initial_approx.h" />
     <ClInclude Include="graph_boost_load_from_vesta.h" />
     <ClInclude Include="choice.h" />
     <ClInclude Include="edge.h" />
