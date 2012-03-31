@@ -13,6 +13,7 @@
 struct EdgeDereferenceFunctor : public std::unary_function<
     GraphBoostEngine::graph_type::edge_descriptor,
     GraphBoostEdge&> {
+  EdgeDereferenceFunctor(GraphBoostEngine::graph_type *g) : g_(g) { }
   GraphBoostEdge& operator()(GraphBoostEngine::graph_type::edge_descriptor desc) const {
     return (*g_)[desc];
   }
@@ -31,12 +32,22 @@ GraphBoostVertex::iter_edge GraphBoostVertex::OutEdgesBegin() {
       out_ei_first, out_ei_last;	
   boost::tie(out_ei_first, out_ei_last) = 
       boost::out_edges(id_in_graph_, engine_->graph_);
-  EdgeDereferenceFunctor edthrust;
-  edthrust.g_ = &(engine_->graph_);
   boost::transform_iterator<
       EdgeDereferenceFunctor, 
       GraphBoostEngine::graph_type::out_edge_iterator>
-    iter(out_ei_first, edthrust);  
+    iter(out_ei_first, EdgeDereferenceFunctor(&(engine_->graph_)));  
+  return iter;
+}
+
+GraphBoostVertex::iter_edge GraphBoostVertex::OutEdgesEnd() {
+  boost::graph_traits<GraphBoostEngine::graph_type>::out_edge_iterator 
+    out_ei_first, out_ei_last;	
+  boost::tie(out_ei_first, out_ei_last) = 
+    boost::out_edges(id_in_graph_, engine_->graph_);
+  boost::transform_iterator<
+    EdgeDereferenceFunctor, 
+    GraphBoostEngine::graph_type::out_edge_iterator>
+    iter(out_ei_last, EdgeDereferenceFunctor(&(engine_->graph_)));  
   return iter;
 }
 

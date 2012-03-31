@@ -453,13 +453,14 @@ TEST(GraphBoost, OutEdgeIteratorTest)
   //graph.AddEdge(&edge_7);
   graph.AddEdge(&edge_8);
   graph.AddEdge(&edge_9);
-  
-  auto v_it = graph.VertexBeginTopological();
-  auto e_it = v_it->OutEdgesBegin();
-  std::cout << "First Edge: " << e_it->in_vertex_id() << " " << e_it->out_vertex_id() << std::endl;
-  ++e_it;
-  std::cout << "Next Edge: " << e_it->in_vertex_id() << " " << e_it->out_vertex_id() << std::endl;
 
+  for(auto v_it = graph.VertexBeginTopological(); v_it != graph.VertexEndTopological();
+      ++v_it) {
+    for(auto e_it = v_it->OutEdgesBegin(); e_it != v_it->OutEdgesEnd(); ++e_it) {
+      std::cout << "Edge (" << e_it->in_vertex_id() << ", " << e_it->out_vertex_id() <<
+        ")" << std::endl;
+    }
+  }
 }
 
 #include "graph_boost_load_from_vesta.h"
