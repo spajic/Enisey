@@ -68,8 +68,11 @@ void GraphBoostLoadFromVesta(GraphBoost* graph, VestaFilesData *vfd) {
     edge.set_edge_id_vesta(edge_id_vesta);
     edge.set_edge_type(edge_data.edge_type);
     edge.set_pipe_type(edge_data.pipe_type);
-    /// \todo Создаём в менеджере объект и записываем указатель на него.
     edge.set_edge(graph->manager()->CreateEdge(&(edge_data.passport)));
+    /* Проставляем максимальное и минимальное пасспортное давление как свойства
+    ребра.*/
+    edge.set_p_max_passport(edge_data.passport.p_max_);
+    edge.set_p_min_passport(edge_data.passport.p_min_);
     // Добавляем ребро в граф
     graph->AddEdge(&edge);
   }
