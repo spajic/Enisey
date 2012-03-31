@@ -1,3 +1,5 @@
+/** \file graph_boost_vertex.h
+Класс GraphBoostVertex - тип узла, хранящегося в графе GraphBoost.*/
 #pragma once
 
 #include <list>
@@ -5,23 +7,26 @@
 #include "choice.h"
 #include <opqit/opaque_iterator_fwd.hpp>
 
+// Forward-declarations.
 class GraphBoostEngine;
 class GraphBoostEdge;
 
-class GraphBoostVertex
-{
-public:
+class GraphBoostVertex {
+ public:
   GraphBoostVertex();
+
+  // Тип итератора, разыменование которого даёт ссылку на ребро графа.
+  typedef opqit::opaque_iterator<GraphBoostEdge, opqit::bidir> iter_edge;
+  // Функции получения итераторов на исходящие из узла рёбра.
+  iter_edge OutEdgesBegin();
+  iter_edge OutEdgesEnd();
+  // Функции получения итераторов на входящие в узел рёбра.
+  iter_edge InEdgesBegin();
+  iter_edge InEdgesEnd();
 
   typedef opqit::opaque_iterator<GraphBoostVertex, opqit::forward> iterator;
   iterator ChildVertexIteratorBegin();
   iterator ChildVertexIteratorEnd();
-
-  typedef opqit::opaque_iterator<GraphBoostEdge, opqit::bidir> iter_edge;
-  iter_edge OutEdgesBegin();
-  iter_edge OutEdgesEnd();
-  iter_edge InEdgesBegin();
-  iter_edge InEdgesEnd();
 
   void set_id_in_graph(int id_in_graph);
   int id_in_graph();

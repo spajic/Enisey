@@ -1,3 +1,5 @@
+/** \file graph_boost_vertex.cpp 
+Реализация graph_boost_vertex.h*/
 #include "graph_boost_vertex.h"
 #include "graph_boost_engine.h"
 #include "choice.h"
@@ -5,38 +7,61 @@
 #include "graph_boost_vertex_child_vertex_iterator.h"
 #include "graph_boost_engine.h"
 
+/* Эти заголовки нужны для того, чтобы предоставить итераторы
+OutEdgesBegin/End, InEdgesBegin/End.*/
 #include <opqit/opaque_iterator.hpp>
 #include "boost/iterator/transform_iterator.hpp"
 
+/** EdgeDereferenceFunctor функтор, принимает в качестве параметра
+дескриптор ребра графа, а возвращает ссылку на ребро, которую получает
+из графа, используя переданный дескриптор.
+Схема здесь такая: 
+ 1. boost::out_edges(vertex, graph) возвращает диапазон из двух итераторов,
+    каждый из которых указывает не на ребро, а на дескриптор ребра, по которому
+    уже можно получить ссылку на ребро из графа. Это не удобно, т.к. дескриптор
+    обычно не нужен, а нужно как раз ребро.
+ 2. Поэтому с помощью boost::transform_iterator полученный итератор 
+    преорбразуется таким образом, чтобы он возвращал ссылку на ребро.
+ 3. А возвращается он как opaque_iterator<GraphBoostEdge, opqit::bidir>,
+    чтобы упростить интерфейс хедера, не вносить туда сведений о конкретном
+    типе итератора. Ведь нам достаточно знать, что это обычный итератор по
+    рёбрам графа.
+ Наследуем EdgeDereferenceFunctor от std::unary_function. Это просто добавляет
+ парочку typedef-ов, однако без этого ничего работать не хотело. Всегда стоит
+ наследоваться от соотв-го unary/binary_function, если нужно представить свой
+ функтор стандартной библиотеке, boost, и т.д.*/
 struct EdgeDereferenceFunctor : public std::unary_function<
-    GraphBoostEngine::graph_type::edge_descriptor,
-    GraphBoostEdge&> {
+    GraphBoostEngine::graph_type::edge_descriptor, // Тип аргумента.
+    GraphBoostEdge&> { //Тип возрващаемого значения.
+  /*g - указатель на граф, из которого по дескриптору нужно будет получать
+  искомую ссылку на ребро*/
   EdgeDereferenceFunctor(GraphBoostEngine::graph_type *g) : g_(g) { }
-  GraphBoostEdge& operator()(GraphBoostEngine::graph_type::edge_descriptor desc) const {
+  /*Необходимость модификатора const здесь не очевидна, но без него не 
+  работало. Стоит поподробнее разобраться с const!*/
+  GraphBoostEdge& operator()(
+      GraphBoostEngine::graph_type::edge_descriptor desc) const {
     return (*g_)[desc];
   }
   GraphBoostEngine::graph_type *g_;
 };
-
-GraphBoostVertex::iterator GraphBoostVertex::ChildVertexIteratorBegin() {
-  return GraphBoostVertexChildVertexIterator(engine_, id_in_graph_, true);
-}
-GraphBoostVertex::iterator GraphBoostVertex::ChildVertexIteratorEnd() {
-  return GraphBoostVertexChildVertexIterator(engine_, id_in_graph_, false);
-}
-
+/* Далее - однотипные функции для итераторов, первую разберём подробно.*/
 GraphBoostVertex::iter_edge GraphBoostVertex::OutEdgesBegin() {
+  // Получаем iterator-range на исходящие рёбра из графа.
   boost::graph_traits<GraphBoostEngine::graph_type>::out_edge_iterator 
-      out_ei_first, out_ei_last;	
+    out_ei_first, out_ei_last;	
   boost::tie(out_ei_first, out_ei_last) = 
-      boost::out_edges(id_in_graph_, engine_->graph_);
+    boost::out_edges(id_in_graph_, engine_->graph_);
+  /* Создаём и возвращаем boost::transform_iterator, который возрващается
+  в качестве opqit::opaque_iterator<GraphBoostEdge, opqit::bidir>*/
   boost::transform_iterator<
-      EdgeDereferenceFunctor, 
+      EdgeDereferenceFunctor, // Функтор, применяемый к результату итератора.
+      // Итератор, к результатоу которого применяется функтор.
       GraphBoostEngine::graph_type::out_edge_iterator>
-    iter(out_ei_first, EdgeDereferenceFunctor(&(engine_->graph_)));  
+       iter(out_ei_first, // Итератор на начало последовательности.
+            EdgeDereferenceFunctor( &(engine_->graph_) ) // Экземпляр функтора.
+       );  
   return iter;
 }
-
 GraphBoostVertex::iter_edge GraphBoostVertex::OutEdgesEnd() {
   boost::graph_traits<GraphBoostEngine::graph_type>::out_edge_iterator 
     out_ei_first, out_ei_last;	
@@ -48,7 +73,6 @@ GraphBoostVertex::iter_edge GraphBoostVertex::OutEdgesEnd() {
     iter(out_ei_last, EdgeDereferenceFunctor(&(engine_->graph_)));  
   return iter;
 }
-
 GraphBoostVertex::iter_edge GraphBoostVertex::InEdgesBegin() {
   boost::graph_traits<GraphBoostEngine::graph_type>::in_edge_iterator 
     in_ei_first, in_ei_last;	
@@ -60,7 +84,6 @@ GraphBoostVertex::iter_edge GraphBoostVertex::InEdgesBegin() {
     iter(in_ei_first, EdgeDereferenceFunctor(&(engine_->graph_)));  
   return iter;
 }
-
 GraphBoostVertex::iter_edge GraphBoostVertex::InEdgesEnd() {
   boost::graph_traits<GraphBoostEngine::graph_type>::in_edge_iterator 
     in_ei_first, in_ei_last;	
@@ -73,6 +96,18 @@ GraphBoostVertex::iter_edge GraphBoostVertex::InEdgesEnd() {
   return iter;
 }
 
+/**\todo Дальнейшие итераторы были реализованы раньше, в рамках проекта London.
+Там мне не удалось докопаться до решения, реализованного выше, и там
+итераторы реализоавны через самодельные классы-обёртки, реализующие
+Boost::IteratorFacade. Очевидно, что это бесполезное монструозное усложнение,
+от которого нужно будет избвавиться. Сделать как сделано выше.*/
+
+GraphBoostVertex::iterator GraphBoostVertex::ChildVertexIteratorBegin() {
+  return GraphBoostVertexChildVertexIterator(engine_, id_in_graph_, true);
+}
+GraphBoostVertex::iterator GraphBoostVertex::ChildVertexIteratorEnd() {
+  return GraphBoostVertexChildVertexIterator(engine_, id_in_graph_, false);
+}
 GraphBoostEngine* GraphBoostVertex::engine() { 
   return engine_; 
 }
