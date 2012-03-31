@@ -51,6 +51,12 @@ public:
   int id_distant_dominator();
   void set_q_in_domintator_subtree(float q);
   float q_in_dominators_subtree();
+// Для вычисления ограничений PMin, PMax с учётом предков и детей.
+// Используется при задании начальных приближений.
+  float p_min();
+  void set_p_min(float p_min);
+  float p_max();
+  void set_p_max(float p_max);
 private:
   GraphBoostEngine* engine_;
   int id_in_graph_;
@@ -66,6 +72,10 @@ private:
   Choice is_all_children_dominator_;
   int id_dominator_in_graph_;
   int id_distant_dominator_;
+
+// Для вычисления ограничений PMin, PMax с учётом предков и детей.
+  float p_min_;
+  float p_max_;
 
   // Сумма q в поддереве доминаторов - для расчёта q при предварительном
   // анализе графа.

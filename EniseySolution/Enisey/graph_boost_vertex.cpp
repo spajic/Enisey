@@ -209,3 +209,8 @@ float GraphBoostVertex::InOutAmount()
 {
   return in_out_amount_;
 }
+
+float GraphBoostVertex::p_min() { return p_min_; }
+void GraphBoostVertex::set_p_min(float p_min) { p_min_ = p_min;}
+float GraphBoostVertex::p_max() { return p_max_; }
+void GraphBoostVertex::set_p_max(float p_max) { p_max_ = p_max;}
