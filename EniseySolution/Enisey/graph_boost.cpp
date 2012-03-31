@@ -1,6 +1,7 @@
 #include "graph_boost.h"
 #include "graph_boost_edge.h"
 #include "graph_boost_vertex.h"
+#include "manager_edge_model_pipe_sequential.h"
 
 #include <boost/graph/adjacency_list.hpp>
 
@@ -15,10 +16,12 @@
 GraphBoost::GraphBoost()
 {
   engine_ = new GraphBoostEngine;
+  manager_ = new ManagerEdgeModelPipeSequential();
 }
 GraphBoost::~GraphBoost()
 {
   delete engine_;
+  delete manager_;
 }
 GraphBoostEngine* GraphBoost::engine()
 {
@@ -67,4 +70,8 @@ GraphBoost::iterator GraphBoost::VertexBeginTopological()
 GraphBoost::iterator GraphBoost::VertexEndTopological()
 {
   return GraphBoostVertexIteratorTopological(engine_, false);
+}
+
+ManagerEdgeModelPipeSequential* GraphBoost::manager() {
+  return manager_;
 }

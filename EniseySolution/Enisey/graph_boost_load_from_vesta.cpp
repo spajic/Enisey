@@ -5,6 +5,7 @@
 #include "graph_boost.h"
 #include "graph_boost_vertex.h"
 #include "graph_boost_edge.h"
+#include "manager_edge_model_pipe_sequential.h"
 // Функция, заполняющаяя граф по структуре matrix_connections
 void GraphBoostLoadFromVesta(GraphBoost* graph, VestaFilesData *vfd) {
   // 1. Создаём все вершины графа (из vfd->vertices_hash).
@@ -68,7 +69,7 @@ void GraphBoostLoadFromVesta(GraphBoost* graph, VestaFilesData *vfd) {
     edge.set_edge_type(edge_data.edge_type);
     edge.set_pipe_type(edge_data.pipe_type);
     /// \todo Создаём в менеджере объект и записываем указатель на него.
-    // edge.set_edge(manager_->CreateEdge(&(edge_data.passport)));
+    edge.set_edge(graph->manager()->CreateEdge(&(edge_data.passport)));
     // Добавляем ребро в граф
     graph->AddEdge(&edge);
   }
