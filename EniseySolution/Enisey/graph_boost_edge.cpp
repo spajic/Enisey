@@ -1,15 +1,19 @@
+/** \file graph_boost_edge.cpp
+Реализация graph_boost_edge.h*/
 #include "graph_boost_edge.h"
 #include "edge.h"
 
-GraphBoostEdge::GraphBoostEdge() : in_vertex_id_(-1), out_vertex_id_(-1)
-{
-
-}
+GraphBoostEdge::GraphBoostEdge() : in_vertex_id_(-1), out_vertex_id_(-1) { }
 GraphBoostEdge::GraphBoostEdge(int in_vertex_id, int out_vertex_id) : 
-in_vertex_id_(in_vertex_id), 
-  out_vertex_id_(out_vertex_id)
-{
+    in_vertex_id_(in_vertex_id), out_vertex_id_(out_vertex_id) { }
 
+float GraphBoostEdge::p_min_passport() { return p_min_passport_; }
+void GraphBoostEdge::set_p_min_passport(float p_min_passport) {
+  p_min_passport_ = p_min_passport;
+}
+float GraphBoostEdge::p_max_passport() { return p_max_passport_; }
+void GraphBoostEdge::set_p_max_passport(float p_max_passport) {
+  p_max_passport_ = p_max_passport;
 }
 
 Edge* GraphBoostEdge::edge()
