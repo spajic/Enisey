@@ -17,7 +17,7 @@ public:
   iterator ChildVertexIteratorBegin();
   iterator ChildVertexIteratorEnd();
 
-  typedef opqit::opaque_iterator<GraphBoostEdge, opqit::forward> iter_edge;
+  typedef opqit::opaque_iterator<GraphBoostEdge, opqit::bidir> iter_edge;
   iter_edge OutEdgesBegin();
   iter_edge OutEdgesEnd();
   iter_edge InEdgesBegin();

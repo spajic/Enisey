@@ -454,12 +454,21 @@ TEST(GraphBoost, OutEdgeIteratorTest)
   graph.AddEdge(&edge_8);
   graph.AddEdge(&edge_9);
 
+  // Тестирование OutEdges
   for(auto v_it = graph.VertexBeginTopological(); v_it != graph.VertexEndTopological();
       ++v_it) {
     for(auto e_it = v_it->OutEdgesBegin(); e_it != v_it->OutEdgesEnd(); ++e_it) {
       std::cout << "Edge (" << e_it->in_vertex_id() << ", " << e_it->out_vertex_id() <<
         ")" << std::endl;
     }
+  }
+  // Тестирование InEdges
+  for(auto v_it = graph.VertexBeginTopological()+1; v_it != graph.VertexEndTopological();
+    ++v_it) {
+      for(auto e_it = v_it->InEdgesBegin(); e_it != v_it->InEdgesEnd(); ++e_it) {
+        std::cout << "Edge (" << e_it->in_vertex_id() << ", " << e_it->out_vertex_id() <<
+          ")" << std::endl;
+      }
   }
 }
 

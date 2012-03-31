@@ -3,12 +3,10 @@
 #include "choice.h"
 #include "graph_boost_edge.h"
 #include "graph_boost_vertex_child_vertex_iterator.h"
+#include "graph_boost_engine.h"
 
 #include <opqit/opaque_iterator.hpp>
-
-#include "graph_boost_engine.h"
 #include "boost/iterator/transform_iterator.hpp"
-#include "boost/bind.hpp"
 
 struct EdgeDereferenceFunctor : public std::unary_function<
     GraphBoostEngine::graph_type::edge_descriptor,
@@ -51,6 +49,29 @@ GraphBoostVertex::iter_edge GraphBoostVertex::OutEdgesEnd() {
   return iter;
 }
 
+GraphBoostVertex::iter_edge GraphBoostVertex::InEdgesBegin() {
+  boost::graph_traits<GraphBoostEngine::graph_type>::in_edge_iterator 
+    in_ei_first, in_ei_last;	
+  boost::tie(in_ei_first, in_ei_last) = 
+    boost::in_edges(id_in_graph_, engine_->graph_);
+  boost::transform_iterator<
+    EdgeDereferenceFunctor, 
+    GraphBoostEngine::graph_type::in_edge_iterator>
+    iter(in_ei_first, EdgeDereferenceFunctor(&(engine_->graph_)));  
+  return iter;
+}
+
+GraphBoostVertex::iter_edge GraphBoostVertex::InEdgesEnd() {
+  boost::graph_traits<GraphBoostEngine::graph_type>::in_edge_iterator 
+    in_ei_first, in_ei_last;	
+  boost::tie(in_ei_first, in_ei_last) = 
+    boost::in_edges(id_in_graph_, engine_->graph_);
+  boost::transform_iterator<
+    EdgeDereferenceFunctor, 
+    GraphBoostEngine::graph_type::in_edge_iterator>
+    iter(in_ei_last, EdgeDereferenceFunctor(&(engine_->graph_)));  
+  return iter;
+}
 
 GraphBoostEngine* GraphBoostVertex::engine() { 
   return engine_; 
