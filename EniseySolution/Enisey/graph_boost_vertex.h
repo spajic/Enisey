@@ -6,15 +6,23 @@
 #include <opqit/opaque_iterator_fwd.hpp>
 
 class GraphBoostEngine;
+class GraphBoostEdge;
 
 class GraphBoostVertex
 {
 public:
+  GraphBoostVertex();
+
   typedef opqit::opaque_iterator<GraphBoostVertex, opqit::forward> iterator;
   iterator ChildVertexIteratorBegin();
   iterator ChildVertexIteratorEnd();
 
-  GraphBoostVertex();
+  typedef opqit::opaque_iterator<GraphBoostEdge, opqit::forward> iter_edge;
+  iter_edge OutEdgesBegin();
+  iter_edge OutEdgesEnd();
+  iter_edge InEdgesBegin();
+  iter_edge InEdgesEnd();
+
   void set_id_in_graph(int id_in_graph);
   int id_in_graph();
   void set_id_vesta(int id_vesta);

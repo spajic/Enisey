@@ -1,69 +1,87 @@
 #include "graph_boost_vertex.h"
 #include "graph_boost_engine.h"
 #include "choice.h"
+#include "graph_boost_edge.h"
 #include "graph_boost_vertex_child_vertex_iterator.h"
 
 #include <opqit/opaque_iterator.hpp>
 
-GraphBoostVertex::iterator GraphBoostVertex::ChildVertexIteratorBegin()
-{
+#include "graph_boost_engine.h"
+#include "boost/iterator/transform_iterator.hpp"
+#include "boost/bind.hpp"
+
+struct EdgeDereferenceFunctor : public std::unary_function<
+    GraphBoostEngine::graph_type::edge_descriptor,
+    GraphBoostEdge&> {
+  GraphBoostEdge& operator()(GraphBoostEngine::graph_type::edge_descriptor desc) const {
+    return (*g_)[desc];
+  }
+  GraphBoostEngine::graph_type *g_;
+};
+
+GraphBoostVertex::iterator GraphBoostVertex::ChildVertexIteratorBegin() {
   return GraphBoostVertexChildVertexIterator(engine_, id_in_graph_, true);
 }
-GraphBoostVertex::iterator GraphBoostVertex::ChildVertexIteratorEnd()
-{
+GraphBoostVertex::iterator GraphBoostVertex::ChildVertexIteratorEnd() {
   return GraphBoostVertexChildVertexIterator(engine_, id_in_graph_, false);
 }
 
-GraphBoostEngine* GraphBoostVertex::engine()
-{
-  return engine_;
+GraphBoostVertex::iter_edge GraphBoostVertex::OutEdgesBegin() {
+  boost::graph_traits<GraphBoostEngine::graph_type>::out_edge_iterator 
+      out_ei_first, out_ei_last;	
+  boost::tie(out_ei_first, out_ei_last) = 
+      boost::out_edges(id_in_graph_, engine_->graph_);
+  EdgeDereferenceFunctor edthrust;
+  edthrust.g_ = &(engine_->graph_);
+  boost::transform_iterator<
+      EdgeDereferenceFunctor, 
+      GraphBoostEngine::graph_type::out_edge_iterator>
+    iter(out_ei_first, edthrust);  
+  return iter;
 }
 
-int GraphBoostVertex::id_dominator_in_graph()
-{
+
+GraphBoostEngine* GraphBoostVertex::engine() { 
+  return engine_; 
+}
+int GraphBoostVertex::id_dominator_in_graph() {
   return id_dominator_in_graph_;
 }
-void GraphBoostVertex::set_id_dominator_in_graph(int id_dominator_in_graph)
-{
+void GraphBoostVertex::set_id_dominator_in_graph(int id_dominator_in_graph) {
   id_dominator_in_graph_ = id_dominator_in_graph;
 }
 
 GraphBoostVertex::GraphBoostVertex() : 
-engine_(NULL),
-  id_in_graph_(-1),
-  id_vesta_(-1),
-  p_is_ready_(false),
-  q_is_ready_(false),
-  has_in_out_(false),
-  is_graph_input_(false),
-  is_graph_output_(false),
-  in_out_amount_(0.0),
-  amount_in_dominator_subtree_(0.0),
-  is_all_children_dominator_(not_init),
-  id_dominator_in_graph_(-1),
-  id_distant_dominator_(-1),
-  q_in_dominators_subtree_(0),
-  p_max_(-1),
-  p_min_(-1)
-{
+    engine_(NULL),
+    id_in_graph_(-1),
+    id_vesta_(-1),
+    p_is_ready_(false),
+    q_is_ready_(false),
+    has_in_out_(false),
+    is_graph_input_(false),
+    is_graph_output_(false),
+    in_out_amount_(0.0),
+    amount_in_dominator_subtree_(0.0),
+    is_all_children_dominator_(not_init),
+    id_dominator_in_graph_(-1),
+    id_distant_dominator_(-1),
+    q_in_dominators_subtree_(0),
+    p_max_(-1),
+    p_min_(-1) {
   Gas clean_gas;
   gas_ = clean_gas;
 }
 
-int GraphBoostVertex::id_vesta()
-{
+int GraphBoostVertex::id_vesta() {
   return id_vesta_;
 }
-void GraphBoostVertex::set_id_vesta(int id_vesta)
-{
+void GraphBoostVertex::set_id_vesta(int id_vesta) {
   id_vesta_ = id_vesta;
 }
-void GraphBoostVertex::set_id_in_graph(int id_in_graph)
-{
+void GraphBoostVertex::set_id_in_graph(int id_in_graph) {
   id_in_graph_ = id_in_graph;
 }
-int GraphBoostVertex::id_in_graph()
-{
+int GraphBoostVertex::id_in_graph() {
   return id_in_graph_;
 }
 
