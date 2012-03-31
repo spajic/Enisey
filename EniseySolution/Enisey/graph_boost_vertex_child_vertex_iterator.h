@@ -23,8 +23,6 @@ public:
 
   GraphBoostVertexChildVertexIterator& operator=(const GraphBoostVertexChildVertexIterator& rhs);
 
-
-
 private:
   friend class boost::iterator_core_access;
 
