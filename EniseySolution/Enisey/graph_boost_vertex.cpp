@@ -42,7 +42,9 @@ engine_(NULL),
   is_all_children_dominator_(not_init),
   id_dominator_in_graph_(-1),
   id_distant_dominator_(-1),
-  q_in_dominators_subtree_(0)
+  q_in_dominators_subtree_(0),
+  p_max_(-1),
+  p_min_(-1)
 {
   Gas clean_gas;
   gas_ = clean_gas;
