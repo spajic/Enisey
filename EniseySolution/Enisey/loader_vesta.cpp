@@ -66,7 +66,7 @@ void LoadPipeLines(std::string file_name, VestaFilesData *vsd) {
     f >> passport.hydraulic_efficiency_coeff_ >> passport.heat_exchange_coeff_;
     f >> passport.t_env_; 
     passport.t_env_ += 273.15; // Перевод из [C] в [K].
-    f >> passport.p_max_ >> passport.p_min_;
+    f >> passport.p_min_ >> passport.p_max_;
     passport.p_max_ *= 0.0980665; // Перевод из [Ата] в [Мпа].
     passport.p_min_ *= 0.0980665;
     f >> passport.d_inner_ >> passport.d_outer_ >> passport.length_;

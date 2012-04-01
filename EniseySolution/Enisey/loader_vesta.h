@@ -86,6 +86,7 @@ void LoadMatrixConnections(std::string file_name, VestaFilesData *vsd);
               разность высот [м]
  Пример строки: 686 3 43337 0.7007 1.3 2.5 20 55 515 530 4.000 0.03 0</pre>*/
 void LoadPipeLines(std::string file_name, VestaFilesData *vsd);
+
 /** Считывает инф-ю из InOutGRS.dat в структуру VestaFilesData.
 <pre>
 Файл InOutGRS.dat содержит информацию по входам/выходам ГТС и отборам.
