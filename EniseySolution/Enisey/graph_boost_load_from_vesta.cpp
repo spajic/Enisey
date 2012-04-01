@@ -73,6 +73,7 @@ void GraphBoostLoadFromVesta(GraphBoost* graph, VestaFilesData *vfd) {
     ребра.*/
     edge.set_p_max_passport(edge_data.passport.p_max_);
     edge.set_p_min_passport(edge_data.passport.p_min_);
+    edge.pipe_length = edge_data.passport.length_;
     // Добавляем ребро в граф.
     graph->AddEdge(&edge);
   }

@@ -22,6 +22,7 @@ class GraphBoostEdge {
   /// Задание максимального допустимого давления по паспорту объекта.
   void set_p_max_passport(float p_max_passport);
   void set_edge(Edge* edge);
+  Edge* edge();
   int in_vertex_id();
   int out_vertex_id();
   int edge_id_vesta();
@@ -31,7 +32,11 @@ class GraphBoostEdge {
 
   int pipe_type();
   void set_pipe_type(int pipe_type);
-  Edge* edge();
+
+  /**\todo Длина трубы - сделал для задания нач. прибл-й. Конечно, здась этого
+  быть не должно - разобраться.*/
+  float pipe_length;
+  
  private:
   float p_min_passport_; ///< Минимальное давление по паспорту объекта.
   float p_max_passport_; ///< Максимальное давление по паспорту объекта.
