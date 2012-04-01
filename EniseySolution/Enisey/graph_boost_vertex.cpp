@@ -129,6 +129,7 @@ struct StartNodeOfEdgeFunctor : public std::unary_function<
   }
   GraphBoostEngine::graph_type *g_;
 };
+/// \todo Есть inv_adjacent_vertices! Переделать!
 /* Получить входящие узлы для узла не так-то просто! В BGL есть только
 adjacent_vertices - это исходящие узлы. Чтобы получить входящие нужно
 взять входящие рёбра, и их исходные вершины.*/
