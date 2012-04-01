@@ -15,7 +15,8 @@ class GraphBoostVertex {
  public:
   GraphBoostVertex();
 
-  // Тип итератора, разыменование которого даёт ссылку на ребро графа.
+  /* Тип итератора, разыменование которого даёт ссылку на ребро графа.
+  Для получения входящих и исходящих из узла рёбер.*/
   typedef opqit::opaque_iterator<GraphBoostEdge, opqit::bidir> iter_edge;
   // Функции получения итераторов на исходящие из узла рёбра.
   iter_edge OutEdgesBegin();
@@ -23,10 +24,15 @@ class GraphBoostVertex {
   // Функции получения итераторов на входящие в узел рёбра.
   iter_edge InEdgesBegin();
   iter_edge InEdgesEnd();
-
-  typedef opqit::opaque_iterator<GraphBoostVertex, opqit::forward> iterator;
-  iterator ChildVertexIteratorBegin();
-  iterator ChildVertexIteratorEnd();
+  /* Тип итератора, разыменование которого даёт ссылку на узел графа.
+  Для получения входящих и исходящих из узла узлов.*/
+  typedef opqit::opaque_iterator<GraphBoostVertex, opqit::forward> iter_node;
+  // Функции получения итераторов на исходящие из узла узлы.
+  iter_node ChildVertexIteratorBegin();
+  iter_node ChildVertexIteratorEnd();
+  // Функции получения итераторов на входящие в узел узлы.
+  iter_node InVerticesBegin();
+  iter_node inVerticesEnd();
 
   void set_id_in_graph(int id_in_graph);
   int id_in_graph();

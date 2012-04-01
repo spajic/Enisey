@@ -373,7 +373,7 @@ TEST(GraphBoostTest, GraphBoostTest)
 
   // Пробуем итератор обхода дочерних вершин
   GraphBoostVertex v = *(graph.VertexBeginTopological());
-  for(GraphBoostVertex::iterator it = v.ChildVertexIteratorBegin(); it != v.ChildVertexIteratorEnd(); ++it)
+  for(GraphBoostVertex::iter_node it = v.ChildVertexIteratorBegin(); it != v.ChildVertexIteratorEnd(); ++it)
   {
     GraphBoostVertex retrievd_vertex = *it;
   }
@@ -469,6 +469,17 @@ TEST(GraphBoost, OutEdgeIteratorTest)
         std::cout << "Edge (" << e_it->in_vertex_id() << ", " << e_it->out_vertex_id() <<
           ")" << std::endl;
       }
+  }
+
+  // Тестируем vertex::InVerticesBegin(), InVerticesEnd();
+  std::cout << "Testing vertex::InVerticesBegin/End\n";
+  for(auto v_it = graph.VertexBeginTopological(); v_it != graph.VertexEndTopological();
+    ++v_it) {
+      for(auto in_v_it = v_it->InVerticesBegin(); 
+          in_v_it != v_it->inVerticesEnd(); ++in_v_it) {
+            std::cout << in_v_it->id_in_graph() << " ";
+      }
+      std::cout << std::endl;
   }
 }
 
