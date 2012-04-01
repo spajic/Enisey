@@ -35,11 +35,14 @@ void SetInitialApproxPressures(GraphBoost *graph);
     ограничение среди всех объектов ГТС.
  4. Для выходов ограничение p_max задаём максимальное ограничение среди всех
     объектов ГТС.
- !. Пока задаём для входов и выходов p_min, p_max соответственно минимальное
+!!. Пока задаём для входов и выходов p_min, p_max соответственно минимальное
     и максимальное ограничение среди всех объектов ГТС.
 </pre>
 */
-void SetPressureConstraintsForVertices(GraphBoost *graph);
+void SetPressureConstraintsForVertices(
+    GraphBoost *graph,
+    float overall_p_min,
+    float overall_p_max );
 
 /** Проверить непротиворечивость задания ограничений на давление в графе.<pre>
  1. Для каждого узла интервал [p_min, p_max] должен быть не пустым.

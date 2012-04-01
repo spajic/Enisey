@@ -11,7 +11,10 @@
 // Для std::min
 #include <algorithm>
 
-void FindMinAndMaxPressureConstraints(GraphBoost *graph, 
+/* Найти максимальное и минимальное паспортное ограничение на давления
+среди всех объектов графа.*/
+void FindOverallMinAndMaxPressureConstraints(
+    GraphBoost *graph, 
     float *overall_p_max,
     float *overall_p_min) {
   /** \todo Реально здесь нужно просто обойти все рёбра. Так же бывает
@@ -31,14 +34,27 @@ void FindMinAndMaxPressureConstraints(GraphBoost *graph,
   }
 }
 
-void SetPressureConstraintsForVertices(GraphBoost *graph) {
+void SetPressureConstraintsForVertices(
+    GraphBoost *graph,
+    float overall_p_min,
+    float overall_p_max ) {
   /*1. В топологическом порядке "сверху вниз" для каждго узла его ограничение 
-  на максимальное давление p_max = min(passport.p_max) всех исходящих
-  из него рёбер.*/
-  for(auto v = graph->VertexBeginTopological(); 
-    v != graph->VertexEndTopological(); ++v) {
+  на максимальное давление 
+  p_max = min( min( passport.p_max исх-х труб ), min( p_max вх-х узлов ) ).*/
+  for(auto v = graph->VertexBeginTopological();
+      v != graph->VertexEndTopological(); ++v) {
+    /* Если v - вход, задаём p_min = overall_p_min.
+       Если v - выход, задаём p_max = overall_p_max.*/
+    if( v->IsGraphInput() == true ) {
+      v->set_p_min( overall_p_min );
+      continue;
+    }
+    if( v->IsGraphOutput() == true ) {
+      v->set_p_max( overall_p_max );
+      continue;
+    }
     // Задаём неправдоподобный min, чтобы любой реальный был его меньше.
-    float min_of_out_p_max(1000.0);
+    float min_of_out_p_max( 1000.0 );
     // Вычисляем min(passport.p_max) для всех исходящих из узла рёбер.
     for(auto out_e = v->OutEdgesBegin();
         out_e != v->OutEdgesEnd(); ++out_e) {
@@ -47,21 +63,32 @@ void SetPressureConstraintsForVertices(GraphBoost *graph) {
     } // Конец цикла по исходящим рёбрам.
     /* Находим min ( p_max вх-х узлов) - рассчитанные на предыдущих шагах 
     ограничения.*/
-    // Здесь нам потребуется итератор для вх-х узлов.
-    v->set_p_max(min_of_out_p_max);
-  } // Конец цикла по узлам в топологическом порядке.
+    float min_of_in_vertices(1000.0);
+    for(auto in_v = v->InVerticesBegin(); in_v != v->inVerticesEnd(); ++in_v) {
+      min_of_in_vertices = std::min(min_of_in_vertices, in_v->p_max());
+    }
+    v->set_p_max( std::min( min_of_out_p_max, min_of_in_vertices ) );
+  } // Конец цикла по узлам в топологическом порядке
+
   /*2. В обратном топологическом порядке "снизу ввверх" для каждого узла его 
-  ограничение на мин давление p_min = max(passport.p_min) всех входящих в него
-  рёбер.*/
+  ограничение на мин давление 
+  p_min = max( max( passport.p_min вх-х рёбер), ( max( p_min ) исх-х узлов ).*/
   /* Нас устраивает, что первая в топологическом порядке вершина не будет 
   обработана, так как у неё не может быть входов.*/
-  for(auto v = graph->VertexEndTopological() -1 ;
+  for(auto v = graph->VertexEndTopological() - 1;
       v != graph->VertexBeginTopological(); --v) {
     // Вычисляем max(passport.p_min) для входящих в узел рёбер.
     float max_of_in_p_min(-1.0);    
     for(auto in_e = v->InEdgesBegin(); in_e != v->InEdgesEnd(); ++v) {
       max_of_in_p_min = std::max(max_of_in_p_min, in_e->p_min_passport());
     } // Конец цикла по входящим в узел рёбрам.
+    // Вычисляем max( p_min исх-х узлов).
+    float max_of_out_v = -1.0;
+    for(auto out_v = v->OutVerticesBegin(); out_v != v->OutVerticesEnd(); 
+        ++out_v) {
+      max_of_out_v = std::max(max_of_out_v, out_v->p_min());
+    }
+    v->set_p_min( std::max(max_of_in_p_min, max_of_out_v) );
     --v;
   } // Конец цикла по вершинам в обратном топологическом порядке.
 }
