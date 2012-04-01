@@ -83,6 +83,7 @@
     <ClCompile Include="..\Enisey\edge_model_pipe_sequential.cpp" />
     <ClCompile Include="..\Enisey\graph_boost.cpp" />
     <ClCompile Include="..\Enisey\graph_boost_edge.cpp" />
+    <ClCompile Include="..\Enisey\graph_boost_initial_approx.cpp" />
     <ClCompile Include="..\Enisey\graph_boost_load_from_vesta.cpp" />
     <ClCompile Include="..\Enisey\graph_boost_vertex.cpp" />
     <ClCompile Include="..\Enisey\graph_boost_vertex_child_vertex_iterator.cpp" />

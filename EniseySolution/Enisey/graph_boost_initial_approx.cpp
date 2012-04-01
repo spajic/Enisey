@@ -27,7 +27,7 @@ void FindOverallMinAndMaxPressureConstraints(
   *overall_p_max = -1.0;
   for (auto v = graph->VertexBeginNative(); v != graph->VertexEndNative(); 
       ++v) {
-    for(auto e = v->OutEdgesBegin(); e != v->OutEdgesEnd(); ++v) {
+    for(auto e = v->OutEdgesBegin(); e != v->OutEdgesEnd(); ++e) {
       *overall_p_max = std::max( *overall_p_max, e->p_max_passport() );
       *overall_p_min = std::min( *overall_p_min, e->p_min_passport() );
     }
@@ -42,17 +42,7 @@ void SetPressureConstraintsForVertices(
   на максимальное давление 
   p_max = min( min( passport.p_max исх-х труб ), min( p_max вх-х узлов ) ).*/
   for(auto v = graph->VertexBeginTopological();
-      v != graph->VertexEndTopological(); ++v) {
-    /* Если v - вход, задаём p_min = overall_p_min.
-       Если v - выход, задаём p_max = overall_p_max.*/
-    if( v->IsGraphInput() == true ) {
-      v->set_p_min( overall_p_min );
-      continue;
-    }
-    if( v->IsGraphOutput() == true ) {
-      v->set_p_max( overall_p_max );
-      continue;
-    }
+      v != graph->VertexEndTopological(); ++v) { 
     // Задаём неправдоподобный min, чтобы любой реальный был его меньше.
     float min_of_out_p_max( 1000.0 );
     // Вычисляем min(passport.p_max) для всех исходящих из узла рёбер.
@@ -75,11 +65,12 @@ void SetPressureConstraintsForVertices(
   p_min = max( max( passport.p_min вх-х рёбер), ( max( p_min ) исх-х узлов ).*/
   /* Нас устраивает, что первая в топологическом порядке вершина не будет 
   обработана, так как у неё не может быть входов.*/
+  bool first_done = false;
   for(auto v = graph->VertexEndTopological() - 1;
-      v != graph->VertexBeginTopological(); --v) {
+      first_done == false; --v) {
     // Вычисляем max(passport.p_min) для входящих в узел рёбер.
     float max_of_in_p_min(-1.0);    
-    for(auto in_e = v->InEdgesBegin(); in_e != v->InEdgesEnd(); ++v) {
+    for(auto in_e = v->InEdgesBegin(); in_e != v->InEdgesEnd(); ++in_e) {
       max_of_in_p_min = std::max(max_of_in_p_min, in_e->p_min_passport());
     } // Конец цикла по входящим в узел рёбрам.
     // Вычисляем max( p_min исх-х узлов).
@@ -89,6 +80,40 @@ void SetPressureConstraintsForVertices(
       max_of_out_v = std::max(max_of_out_v, out_v->p_min());
     }
     v->set_p_min( std::max(max_of_in_p_min, max_of_out_v) );
-    --v;
+    if(v == graph->VertexBeginTopological()) {
+      first_done = true; // Обработали первую вершину - заканчиваем.
+    }
   } // Конец цикла по вершинам в обратном топологическом порядке.
+}
+
+bool ChechPressureConstraintsForVertices(
+    GraphBoost *graph,
+    float overall_p_min,
+    float overall_p_max ) {
+  //1. overall_p_min, overall_p_max должны быть > 0, p_min <= p_max.
+  if(overall_p_max <= 0.0) {
+    return false;
+  }
+  if(overall_p_min <= 0.0) {
+    return false;
+  }
+  if(overall_p_min >= overall_p_max) {
+    return false;
+  }
+  for( auto v = graph->VertexBeginTopological(); 
+      v != graph->VertexEndTopological(); ++v ) {
+    /* 2. Все p_min, p_max должны быть в интервале 
+    [overall_p_min, overall_p_max].*/
+    if ( v->p_max() > overall_p_max ) {
+      return false;
+    }
+    if( v->p_min() < overall_p_min ) {
+      return false;
+    }
+    // 3. Для каждого узла интервал [p_min, p_max] должен быть не пустым.
+    if( v->p_max() - v->p_min() <= 0) {
+      return false;
+    }
+  } // Конец перебора всех вершин.
+  return true; // Если добрались до сюда, значит всё корректно.
 }

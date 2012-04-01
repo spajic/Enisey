@@ -497,6 +497,43 @@ TEST(LoadGraphFromVestaFiles, LoadGraphFromVestaFiles) {
   WriterGraphviz writer;
   writer.WriteGraphToFile(graph, "C:\\Enisey\\out\\test_load_from_vesta.dot");
 }
+#include "graph_boost_initial_approx.h"
+// Тестируем корректность задания поля ограничений в вершинах.
+TEST(InitialApprox, CorrectnessOfInitialConstraintsForVertices) {
+  // 1. Загружаем схему Саратов-Горький из Весты.
+  VestaFilesData vfd;
+  LoadMatrixConnections(
+    "C:\\Enisey\\data\\saratov_gorkiy\\MatrixConnections.dat", &vfd);
+  LoadPipeLines(
+    "C:\\Enisey\\data\\saratov_gorkiy\\PipeLine.dat", &vfd);
+  LoadInOutGRS(
+    "C:\\Enisey\\data\\saratov_gorkiy\\InOutGRS.dat", &vfd);
+  GraphBoost graph;
+  GraphBoostLoadFromVesta(&graph, &vfd);
+  // 2. Рассчитываем overall ограничения по всему графу.
+  float overall_p_min(999.0);
+  float overall_p_max(-999.0);
+  FindOverallMinAndMaxPressureConstraints(
+      &graph, 
+      &overall_p_max,
+      &overall_p_min);
+  // 2. Рассчитываем ограничения.
+  SetPressureConstraintsForVertices(
+      &graph,
+      overall_p_min,
+      overall_p_max );
+  // 3. Проверяем корректность.
+  bool ok = ChechPressureConstraintsForVertices(
+      &graph,
+      overall_p_min,
+      overall_p_max);
+  EXPECT_EQ(ok, true);
+  // 4. Выводим граф в GraphViz - посмотреть.
+  WriterGraphviz writer;
+  writer.WriteGraphToFile(graph, 
+      "C:\\Enisey\\out\\test_pressure_constraints.dot");
+}
+
 
  int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);

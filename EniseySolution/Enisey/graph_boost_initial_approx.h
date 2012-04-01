@@ -3,6 +3,12 @@
 #pragma once
 // Forward-declarations.
 class GraphBoost;
+
+void FindOverallMinAndMaxPressureConstraints(
+  GraphBoost *graph, 
+  float *overall_p_max,
+  float *overall_p_min);
+
 /**Задать для графа поле давлений - начальное приближение.
 Начальное приближение должно удовлетворять следующим условиям:<pre>
  1. Давления должны убывать от начала к концу графа.
@@ -45,7 +51,11 @@ void SetPressureConstraintsForVertices(
     float overall_p_max );
 
 /** Проверить непротиворечивость задания ограничений на давление в графе.<pre>
- 1. Для каждого узла интервал [p_min, p_max] должен быть не пустым.
- 2. Все p_min, p_max должны быть > 0. 
-*/
-void ChechPressureConstraintsForVertices(GraphBoost *graph);
+ 1. overall_p_min, overall_p_max должны быть > 0.
+ 2. Все p_min, p_max должны быть в интервале [overall_p_min, overall_p_max]. 
+ 3. Для каждого узла интервал [p_min, p_max] должен быть не пустым.</pre>*
+Возвращает true, если всё корректно. */
+bool ChechPressureConstraintsForVertices(
+    GraphBoost *graph,
+    float overall_p_min,
+    float overall_p_max );

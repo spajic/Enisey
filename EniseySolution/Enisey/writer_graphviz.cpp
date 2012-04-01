@@ -40,6 +40,10 @@ class MyVertexWriter {
     }
     labels.push_back("id = " + boost::lexical_cast<std::string>(vertex.id_in_graph()));
     //labels.push_back("idom = " + boost::lexical_cast<std::string>(vertex.id_dominator_in_graph()));
+    // Вывод рассчитанного диапазона ограничений [p_min, p_max].
+    labels.push_back("[" + boost::lexical_cast<std::string>( vertex.p_min() ) +
+        ", " + boost::lexical_cast<std::string>( vertex.p_max() ) + "]");
+
 
     //------------- Закончили добавлять параметры, собираем результат -----
     std::string result_params = "";
