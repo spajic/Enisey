@@ -87,7 +87,7 @@ void LoadInOutGRS(std::string file_name, VestaFilesData *vsd) {
     int control_pressure = -1; // Признак контроля давления.
     int id_pipeline = -1; // Идентификатор нитки.
     float humidity = -1; // Влажность газа.
-    float Pst = -1; // Новые параметры.
+    float Pst = -1; // Новые параметры Pst, A, B, Qmax.
     float A = -1; 
     float B = -1;
     float Qmax = -1; 
