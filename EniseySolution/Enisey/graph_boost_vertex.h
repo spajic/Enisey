@@ -33,6 +33,9 @@ class GraphBoostVertex {
   // Функции получения итераторов на входящие в узел узлы.
   iter_node InVerticesBegin();
   iter_node inVerticesEnd();
+  // Функциb задания и получения давления. Не влияют на PIsReady().
+  void set_p(float p);
+  float p();
 
   void set_id_in_graph(int id_in_graph);
   int id_in_graph();

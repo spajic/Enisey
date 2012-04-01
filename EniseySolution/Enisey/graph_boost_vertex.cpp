@@ -170,7 +170,13 @@ GraphBoostVertex::iter_node GraphBoostVertex::OutVerticesEnd() {
   return GraphBoostVertexChildVertexIterator(engine_, id_in_graph_, false);
 }
 
-
+// Функции задания и получения давления.
+void GraphBoostVertex::set_p(float p) {
+  gas_.work_parameters.p = p;
+}
+float GraphBoostVertex::p() {
+  return gas_.work_parameters.p;
+}
 
 GraphBoostEngine* GraphBoostVertex::engine() { 
   return engine_; 
