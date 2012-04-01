@@ -28,8 +28,8 @@ class GraphBoostVertex {
   Для получения входящих и исходящих из узла узлов.*/
   typedef opqit::opaque_iterator<GraphBoostVertex, opqit::forward> iter_node;
   // Функции получения итераторов на исходящие из узла узлы.
-  iter_node ChildVertexIteratorBegin();
-  iter_node ChildVertexIteratorEnd();
+  iter_node OutVerticesBegin();
+  iter_node OutVerticesEnd();
   // Функции получения итераторов на входящие в узел узлы.
   iter_node InVerticesBegin();
   iter_node inVerticesEnd();

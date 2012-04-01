@@ -163,10 +163,10 @@ GraphBoostVertex::iter_node GraphBoostVertex::inVerticesEnd() {
 Boost::IteratorFacade. Очевидно, что это бесполезное монструозное усложнение,
 от которого нужно будет избвавиться. Сделать как сделано выше.*/
 
-GraphBoostVertex::iter_node GraphBoostVertex::ChildVertexIteratorBegin() {
+GraphBoostVertex::iter_node GraphBoostVertex::OutVerticesBegin() {
   return GraphBoostVertexChildVertexIterator(engine_, id_in_graph_, true);
 }
-GraphBoostVertex::iter_node GraphBoostVertex::ChildVertexIteratorEnd() {
+GraphBoostVertex::iter_node GraphBoostVertex::OutVerticesEnd() {
   return GraphBoostVertexChildVertexIterator(engine_, id_in_graph_, false);
 }
 

@@ -373,7 +373,7 @@ TEST(GraphBoostTest, GraphBoostTest)
 
   // Пробуем итератор обхода дочерних вершин
   GraphBoostVertex v = *(graph.VertexBeginTopological());
-  for(GraphBoostVertex::iter_node it = v.ChildVertexIteratorBegin(); it != v.ChildVertexIteratorEnd(); ++it)
+  for(GraphBoostVertex::iter_node it = v.OutVerticesBegin(); it != v.OutVerticesEnd(); ++it)
   {
     GraphBoostVertex retrievd_vertex = *it;
   }
