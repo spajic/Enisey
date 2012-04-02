@@ -95,6 +95,9 @@
     <ClCompile Include="..\Enisey\passport_pipe.cpp" />
     <ClCompile Include="..\Enisey\writer_graphviz.cpp" />
     <ClCompile Include="test.cpp" />
+    <ClCompile Include="test_functions_gas.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="test_utils.cpp" />
   </ItemGroup>
   <ItemGroup>

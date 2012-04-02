@@ -1,13 +1,15 @@
-// ASSERT_FLOAT_EQ(expected, actual); — неточное сравнение float
-// ASSERT_DOUBLE_EQ(expected, actual); — неточное сравнение double
-// ASSERT_NEAR(val1, val2, abs_error); — разница между val1 и val2 не превышает погрешность abs_error
-// EXPECT(expected,actual) - не фатальная ошибка, предпочтительно использовать.
-// ASSERT - фатальная ошибка, использовать, когда продолжение не имеет смысла.
-//TEST(test_case_name, test_name) {
-//  EXPECT_EQ(1, 2) << "Nonsense!";
-//  ASSERT_EQ(2, 3) << "I can't take this!";
-//  EXPECT_EQ(3, 4) << "This is impossible!";
-//}
+/*Есть два типа предположений: ASSERT(expected, actual) и EXPECT.
+Невыполнение ASSERT - фатально, прекращает выполнение теста.
+Невыполнение EXPECT - не фатально, выполнение продолжается.
+
+Интересные EXPECT'ы:
+FLOAT_EQ, DOUBLE_EQ; — неточное сравнение float, double.
+NEAR(val1, val2, abs_error) - c погрешностью abs_error.
+
+Тесты можно группировать по файлам и включить (#include) их в test.cpp.
+Сами файлы test_concrete.cpp нужно сделать excluded from build.
+Это можно сделать из контекстного меню файла в Solution Explorer.
+
 // The fixture for testing class Foo.
 //class FooTest : public ::testing::Test {
 //protected:
@@ -31,6 +33,7 @@
 //  Foo f;
 //  EXPECT_EQ(0, f.Bar(input_filepath, output_filepath));
 //}
+*/
 
 #include "gtest/gtest.h"
 #include "test_utils.h"
@@ -42,107 +45,19 @@
 #include "edge.h"
 #include "manager_edge_model_pipe_sequential.h"
 #include "loader_vesta.h"
-TEST(Gas, GasCountFunctions)
-{
-  // Тестируем правильность работы газовых функций.
-  // Тест такой - в Весте выставяляем использование НТП-2006
-  // В локальной задаче смотрим вычисленные Вестой значения.
-  // Если получается довольно похоже, принимаем рассчитанные мной значения
-  // за эталон - и сохраняем для дальнейшего сравнения с ними.
-  // В Весте показываются значения для z, c, mju.
 
-  // Задаём свойства газа, для которого проводим тестирование.
-  GasCompositionReduced composition;
-  composition.density_std_cond = 0.6865365; // [кг/м3]
-  composition.co2 = 0;
-  composition.n2 = 0;
-  GasWorkParameters params;
-  params.p = 2.9769; // [МПа]
-  params.t = 279.78; // [К]
-  params.q = 387.843655734; // [м3/сек]
+#include "test_functions_gas.cpp"
 
-  // Вычисление базовых характеристик газа только по составу
-  // t_pseudo_critical = 194.07213 [К]
-  // p_pseudo_critical = 4.6355228 [МПа]
-  // z_standart_conditions = 0.99798650 [б.р.]
-  // r_standart_conditions = 503.37848 [Дж / (кг * К)]
-  float t_pseudo_critical = FindTPseudoCritical(
-    composition.density_std_cond, composition.co2, composition.n2);
-  float p_pseudo_critical = FindPPseudoCritical(
-    composition.density_std_cond, composition.co2, composition.n2);
-  float z_standart_conditions = FindZStandartConditions(
-    composition.density_std_cond, composition.co2, composition.n2);
-  float r_standart_conditions = FindRStandartConditions(
-    composition.density_std_cond);
-
-  // Вычисление характеристик газа при рабочем давлении и температуре
-  // p_reduced = 0.64219296
-  // t_reduced = 1.4416289
-  // c = 2372.5037		(значение в Весте Cp = 2310.1)
-  // di = 5.0115082e-6
-  // mju = 1.0930206e-5	(значение в Весте mju = 1.093e-5)
-  // z = 0.91878355		(значение в Весте z = 0.91878)
-  // ro = 23.002302
-  float p_reduced = FindPReduced(params.p, p_pseudo_critical);
-  float t_reduced = FindTReduced(params.t, t_pseudo_critical);
-  float c = FindC(t_reduced, p_reduced, r_standart_conditions);
-  float di = FindDi(p_reduced, t_reduced);
-  float mju = FindMju(p_reduced, t_reduced);
-  float z = FindZ(p_reduced, t_reduced);
-  float ro = FindRo(composition.density_std_cond, params.p, params.t, z);
-
-  // Проверим на адекватность так же функции, которые зависят и от пасспорта трубы
-  PassportPipe passport;
-  FillTestPassportPipe(&passport);
-
-  // re = 31017164.0
-  // lambda = 0.010797811
-  float re = FindRe(params.q, composition.density_std_cond, mju, passport.d_inner_);
-  float lambda = FindLambda(re, passport.d_inner_, passport.roughness_coeff_, passport.hydraulic_efficiency_coeff_);
-
-  // Видно, что значения mju и z практически совпали с Вестой,
-  // с немного отличается. 
-  // Принимаем вычисленные решения за эталон и делаем EXPECT'ы
-  // Если значения вдруг станут вычислятся по другому, тест даст нам знать.
-
-  // Задаём точность сравнения eps
-  float eps = 1.0e-4;
-
-  // Проверки базовых параметров
-  EXPECT_LE(abs(t_pseudo_critical - 194.07213), eps);
-  EXPECT_LE(abs(p_pseudo_critical - 4.6355228), eps);
-  EXPECT_LE(abs(z_standart_conditions - 0.99798650), eps);
-  EXPECT_LE(abs(r_standart_conditions - 503.37848), eps);
-
-  // Проверки параметров при рабочих условиях
-  EXPECT_LE(abs(p_reduced - 0.64219296), eps);
-  EXPECT_LE(abs(t_reduced - 1.4416289), eps);
-  EXPECT_LE(abs(c - 2372.5037), eps);
-  EXPECT_LE(abs(di - 5.0115082e-6), eps);
-  EXPECT_LE(abs(mju - 1.0930206e-5), eps);
-  EXPECT_LE(abs(z - 0.91878355), eps);
-  EXPECT_LE(abs(ro - 23.002302), eps);
-
-  // Проверки для re и lambda
-  // Для re задаём свою точность, потому что число большое
-  float eps_re = 1;
-  EXPECT_LE(abs(re - 31017164.0), eps_re);
-  EXPECT_LE(abs(lambda - 0.010797811), eps);
-}
-
-
-TEST(PipeSequential, CountSequentialOut)
-{
-  // Тест расчёта трубы методом последовательного счёта
-  // Тестировать будем так - зададим входные данные, получим расчётные рез-ты
-  // и сравним их с рез-ми Весты для таких же входных данных.
-  // Если результаты окажутся похожими, сохраним их и в дальнейшем будем
-  // использовать в качестве эталона.
-
+/* Тест расчёта трубы методом последовательного счёта.
+Тестировать будем так - зададим входные данные, получим расчётные рез-ты
+и сравним их с рез-ми Весты для таких же входных данных.
+Если результаты окажутся похожими, сохраним их и в дальнейшем будем
+использовать в качестве эталона.*/
+TEST(PipeSequential, CountSequentialOut) {
   // Задаём пасспортные свойства трубы.
   PassportPipe passport;
   FillTestPassportPipe(&passport);
-
+  
   // Задаём свойства газа на входе.
   GasCompositionReduced composition;
   GasWorkParameters params_in;
@@ -154,22 +69,30 @@ TEST(PipeSequential, CountSequentialOut)
   params_in.q = 387.843655734; // [м3/сек]
 
   // Производим расчёт параметров газа на выходе.
-  float p_out;
-  float t_out;
-
+  float p_out(-999.0);
+  float t_out(-999.0);
   float number_of_segments = 10;
   float length_of_segment = passport.length_ / number_of_segments;
-  // Получены результаты p_out = 2.9721224, t_out = 280.14999 (В Весте - p_out = 2.9769, t_out = 279.78)
-  // Результаты очень похожи на Весту, принимаем их за эталон.
-  // Видна особенность - у меня температура выходит на Тос, а в Весте - продолжает падать.
-  // ToDo: разобраться точно с этой особенностью.
+  /* Получены результаты:
+  p_out = 2.9721224, t_out = 280.14999 
+  (В Весте - p_out = 2.9769, t_out = 279.78)
+  Результаты очень похожи на Весту, принимаем их за эталон.
+  Видна особенность - у меня температура выходит на Тос, а в Весте - продолжает падать.
+  \todo: разобраться точно с этой особенностью.*/
   FindSequentialOut(
-    params_in.p, params_in.t, params_in.q,  // рабочие параметры газового потока на входе
-    composition.density_std_cond, composition.co2, composition.n2, // состав газа
-    passport.d_inner_, passport.d_outer_, passport.roughness_coeff_, passport.hydraulic_efficiency_coeff_, // св-ва трубы
-    passport.t_env_, passport.heat_exchange_coeff_, // св-ва внешней среды (тоже входят в пасспорт трубы)
-    length_of_segment, number_of_segments, // длина сегмента и кол-во сегментов
-    &t_out, &p_out); 
+      // Рабочие параметры газового потока на входе.
+      params_in.p, params_in.t, params_in.q,  
+      // Состав газа.
+      composition.density_std_cond, composition.co2, composition.n2, 
+      // Паспортные свойства трубы.
+      passport.d_inner_, passport.d_outer_, passport.roughness_coeff_, 
+      passport.hydraulic_efficiency_coeff_, passport.t_env_, 
+      // Свойства внешней среды (тоже входят в пасспорт трубы).
+      passport.heat_exchange_coeff_, 
+      // Длина сегмента и кол-во сегментов.
+      length_of_segment, number_of_segments, 
+      // Результаты: out-параметры.
+      &t_out, &p_out); 
 
   float eps = 1.0e-4;
   ASSERT_LE(abs(p_out - 2.9721224), eps);
