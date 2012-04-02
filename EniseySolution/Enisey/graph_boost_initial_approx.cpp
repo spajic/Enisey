@@ -4,12 +4,17 @@
 #include "graph_boost.h"
 #include "graph_boost_vertex.h"
 #include "graph_boost_edge.h"
+#include "graph_boost_engine.h"
 // Для работы с opaque итераторми, возвращаемыми графом.
 #include <opqit/opaque_iterator.hpp>
 // Для итератора на дочерние вершины.
 #include "graph_boost_vertex_child_vertex_iterator.h"
 // Для std::min
 #include <algorithm>
+
+// Для получения объектов труб из рёбер графа.
+#include "edge_model_pipe_sequential.h"
+#include "model_pipe_sequential.h"
 
 /* Найти максимальное и минимальное паспортное ограничение на давления
 среди всех объектов графа.*/
@@ -116,4 +121,107 @@ bool ChechPressureConstraintsForVertices(
     }
   } // Конец перебора всех вершин.
   return true; // Если добрались до сюда, значит всё корректно.
+}
+
+// Задать для всех входов указанное давление.
+void SetPressureForInsAndOuts(GraphBoost *g, float p_in, float p_out) {
+  // Все входы в топологическом порядке должны быть сначала?
+  for(auto v = g->VertexBeginTopological(); v != g->VertexEndTopological(); 
+      ++v) {
+    // Если у входа не задано давление задаём p_in.
+    if( v->IsGraphInput() == true && v->PIsReady() == false) {
+      v->set_p(p_in);
+    }
+    // Если у выхода не задано давление задаём p_out.
+    if( v->IsGraphOutput() == true && v->PIsReady() == false ) {
+      v->set_p(p_out);
+    }
+  }
+}
+
+/* Задать давление в исходной вершине, зная путь от неё до вершины с PIsReady.
+Путь имеет вид < ( vвх(Pвх), v?(P?) ), (. , .), (. , .), (. , vвых(Pвых) ) >
+Формула: P? = sqrt( Pвх^2 - ( x/l ) * (Pвх^2 - Pвых^2) ), где
+Pвх - давление на входе пути - должно быть известно, или
+расчитано, так как мы идём в топологическом порядке;
+x - длина ребра на входе пути
+l - общая длина пути (включая x);
+Pвых - давление в вершине, явл-ся концом пути.*/
+float CountPressureApproxByPath(
+    GraphBoost *g,
+    std::vector<GraphBoostEdge> *path) {
+  // Входящее ребро и его свойства.
+  GraphBoostEdge in_e = path->front();
+  float x = in_e.pipe_length;
+  GraphBoostVertex first_v = g->engine()->graph_[in_e.in_vertex_id()];
+  float p_in = first_v.p();
+  // Давление на выходе.
+  GraphBoostEdge out_e = path->back();
+  GraphBoostVertex last_v = g->engine()->graph_[out_e.out_vertex_id()];
+  float p_out = last_v.p();
+  // Рассчитываем общую длину пути.
+  float l = 0.0;
+  for(auto e = path->begin(); e != path->end(); ++e) {
+    l += e->pipe_length;
+  }
+  float p_res = 
+      sqrt( 
+          (p_in*p_in) - 
+          (x/l) * ( (p_in*p_in) - (p_out*p_out) ) 
+      );
+  return p_res;
+}
+
+void SetInitialApproxPressures(
+    GraphBoost *g,
+    float overall_p_max,
+    float overall_p_min) {
+  SetPressureForInsAndOuts(
+      g, 
+      overall_p_max, // Если давление на входе не известно - задаём макс.
+      overall_p_min); // Если давление на выходе не исзвестго - задаём мин.
+  for(auto v = g->VertexBeginTopological(); v != g->VertexEndTopological(); 
+      ++v) {
+    // Для входов и выходов должно уже быть задано.
+    if(v->IsGraphInput() == true || v->IsGraphOutput() == true) {
+      continue;
+    }
+    // Находим min p вх узлов.
+    float min_p_v_in = 1000.0;
+    for(auto in_v = v->InVerticesBegin(); in_v != v->inVerticesEnd(); ++in_v) {
+      min_p_v_in = std::min(min_p_v_in, in_v->p());
+    }
+    // a) Уточняем ограничение для p_max = min(p_max, min p вх узлов).
+    v->set_p_max( std::min( v->p_max(), min_p_v_in ) );
+
+    /* б) Ищем путь до ближайшей вершины с заданным давлением и задаём
+    давление в соответствии с p входа, p выхода, длиной пути, длиной трубы.
+    Ищем просто в глубину.*/
+    std::vector<GraphBoostEdge> path; // Путь до вершины с PIsReady.
+    // Помещаем в путь ребро от вершины с известным P до текущей v.
+    auto v_cur = v->InVerticesBegin(); // Начало ребра при формировании пути.
+    GraphBoostVertex::iter_node v_next = v; // Конец ребра при формир-ии пути.
+    /* Пока не задано давление или не выход - в нём должно быть задано.
+    А давление у меня пока бывает ещё только во входах...*/
+    while(v_cur->IsGraphOutput() == false) {
+      path.push_back( 
+          g->GetEdge(
+              v_cur->id_in_graph(), // id входа.
+              v_next->id_in_graph() // id выхода.
+          )
+      ); // Записали первое ребро пути.
+      v_cur = v_next;
+      v_next = v_next->OutVerticesBegin(); // Первый попавшийся выход.
+    } // Путь сформирован.
+
+    float p_count = CountPressureApproxByPath(
+        g, // Указатель на текущий граф.
+        &(path) // Путь от текущей вершины до вершины с известным p.
+    );
+    /* Задаваемое значение должно соответствовать ограничениям.
+    Если выходит за рамки [pmin, pmax], то задаём по ближнему краю.*/
+    float p_res = std::min( p_count, v->p_max() );
+    p_res = std::max( p_res, v->p_min() );
+    v->set_p(p_res);
+  } // Конец обхода всех вершин в топологическом порядке.
 }

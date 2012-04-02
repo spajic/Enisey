@@ -4,6 +4,7 @@
 // Forward-declarations.
 class GraphBoost;
 
+/** Найти максимальное и минимальное ограничение среди всех объектов ГТС*/
 void FindOverallMinAndMaxPressureConstraints(
   GraphBoost *graph, 
   float *overall_p_max,
@@ -13,8 +14,19 @@ void FindOverallMinAndMaxPressureConstraints(
 Начальное приближение должно удовлетворять следующим условиям:<pre>
  1. Давления должны убывать от начала к концу графа.
  2. Давления должны соблюдать ограничения на макс. и мин. давления дуги. </pre>
+Алгоритм задания начальных приближений:
+ 1. Нужно задать P на входе и выходе. Оно может быть задано в InOutGRS.
+    Если нет - на входе - overall_p_max, на выходе - overall_p_min.
+ 2. В топологическом порядке для всех узлов:
+    а) Уточняем оганичение p_max = min(p_max, min p вх узлов). 
+    б) Ищем путь до ближайшей вершины с заданным p и задаём по всему пути
+    давления в зависимости от длины пути, давления на входе, выходе и 
+    удовлетворяющее ограничениям.
 \param graph Граф, для которого нужно задать начальное приближение.*/
-void SetInitialApproxPressures(GraphBoost *graph);
+void SetInitialApproxPressures(
+    GraphBoost *g,
+    float overall_p_max,
+    float overall_p_min);
 
 /**Задать для всех вершин графа ограничения по давлению.<pre>
 Входные данные для алгоритма:
