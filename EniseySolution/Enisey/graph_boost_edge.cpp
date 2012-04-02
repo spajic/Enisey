@@ -1,5 +1,5 @@
 /** \file graph_boost_edge.cpp
-Реализация graph_boost_edge.h*/
+Р РµР°Р»РёР·Р°С†РёСЏ graph_boost_edge.h*/
 #include "graph_boost_edge.h"
 #include "edge.h"
 
