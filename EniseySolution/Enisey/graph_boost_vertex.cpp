@@ -178,6 +178,13 @@ void GraphBoostVertex::set_p(float p) {
 float GraphBoostVertex::p() {
   return gas_.work_parameters.p;
 }
+// Функции задания и получения температуры.
+void GraphBoostVertex::set_t(float t) {
+  gas_.work_parameters.t = t;
+}
+float GraphBoostVertex::t() {
+  return gas_.work_parameters.t;
+}
 
 GraphBoostEngine* GraphBoostVertex::engine() { 
   return engine_; 
