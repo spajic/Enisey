@@ -71,3 +71,7 @@ bool ChechPressureConstraintsForVertices(
     GraphBoost *graph,
     float overall_p_min,
     float overall_p_max );
+
+/** Затдать начальные приближения температур в графе.
+Пока простой алгоритм: температура линейно падает до Тос за 50 км.*/
+void SetInitialApproxTemperatures(GraphBoost *g, float t_os);

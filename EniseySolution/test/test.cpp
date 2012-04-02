@@ -558,9 +558,11 @@ TEST(InitialApprox, InitialApprox) {
     &graph,
     overall_p_min,
     overall_p_max );
-  // 3. Задаём начальное приближение.
+  // 3. Задаём начальное приближение давлений.
   SetInitialApproxPressures(&graph, overall_p_max, overall_p_min);
-  // 4. Выводим граф в GraphViz - посмотреть.
+  // 4. Задаём начальное приближение температур.
+  SetInitialApproxTemperatures(&graph, 278.0);
+  // 5. Выводим граф в GraphViz - посмотреть.
   WriterGraphviz writer;
   writer.WriteGraphToFile(graph, 
     "C:\\Enisey\\out\\test_initial_approx.dot");

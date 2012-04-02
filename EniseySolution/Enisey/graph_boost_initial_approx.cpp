@@ -225,3 +225,20 @@ void SetInitialApproxPressures(
     v->set_p(p_res);
   } // Конец обхода всех вершин в топологическом порядке.
 }
+
+/* Задать начальные приближения температур в графе.
+Начиная от входов с известным T, температура падает до Tос за 50 км.*/
+void SetInitialApproxTemperatures(GraphBoost *g, float t_os) {
+  for(auto v = g->VertexBeginTopological(); v != g->VertexEndTopological(); 
+      ++v) {
+    if(v->gas().work_parameters.t > 0) { // Уже задано
+      continue;
+    }
+    auto v_in = v->InVerticesBegin();
+    auto e = g->GetEdge( v_in->id_in_graph(), v->id_in_graph() );
+    float l = e.pipe_length;
+    float t_in = v_in->t();
+    float t_res = std::max( t_os, t_in - (l/50)*(t_in-t_os) );
+    v->set_t(t_res);
+  }
+}
