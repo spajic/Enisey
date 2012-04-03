@@ -2,37 +2,48 @@
 #include "passport_pipe.h"
 #include "gas.h"
 
-void FillTestPassportPipe(PassportPipe* passport)
-{
-  passport->d_inner_ = 1000;
-  passport->d_outer_ = 1020;
-  passport->length_ = 100;
-  passport->heat_exchange_coeff_ = 1.3;
-  passport->hydraulic_efficiency_coeff_ = 0.95;
-  passport->p_max_ = 100;
-  passport->p_min_ = 1;
-  passport->roughness_coeff_ = 0.03;
-  passport->t_env_ = 280.15;
+void FillTestPassportPipe(PassportPipe* passport) {
+  passport->d_inner_ = kInnerPipeDiameter;
+  passport->d_outer_ = kOuterPipeDiameter;
+  passport->length_ = kPipeLength;
+  passport->heat_exchange_coeff_ = kHeatExchangeCoefficient;
+  passport->hydraulic_efficiency_coeff_ = kHydraulicEfficiencyCoefficient;
+  passport->p_max_ = kMaximumPressure;
+  passport->p_min_ = kMinimumPressure;
+  passport->roughness_coeff_ = kRoughnessCoefficient;
+  passport->t_env_ = kEnvironmentTemperature;
+}
+PassportPipe MakeTestPassportPipe() {
+  PassportPipe p;
+  FillTestPassportPipe(&p);
+  return p;  
 }
 
-void FillTestGasIn(Gas* gas)
-{
-  gas->composition.density_std_cond = 0.6865365; // [кг/м3]
-  gas->composition.co2 = 0;
-  gas->composition.n2 = 0;
-
-  gas->work_parameters.p = 5; // [МПа]
-  gas->work_parameters.t = 293.15; // [К]
-  gas->work_parameters.q = 387.843655734; // [м3/сек]
+void FillTestGasIn(Gas* gas) {
+  gas->composition.density_std_cond = kInputGasDensityOnStandartConditions;
+  gas->composition.co2 = kInputGasCarbonDioxidePart;
+  gas->composition.n2 = kInputGasNitrogenPart;
+  gas->work_parameters.p = kInputGasPressure;
+  gas->work_parameters.t = kInputGasTemperature;
+  gas->work_parameters.q = kInputGasQuantity;
+}
+Gas MakeTestGasIn() {
+  Gas g;
+  FillTestGasIn(&g);
+  return g;
 }
 
-void FillTestGasOut(Gas* gas)
-{
-  gas->composition.density_std_cond = 0.6865365; // [кг/м3]
-  gas->composition.co2 = 0;
-  gas->composition.n2 = 0;
+void FillTestGasOut(Gas* gas) {
+  gas->composition.density_std_cond = kOutputGasDensityOnStandartConditions;
+  gas->composition.co2 = kOutputGasCarbonDioxidePart;
+  gas->composition.n2 = kOutputGasNitrogenPart;
 
-  gas->work_parameters.p = 3;
+  gas->work_parameters.p = kOutputGasPressure;
   gas->work_parameters.q = 0;
   gas->work_parameters.t = 0;
+}
+Gas MakeTestGasOut() {
+  Gas g;
+  FillTestGasOut(&g);
+  return g;
 }

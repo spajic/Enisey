@@ -17,9 +17,9 @@ void ModelPipeSequential::set_gas_out(const Gas* gas) {
 	gas_out_ = *gas;
 }
 
-void ModelPipeSequential::DetermineDirectionOfFlow() {
-  direction_is_forward_ = 
-      ( gas_in_.work_parameters.p > gas_out_.work_parameters.p );
+inline
+bool ModelPipeSequential::IsReverse() {
+  return (gas_in_.work_parameters.p < gas_out_.work_parameters.p);
 }
 
 float ModelPipeSequential::q() {
@@ -28,64 +28,44 @@ float ModelPipeSequential::q() {
 
 // Расчёт трубы. По заданным gas_in, gas_out - найти q.
 void ModelPipeSequential::Count() {
-	// Определяем направление течения газа.
-	DetermineDirectionOfFlow(); 
-  /*В зависимости от направления решаем, как вызвать функцию расчёта q.
-  Функция расчёта q всегда возвращает q > 0.
-  Мы же здесь придаём q отрицательный знак, если направление потока обратное.*/
-	/// \todo: как-то разобраться с этим цивилизованно.
+	/* В зависимости от направления потока по трубе реально входом может
+  являться вход (прямое течение), или выход (реверсивное) - учитываем.*/
+  Gas real_in = gas_in_;
+  Gas real_out = gas_out_;
+  if(IsReverse() == true) {
+    real_in = gas_out_;
+    real_out = gas_in_;
+  }
+  /*Ф-я расчёта q всегда принимает Pвх > Pвых и возвращает q > 0.*/
+	/// \todo: как-то разобраться с этим цивилизованно
 	int number_of_segments = 10; 
 
-	if(direction_is_forward_ == true)	{
-		FindSequentialQ(
-        // Давление, которое должно получиться в конце.
-			  gas_out_.work_parameters.p, 
-        // Рабочие параметры газового потока на входе.
-			  gas_in_.work_parameters.p, 
-        gas_in_.work_parameters.t,  
-        // Состав газа.
-			  gas_in_.composition.density_std_cond, 
-        gas_in_.composition.co2, 
-        gas_in_.composition.n2, 
-        // Свойства трубы.
-			  passport_.d_inner_, 
-        passport_.d_outer_, 
-        passport_.roughness_coeff_, 
-        passport_.hydraulic_efficiency_coeff_, 
-        // Свойства внешней среды (тоже входят в паспорт трубы).
-			  passport_.t_env_, passport_.heat_exchange_coeff_, 
-        // Длина сегмента и количество сегментов.
-			  passport_.length_/number_of_segments, number_of_segments, 
-        // out - параметры, значения t и q на выходе.
-			  &(gas_out_.work_parameters.t), 
-        &q_ 
-    ); 
-	}
-	else { // direction_is_forward == false	
-		FindSequentialQ(
-        // Давление, которое должно получиться в конце.
-			  gas_in_.work_parameters.p,
-        // Рабочие параметры газового потока на входе.
-			  gas_out_.work_parameters.p, 
-        gas_out_.work_parameters.t,  
-        // Состав газа.
-			  gas_out_.composition.density_std_cond, 
-        gas_out_.composition.co2, 
-        gas_out_.composition.n2,
-        // Свойства трубы.
-			  passport_.d_inner_, 
-        passport_.d_outer_, 
-        passport_.roughness_coeff_, 
-        passport_.hydraulic_efficiency_coeff_, 
-        // Свойства внешней среды (тоже входят в паспорт трубы).
-			  passport_.t_env_, passport_.heat_exchange_coeff_, 
-        // Длина сегмента и количество сегментов.
-			  passport_.length_/number_of_segments, number_of_segments, 
-        // out - параметры, значения t и q на выходе.
-			  &(gas_out_.work_parameters.t), &q_ 
-    );
-		/* Направление потока изменено на обратное, 
-    поэтому расход возвращаем с минусом.*/
+	FindSequentialQ(
+      // Давление, которое должно получиться в конце.
+	    real_out.work_parameters.p, 
+      // Рабочие параметры газового потока на входе.
+			real_in.work_parameters.p, 
+      real_in.work_parameters.t,  
+      // Состав газа.
+			real_in.composition.density_std_cond, 
+      real_in.composition.co2, 
+      real_in.composition.n2, 
+      // Свойства трубы.
+			passport_.d_inner_, 
+      passport_.d_outer_, 
+      passport_.roughness_coeff_, 
+      passport_.hydraulic_efficiency_coeff_, 
+      // Свойства внешней среды (тоже входят в паспорт трубы).
+			passport_.t_env_, 
+      passport_.heat_exchange_coeff_, 
+      // Длина сегмента и количество сегментов.
+			passport_.length_/number_of_segments, number_of_segments, 
+      // out - параметры, значения t и q на выходе.
+			&(real_out.work_parameters.t), 
+      &q_ 
+  ); // Конец FindSequentialQ.
+  // Если труба реверсивна - расход отрицательный.
+  if( IsReverse() ) {
 		q_ = -q_;
 	}
 	gas_in_.work_parameters.q = q_;
@@ -104,20 +84,10 @@ void ModelPipeSequential::Count() {
 // ToDo: идея об именовании функций - по-разному называть мутаторы и не мут-ры
 // тоже посмотреть, какие соглашения на этот счёт бывают, в т.ч. у Мейерса
 
-// Произвести расчёт трубы, то есть:
-// Должны быть заданы gas_in и gas_out
-// при известных (Pвх, Tвх, Pвх) рассчитать (Q, Tвых)
 // рассчитать производные на dQ/dPвх, dQ/dPвых
 __host__ __device__
 void EdgePipeSequential::Count()
 {
-	// Проверим, что давление на входе больше, чем давление на выходе
-	// если это не так, то газ должен течь в другую сторону
-	// ToDo: определиться, что делать в случае Pвх < Pвых
-	// Здесь будет использоваться функция типа FindQ - рассчитывающая Q
-	// Наверное, стоит начать с неё, чтобы определиться с особенностями
-	// её использования для расчёта производных
-
 	// ToDo: определиться, как должна обрабатываться ситуация, когда
 	// давление газа задано - в этом случае производная всегда равна нулю
 	//if (GasFlowIn.getPisReady() == true)

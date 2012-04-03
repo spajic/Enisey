@@ -98,6 +98,9 @@
     <ClCompile Include="test_functions_gas.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="test_model_pipe_sequential.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="test_utils.cpp" />
   </ItemGroup>
   <ItemGroup>

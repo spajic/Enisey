@@ -1,3 +1,5 @@
+/** \file test_functions_gas.cpp
+Тесты для функций расчёта свойств газа из functions_gas.h*/
 #include "gtest/gtest.h"
 #include "test_utils.h"
 

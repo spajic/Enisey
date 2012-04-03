@@ -46,7 +46,12 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 #include "manager_edge_model_pipe_sequential.h"
 #include "loader_vesta.h"
 
+// Тесты функций расчёта свойств газа.
 #include "test_functions_gas.cpp"
+
+// Тесты класса ModelPipeSequential.
+#include "test_model_pipe_sequential.cpp"
+
 
 /* Тест расчёта трубы методом последовательного счёта.
 Тестировать будем так - зададим входные данные, получим расчётные рез-ты
@@ -97,37 +102,6 @@ TEST(PipeSequential, CountSequentialOut) {
   float eps = 1.0e-4;
   ASSERT_LE(abs(p_out - 2.9721224), eps);
   ASSERT_LE(abs(t_out - 280.14999), eps);
-}
-
-TEST(PipeSequential, Count)
-{
-  // Тестируем расчёт трубы.
-  // Методика тестирования поянтна - сравнить с Вестой, если похоже - 
-  // сохранить полученный результат и принять за эталон.
-  // Задаём пасспортные свойства трубы.
-  PassportPipe passport;
-  FillTestPassportPipe(&passport);
-
-  // Задаём свойства газа на входе.
-  Gas gas_in;
-  FillTestGasIn(&gas_in);
-
-  // задаём параметры газа на выходе
-  Gas gas_out;
-  FillTestGasOut(&gas_out);
-
-  // Создаём объект трубы
-  ModelPipeSequential pipe(&passport);
-  pipe.set_gas_in(&gas_in);
-  pipe.set_gas_out(&gas_out);
-  pipe.Count();
-
-  // Результат Весты для данной конфигурации - q = 387.84
-  // результат моего расчёта - 385.8383, что похоже на Весту, но не совпадает.
-  // Сохраняем это решение в качестве эталонного - при дальнейших изменениях, тест
-  // будет сигнализировать, что что-то изменилось, будем смотреть и разбираться.
-  float eps = 0.1;
-  ASSERT_LE(abs(pipe.q() - 385.83), eps);
 }
 
 TEST(DISABLED_ManagerEdgeModelPipeSequential, LoadTest)
