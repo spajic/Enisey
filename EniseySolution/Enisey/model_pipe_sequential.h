@@ -23,13 +23,27 @@ class ModelPipeSequential {
   на входе и выходе. 
   Если p_вх < p_вых, то труба считается реверсивной, газ течёт в обратную
   сторону. В этом случае gas_out считается входом, а gas_in - выходом, расход
-  возвращается отрицательный.*/
+  возвращается отрицательный.
+  Так же эта функция выполняет расчёт производных: dq_dp_in, dq_dp_out.
+  dq_dp = ( q(p + eps) - q(p) ) / eps.
+  */
   void Count();
-  /// Поулчить расчитанный расход.
-  float q();
+  float q(); ///< Поулчить расчитанный расход.
+  float dq_dp_in(); ///< Получить производную по Pвх.
+  float dq_dp_out(); ///< Получить производную по Pвых.
  private:
   bool IsReverse(); ///< Направление потока обратное? (м.б. прямым и обратным)
+  /// Вызов функции расчёта q с стуктурированными параметрами.
+  void CallFindSequentialQ(
+      const Gas &gas_in,
+      const Gas &gas_out,
+      const PassportPipe &passport,
+      const int number_of_segments,
+      float *t_out,
+      float *q_out); 
   float q_; ///< Расход.
+  float dq_dp_in_; ///< Производная q по Pвх.
+  float dq_dp_out_; ///< Производная q по Pвых.
   PassportPipe passport_; ///< Паспорт трубы.
   Gas gas_in_; ///< Объект Газ на входе.
   Gas gas_out_; ///< Объект Газ на выходе.
