@@ -23,6 +23,7 @@ class GraphBoostEdge {
   void set_p_max_passport(float p_max_passport);
   void set_edge(Edge* edge);
   Edge* edge();
+  /// \todo Edge* хорошо было бы спрятать за методами GraphBoostEdge.
   int in_vertex_id();
   int out_vertex_id();
   int edge_id_vesta();
