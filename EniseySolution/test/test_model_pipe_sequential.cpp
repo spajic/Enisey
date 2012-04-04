@@ -14,6 +14,7 @@ class ModelPipeSequentialTest : public ::testing::Test {
     pipe = ModelPipeSequential(&passport); // Создаём и заполняем трубу.
     pipe.set_gas_in(&gas_in);
     pipe.set_gas_out(&gas_out);
+    pipe.Count();
   }
   PassportPipe passport;
   ModelPipeSequential pipe;
@@ -21,12 +22,11 @@ class ModelPipeSequentialTest : public ::testing::Test {
   Gas gas_out;
 };
 
-/*CountsDirectFlow - Pвх > Pвых, q > 0.*/
+/* DirectFlow - Pвх > Pвых, q > 0.*/
 TEST_F( ModelPipeSequentialTest, CountsDirectFlow ) {
-  pipe.Count();
   EXPECT_NEAR(kTestPipeQuantity, pipe.q(), kTestPipeQuantityPrecision);
 }
-/*CountsReverseFlow - Pвх < Pвых, q < 0.*/
+/* ReverseFlow - Pвх < Pвых, q < 0.*/
 TEST_F( ModelPipeSequentialTest, CountsReverseFlow ) {
   // Меняем вход и выход местами, получаем реверсивную трубу.
   pipe.set_gas_in(&gas_out); 
@@ -34,3 +34,16 @@ TEST_F( ModelPipeSequentialTest, CountsReverseFlow ) {
   pipe.Count();
   EXPECT_NEAR(-kTestPipeQuantity, pipe.q(), kTestPipeQuantityPrecision);
 } 
+TEST_F( ModelPipeSequentialTest, CountsDerivativesOfProperSigns ) {
+  EXPECT_GE( pipe.dq_dp_in(), 0 ); // Растёт давление на входе - растёт расход.
+  EXPECT_LE( pipe.dq_dp_out(), 0 );// Растёт P на выходе - расход падает.
+}
+TEST_F( ModelPipeSequentialTest, CountsDerivativesForReverseFlow ) {
+  ModelPipeSequential reverse_pipe = pipe; // Создаём реверсивную трубу.
+  reverse_pipe.set_gas_in( &gas_out );
+  reverse_pipe.set_gas_out( &gas_in );
+  reverse_pipe.Count();
+  // Производные должны быть обменены местами и знаками.
+  EXPECT_FLOAT_EQ(reverse_pipe.dq_dp_in(), -pipe.dq_dp_out() );
+  EXPECT_FLOAT_EQ(reverse_pipe.dq_dp_out(), -pipe.dq_dp_in() ); 
+}
