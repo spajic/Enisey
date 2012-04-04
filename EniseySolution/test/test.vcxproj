@@ -81,6 +81,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Enisey\edge_model_pipe_sequential.cpp" />
+    <ClCompile Include="..\Enisey\gas_transfer_system.cpp" />
     <ClCompile Include="..\Enisey\graph_boost.cpp" />
     <ClCompile Include="..\Enisey\graph_boost_edge.cpp" />
     <ClCompile Include="..\Enisey\graph_boost_initial_approx.cpp" />
@@ -96,6 +97,9 @@
     <ClCompile Include="..\Enisey\writer_graphviz.cpp" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="test_functions_gas.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="test_gas_transfer_system.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="test_model_pipe_sequential.cpp">

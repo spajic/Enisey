@@ -9,30 +9,6 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 Тесты можно группировать по файлам и включить (#include) их в test.cpp.
 Сами файлы test_concrete.cpp нужно сделать excluded from build.
 Это можно сделать из контекстного меню файла в Solution Explorer.
-
-// The fixture for testing class Foo.
-//class FooTest : public ::testing::Test {
-//protected:
-//  FooTest() {} // You can do set-up work for each test here.
-//  virtual ~FooTest() { } // You can do clean-up work that doesn't throw exceptions here.
-//  // If the constructor and destructor are not enough for setting up
-//  // and cleaning up each test, you can define the following methods:
-//  virtual void SetUp() { }
-//    // Code here will be called immediately after the constructor (right
-//    // before each test).
-//  virtual void TearDown() { }
-//    // Code here will be called immediately after each test (right
-//    // before the destructor).
-
-//  // Objects declared here can be used by all tests in the test case for Foo.
-//};
-//// Tests that the Foo::Bar() method does Abc.
-//TEST_F(FooTest, MethodBarDoesAbc) {
-//  const string input_filepath = "this/package/testdata/myinputfile.dat";
-//  const string output_filepath = "this/package/testdata/myoutputfile.dat";
-//  Foo f;
-//  EXPECT_EQ(0, f.Bar(input_filepath, output_filepath));
-//}
 */
 
 #include "gtest/gtest.h"
@@ -48,9 +24,10 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 
 // Тесты функций расчёта свойств газа.
 #include "test_functions_gas.cpp"
-
 // Тесты класса ModelPipeSequential.
 #include "test_model_pipe_sequential.cpp"
+// Тесты класса GasTransferSystem.
+#include "test_gas_transfer_system.cpp"
 
 
 /* Тест расчёта трубы методом последовательного счёта.
@@ -450,16 +427,16 @@ TEST(InitialApprox, InitialApprox) {
     &graph, 
     &overall_p_max,
     &overall_p_min);
-  // 2. Рассчитываем ограничения.
+  // 3. Рассчитываем ограничения.
   SetPressureConstraintsForVertices(
     &graph,
     overall_p_min,
     overall_p_max );
-  // 3. Задаём начальное приближение давлений.
+  // 4. Задаём начальное приближение давлений.
   SetInitialApproxPressures(&graph, overall_p_max, overall_p_min);
-  // 4. Задаём начальное приближение температур.
+  // 5. Задаём начальное приближение температур.
   SetInitialApproxTemperatures(&graph, 278.0);
-  // 5. Выводим граф в GraphViz - посмотреть.
+  // 6. Выводим граф в GraphViz - посмотреть.
   WriterGraphviz writer;
   writer.WriteGraphToFile(graph, 
     "C:\\Enisey\\out\\test_initial_approx.dot");
