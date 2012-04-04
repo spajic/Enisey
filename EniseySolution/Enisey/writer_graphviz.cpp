@@ -25,6 +25,9 @@ class MyVertexWriter {
     //if(vertex.PIsReady()) {
       labels.push_back("P = " + boost::lexical_cast<std::string>(vertex.gas().work_parameters.p).substr(0, 5)  );
       labels.push_back("T = " + boost::lexical_cast<std::string>(vertex.gas().work_parameters.t).substr(0, 5)  );
+      labels.push_back("ro = " + 
+        boost::lexical_cast<std::string>( vertex.gas().composition.density_std_cond ) 
+      );
     //}
     if(vertex.is_all_children_dominator() == yes) {
       labels.push_back("Q = " + boost::lexical_cast<std::string>(vertex.q_in_dominators_subtree()).substr(0, 5) );
