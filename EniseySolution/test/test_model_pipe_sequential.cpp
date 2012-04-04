@@ -39,7 +39,7 @@ TEST_F( ModelPipeSequentialTest, CountsDerivativesOfProperSigns ) {
   EXPECT_LE( pipe.dq_dp_out(), 0 );// Растёт P на выходе - расход падает.
 }
 TEST_F( ModelPipeSequentialTest, CountsDerivativesForReverseFlow ) {
-  ModelPipeSequential reverse_pipe = pipe; // Создаём реверсивную трубу.
+  ModelPipeSequential reverse_pipe = pipe; // Создаём реверсивн ую трубу.
   reverse_pipe.set_gas_in( &gas_out );
   reverse_pipe.set_gas_out( &gas_in );
   reverse_pipe.Count();

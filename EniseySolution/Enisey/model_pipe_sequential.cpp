@@ -75,7 +75,8 @@ void ModelPipeSequential::Count() {
   // Для рассчитанных температур, отбрасывах при расчёте производных.
   float t_dummy = 0; 
   /*Ф-я расчёта q всегда принимает Pвх > Pвых и возвращает q > 0.*/
-	/// \todo: как-то разобраться с этим цивилизованно
+	/** \todo: как-то разобраться цивилизованно с количеством сегментов
+  при расчёте трубы методом последовательного счёта.*/
 	int segments = 10; 
   CallFindSequentialQ( // Расчитываем q(Pвх, Pвых)
       real_in, real_out, passport_, segments, 
@@ -118,9 +119,6 @@ void ModelPipeSequential::Count() {
     dq_dp_out_ = -dq_dp_out_;
     // Записываем расчитанную температуру в входной газовый поток.
     gas_in_.work_parameters.t = t_res;
-    //float swap = dq_dp_out_;
-    //dq_dp_out_ = -dq_dp_in_;
-    //dq_dp_in_ = -swap;
 	}
   else { // Прямое течение. Ничего менять не надо, температура идёт на выход.
     gas_out_.work_parameters.t = t_res;
@@ -129,73 +127,3 @@ void ModelPipeSequential::Count() {
 	gas_in_.work_parameters.q = q_;
 	gas_out_.work_parameters.q = q_;
 }
-
-/*
-//-----------------------------------------------------------------------------
-//---------------------------- Наследие Belek ---------------------------------
-//-----------------------------------------------------------------------------
-
-#include "EdgePipeSequential.h"
-
-// ToDo: Присвоить функциям соответствующие модификаторы static и const
-// прочитать об этом у Мейерса в Effective C++
-// ToDo: идея об именовании функций - по-разному называть мутаторы и не мут-ры
-// тоже посмотреть, какие соглашения на этот счёт бывают, в т.ч. у Мейерса
-
-// рассчитать производные на dQ/dPвх, dQ/dPвых
-__host__ __device__
-void EdgePipeSequential::Count()
-{
-	// ToDo: определиться, как должна обрабатываться ситуация, когда
-	// давление газа задано - в этом случае производная всегда равна нулю
-	//if (GasFlowIn.getPisReady() == true)
-	//{ 
-	//	ProizvIn = 0;
-	//}
-
-	// Рассчитываем значение Q для трубы
-	float q = ReturnQSequential();
-	// Рассчитываем производную dQ/dPвх
-	// ToDo: учесть, что производная не может быть отрицательна
-	// растёт давление на входе, значит растёт и кол-во газа
-
-	// ToDo: сделать чёткое и ясное задание eps
-	float eps = 0.001;
-
-	// Производные! Чтобы их считать, нужно задавать приращения - вопрос - где?
-	// Сохраню исходные gas_in и gas_out трубы, буду задавать приращения,
-	// и возвращать объекты в исходное состояние.
-	ReducedGasComposition gas_in_prototype = gas_in_;
-	ReducedGasComposition gas_out_prototype = gas_out_;
-
-	// Производная dQ/dPin
-	// Производная в правой точке
-	gas_in_.SetPWorkAndTWork(gas_in_prototype.p_work() + eps, 
-		gas_in_prototype.t_work());
-	float right = ReturnQSequential();
-	// Производная в левой точке
-	gas_in_.SetPWorkAndTWork(gas_in_prototype.p_work() - eps, 
-		gas_in_prototype.t_work());
-	float left = ReturnQSequential();
-	// Находим центральную производную dQ/dPin
-	derivative_of_q_by_p_in_ = (right-left)/(2*eps);
-	// Возвращаем состояние газового объекта
-	gas_in_ = gas_in_prototype;
-
-	// Рассчитываем производную dQ/dPвых
-	// ToDo: учесть, что производная не может быть больше нуля
-	// увеличиваем давление на выходе, кол-во газа падает
-	// Производная в правой точке
-	gas_out_.SetPWorkAndTWork(gas_out_prototype.p_work() + eps,
-		gas_out_prototype.t_work());
-	right = ReturnQSequential();
-	// Производная в левой точке
-	gas_out_.SetPWorkAndTWork(gas_out_prototype.p_work() - eps, 
-		gas_out_prototype.t_work());
-	left = ReturnQSequential();
-	// Находим центральную производную dQ/dPвых
-	derivative_of_q_by_p_out_ = (right-left)/(2*eps);
-	// Возвращаем состояние газового объекта
-	gas_out_ = gas_out_prototype;
-}
-*/
