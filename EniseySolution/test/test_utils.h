@@ -50,7 +50,7 @@ const float kOutputGasPressure = 3.0;
 Результат моего расчёта - 385.8383, что похоже на Весту, но не совпадает.
 Тем не менее считаем это решение за эталон - при дальнейших изменениях, тесты
 будут сигнализировать, что что-то изменилось, будем смотреть и разбираться.*/
-const float kTestPipeQuantity = 385.8383; /// Расчитаннй мной расход.
+const float kTestPipeQuantity = 385.8427; /// Расчитаннй мной расход.
 const float kTestPipeQuantityPrecision = 0.0001; /// Точность расчёта.
 
 // Forward-declarations.

@@ -194,10 +194,10 @@ int FindSequentialQ(
   // Подумать, как разумно настроить метод деления отрезка пополам для решения 
   // данной задачи.
   // ToDo: корректно обрабатывать возвращаемое значение (для аварийных случаев).
-  float start = 0.1;
+  float start = 0.001;
   float finish = 10000;
-  float eps_x = 0.1;
-  float eps_y = 0.0001;
+  float eps_x = 0.000001;
+  float eps_y = 0.000001;
 
   // Заглушка для вызова функции EquationToSolve
   float p_out;
