@@ -13,8 +13,14 @@ ModelPipeSequential::ModelPipeSequential(const Passport* passport) {
 void ModelPipeSequential::set_gas_in(const Gas* gas) {
 	gas_in_ = *gas;
 }
+const Gas& ModelPipeSequential::gas_in() {
+  return gas_in_;
+}
 void ModelPipeSequential::set_gas_out(const Gas* gas) {
 	gas_out_ = *gas;
+}
+const Gas& ModelPipeSequential::gas_out() {
+  return gas_out_;
 }
 
 inline

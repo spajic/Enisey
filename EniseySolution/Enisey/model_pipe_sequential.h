@@ -15,8 +15,12 @@ class ModelPipeSequential {
   ModelPipeSequential(const Passport* passport);
   /// Установить объект Газ на входе трубы.
   void set_gas_in(const Gas* gas);
+  /// Получить объект Газ на входе трубы.
+  const Gas& gas_in();
   /// Установить объект Газ на выходе трубы.
   void set_gas_out(const Gas* gas);
+  /// Получить объект Газ на выходе трубы.
+  const Gas& gas_out();
   /** Произвести расчёт расхода q и tвых по (p_вх, t_вх, состав_газа_вх, p_вых)
   То есть для того, чтобы можно было выполнить Count нужно предварительно 
   выполнить set_gas_in, set_gas_out, откуда будут взяты необходимые параметры
@@ -31,8 +35,8 @@ class ModelPipeSequential {
   float q(); ///< Поулчить расчитанный расход.
   float dq_dp_in(); ///< Получить производную по Pвх.
   float dq_dp_out(); ///< Получить производную по Pвых.
- private:
   bool IsReverse(); ///< Направление потока обратное? (м.б. прямым и обратным)
+ private:
   /// Вызов функции расчёта q с стуктурированными параметрами.
   void CallFindSequentialQ(
       const Gas &gas_in,
