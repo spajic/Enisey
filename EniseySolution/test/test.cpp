@@ -29,7 +29,6 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 // Тесты класса GasTransferSystem.
 #include "test_gas_transfer_system.cpp"
 
-
 /* Тест расчёта трубы методом последовательного счёта.
 Тестировать будем так - зададим входные данные, получим расчётные рез-ты
 и сравним их с рез-ми Весты для таких же входных данных.
@@ -81,62 +80,6 @@ TEST(PipeSequential, CountSequentialOut) {
   ASSERT_LE(abs(t_out - 280.14999), eps);
 }
 
-TEST(DISABLED_ManagerEdgeModelPipeSequential, LoadTest)
-{
-  // Создадим в менеджере 50 000 труб, и рассчитаем их 100 раз
-  // Подготовим трубу для расчёта
-  PassportPipe passport;
-  FillTestPassportPipe(&passport);
-
-  // Задаём свойства газа на входе.
-  GasCompositionReduced composition;
-  composition.density_std_cond = 0.6865365; // [кг/м3]
-  composition.co2 = 0;
-  composition.n2 = 0;
-  GasWorkParameters params_in;
-  params_in.p = 5; // [МПа]
-  params_in.t = 293.15; // [К]
-  params_in.q = 387.843655734; // [м3/сек]
-  Gas gas_in;
-  gas_in.composition = composition;
-  gas_in.work_parameters = params_in;
-
-  // задаём параметры газа на выходе
-  Gas gas_out = gas_in;
-  gas_out.work_parameters.p = 3;
-  gas_out.work_parameters.t = 0;
-  gas_out.work_parameters.q = 0;
-
-  Edge *edge;
-  ManagerEdgeModelPipeSequential manager;
-
-  // Заполняем менеджер объектами
-  for(int i = 50; i > 0; --i)
-  {
-    edge = manager.CreateEdge(&passport);
-    edge->set_gas_in(&gas_in);
-    edge->set_gas_out(&gas_out);
-  }
-
-  // Имитируем расчёт 10 итераций
-  //std::cout << "Performing 10 iterations..." << std::endl;
-  for(int i = 1; i <= 1; ++i)
-  {
-    manager.CountAll();
-    std::cout << i << " iterations performed" << std::endl;
-  }
-}
-
-TEST(LoadFromVesta, MatrixConnectionsLoad) {
-  VestaFilesData vsd;
-  LoadMatrixConnections(
-      "C:\\Enisey\\data\\saratov_gorkiy\\MatrixConnections.dat", &vsd);
-  LoadPipeLines(
-      "C:\\Enisey\\data\\saratov_gorkiy\\PipeLine.dat", &vsd);
-  LoadInOutGRS(
-    "C:\\Enisey\\data\\saratov_gorkiy\\InOutGRS.dat", &vsd);
-}
-
 #include "graph_boost.h"
 #include "graph_boost_vertex.h"
 #include "graph_boost_edge.h"
@@ -146,8 +89,8 @@ TEST(LoadFromVesta, MatrixConnectionsLoad) {
 #include <algorithm>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/dominator_tree.hpp>
-TEST(GraphBoostTest, GraphBoostTest)
-{
+
+TEST(GraphBoostTest, GraphBoostTest) {
   GraphBoost graph;
   GraphBoostVertex dummy_vertex;
 
@@ -254,47 +197,7 @@ TEST(GraphBoostTest, GraphBoostTest)
 
 }
 
-#include "writer_graphviz.h"
-TEST(WriterGraphvizTest, WriterGraphvizTest)
-{
-  GraphBoost graph;
-  GraphBoostVertex dummy_vertex;
-
-  int id_vertex_0 = graph.AddVertex(&dummy_vertex);
-  int id_vertex_1 = graph.AddVertex(&dummy_vertex);
-  int id_vertex_2 = graph.AddVertex(&dummy_vertex);
-  int id_vertex_3 = graph.AddVertex(&dummy_vertex);
-  int id_vertex_4 = graph.AddVertex(&dummy_vertex);
-  int id_vertex_5 = graph.AddVertex(&dummy_vertex);
-  int id_vertex_6 = graph.AddVertex(&dummy_vertex);
-
-  GraphBoostEdge edge_0(id_vertex_2, id_vertex_3);
-  GraphBoostEdge edge_1(id_vertex_5, id_vertex_3);
-  GraphBoostEdge edge_2(id_vertex_5, id_vertex_1);
-  //GraphBoostEdge edge_3(id_vertex_3, id_vertex_1);
-  GraphBoostEdge edge_4(id_vertex_3, id_vertex_0);
-  GraphBoostEdge edge_5(id_vertex_1, id_vertex_0);
-  GraphBoostEdge edge_6(id_vertex_0, id_vertex_4);
-  //GraphBoostEdge edge_7(id_vertex_1, id_vertex_4);
-  GraphBoostEdge edge_8(id_vertex_6, id_vertex_2);
-  GraphBoostEdge edge_9(id_vertex_6, id_vertex_5);
-
-  graph.AddEdge(&edge_0);
-  graph.AddEdge(&edge_1);
-  graph.AddEdge(&edge_2);
-  //graph.AddEdge(&edge_3);
-  graph.AddEdge(&edge_4);
-  graph.AddEdge(&edge_5);
-  graph.AddEdge(&edge_6);
-  //graph.AddEdge(&edge_7);
-  graph.AddEdge(&edge_8);
-  graph.AddEdge(&edge_9);
-  WriterGraphviz writer;
-  writer.WriteGraphToFile(graph, "C:\\Enisey\\out\\test_graphviz.dot");
-}
-
-TEST(GraphBoost, OutEdgeIteratorTest)
-{
+TEST(GraphBoost, OutEdgeIteratorTest) {
   GraphBoost graph;
   GraphBoostVertex dummy_vertex;
 
@@ -357,8 +260,10 @@ TEST(GraphBoost, OutEdgeIteratorTest)
   }
 }
 
+
+#include "writer_graphviz.h"
 #include "graph_boost_load_from_vesta.h"
-TEST(LoadGraphFromVestaFiles, LoadGraphFromVestaFiles) {
+TEST(DISABLED_LoadGraphFromVestaFiles, LoadGraphFromVestaFiles) {
   VestaFilesData vfd;
   LoadMatrixConnections(
     "C:\\Enisey\\data\\saratov_gorkiy\\MatrixConnections.dat", &vfd);
@@ -371,9 +276,49 @@ TEST(LoadGraphFromVestaFiles, LoadGraphFromVestaFiles) {
   WriterGraphviz writer;
   writer.WriteGraphToFile(graph, "C:\\Enisey\\out\\test_load_from_vesta.dot");
 }
+
+
+TEST(DISABLED_WriterGraphvizTest, WriterGraphvizTest)
+{
+  GraphBoost graph;
+  GraphBoostVertex dummy_vertex;
+
+  int id_vertex_0 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_1 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_2 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_3 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_4 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_5 = graph.AddVertex(&dummy_vertex);
+  int id_vertex_6 = graph.AddVertex(&dummy_vertex);
+
+  GraphBoostEdge edge_0(id_vertex_2, id_vertex_3);
+  GraphBoostEdge edge_1(id_vertex_5, id_vertex_3);
+  GraphBoostEdge edge_2(id_vertex_5, id_vertex_1);
+  //GraphBoostEdge edge_3(id_vertex_3, id_vertex_1);
+  GraphBoostEdge edge_4(id_vertex_3, id_vertex_0);
+  GraphBoostEdge edge_5(id_vertex_1, id_vertex_0);
+  GraphBoostEdge edge_6(id_vertex_0, id_vertex_4);
+  //GraphBoostEdge edge_7(id_vertex_1, id_vertex_4);
+  GraphBoostEdge edge_8(id_vertex_6, id_vertex_2);
+  GraphBoostEdge edge_9(id_vertex_6, id_vertex_5);
+
+  graph.AddEdge(&edge_0);
+  graph.AddEdge(&edge_1);
+  graph.AddEdge(&edge_2);
+  //graph.AddEdge(&edge_3);
+  graph.AddEdge(&edge_4);
+  graph.AddEdge(&edge_5);
+  graph.AddEdge(&edge_6);
+  //graph.AddEdge(&edge_7);
+  graph.AddEdge(&edge_8);
+  graph.AddEdge(&edge_9);
+  WriterGraphviz writer;
+  writer.WriteGraphToFile(graph, "C:\\Enisey\\out\\test_graphviz.dot");
+}
+
 #include "graph_boost_initial_approx.h"
 // Тестируем корректность задания поля ограничений в вершинах.
-TEST(InitialApprox, CorrectnessOfInitialConstraintsForVertices) {
+TEST(DISABLED_InitialApprox, CorrectnessOfInitialConstraintsForVertices) {
   // 1. Загружаем схему Саратов-Горький из Весты.
   VestaFilesData vfd;
   LoadMatrixConnections(
@@ -408,8 +353,8 @@ TEST(InitialApprox, CorrectnessOfInitialConstraintsForVertices) {
       "C:\\Enisey\\out\\test_pressure_constraints.dot");
 }
 
-// Тестируем корректность задания поля ограничений в вершинах.
-TEST(InitialApprox, InitialApprox) {
+// Тестируем начальное приближение.
+TEST(DISABLED_InitialApprox, InitialApprox) {
   // 1. Загружаем схему Саратов-Горький из Весты.
   VestaFilesData vfd;
   LoadMatrixConnections(
@@ -442,6 +387,62 @@ TEST(InitialApprox, InitialApprox) {
     "C:\\Enisey\\out\\test_initial_approx.dot");
 }
 
+
+TEST(DISABLED_ManagerEdgeModelPipeSequential, LoadTest)
+{
+  // Создадим в менеджере 50 000 труб, и рассчитаем их 100 раз
+  // Подготовим трубу для расчёта
+  PassportPipe passport;
+  FillTestPassportPipe(&passport);
+
+  // Задаём свойства газа на входе.
+  GasCompositionReduced composition;
+  composition.density_std_cond = 0.6865365; // [кг/м3]
+  composition.co2 = 0;
+  composition.n2 = 0;
+  GasWorkParameters params_in;
+  params_in.p = 5; // [МПа]
+  params_in.t = 293.15; // [К]
+  params_in.q = 387.843655734; // [м3/сек]
+  Gas gas_in;
+  gas_in.composition = composition;
+  gas_in.work_parameters = params_in;
+
+  // задаём параметры газа на выходе
+  Gas gas_out = gas_in;
+  gas_out.work_parameters.p = 3;
+  gas_out.work_parameters.t = 0;
+  gas_out.work_parameters.q = 0;
+
+  Edge *edge;
+  ManagerEdgeModelPipeSequential manager;
+
+  // Заполняем менеджер объектами
+  for(int i = 50; i > 0; --i)
+  {
+    edge = manager.CreateEdge(&passport);
+    edge->set_gas_in(&gas_in);
+    edge->set_gas_out(&gas_out);
+  }
+
+  // Имитируем расчёт 10 итераций
+  //std::cout << "Performing 10 iterations..." << std::endl;
+  for(int i = 1; i <= 1; ++i)
+  {
+    manager.CountAll();
+    std::cout << i << " iterations performed" << std::endl;
+  }
+}
+
+TEST(DISABLED_LoadFromVesta, MatrixConnectionsLoad) {
+  VestaFilesData vsd;
+  LoadMatrixConnections(
+    "C:\\Enisey\\data\\saratov_gorkiy\\MatrixConnections.dat", &vsd);
+  LoadPipeLines(
+    "C:\\Enisey\\data\\saratov_gorkiy\\PipeLine.dat", &vsd);
+  LoadInOutGRS(
+    "C:\\Enisey\\data\\saratov_gorkiy\\InOutGRS.dat", &vsd);
+}
 
  int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
