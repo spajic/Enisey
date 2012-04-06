@@ -17,7 +17,9 @@ struct GasCompositionReduced {
 
 struct Gas {
   /** Примешать к этому Gas переданный. Результат отражается на этом.
-  Смешивание T, rho с.у., CO2, N2 пропорционально объёму. Ну и сам объём.
+  Смешивание T, rho с.у., CO2, N2 пропорционально объёму. 
+  Расход не меняем, расход вообще как бы не свойство узла, для узла нас
+  больше интересует дисбаланс.
   Расход может быть отрицательным, если труба реверсивная. Раз потоки всё же
   смешиваются, берём абсолютное значение расходов. */
   void Mix(const Gas &mix) {  
@@ -31,16 +33,7 @@ struct Gas {
         (q1 * composition.co2 + q2 * mix.composition.co2 ) / sum_q;
     composition.n2 = (q1 * composition.n2 + q2 * mix.composition.n2 ) / sum_q;
     work_parameters.t = 
-        (q1 * work_parameters.t + 
-        q2 * mix.work_parameters.t ) / sum_q;   
-    /* И в последнюю очередь перерасчитываем q, важно, т.к. предыдущие 
-    формулы зависят от work_parameters.q.*/
-    if(work_parameters.q > 0) {
-      work_parameters.q = sum_q;
-    }
-    else {
-      work_parameters.q = -sum_q;
-    }
+        (q1 * work_parameters.t + q2 * mix.work_parameters.t ) / sum_q;
   }
   GasWorkParameters work_parameters;
   GasCompositionReduced composition;
