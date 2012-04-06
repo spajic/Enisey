@@ -7,8 +7,6 @@
 #include "graph_boost_engine.h"
 // Для работы с opaque итераторми, возвращаемыми графом.
 #include <opqit/opaque_iterator.hpp>
-// Для итератора на дочерние вершины.
-#include "graph_boost_vertex_child_vertex_iterator.h"
 // Для std::min
 #include <algorithm>
 
