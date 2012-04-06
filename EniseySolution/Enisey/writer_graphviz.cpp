@@ -6,6 +6,7 @@
 #include "graph_boost.h"
 #include "graph_boost_edge.h"
 #include "graph_boost_vertex.h"
+#include "edge.h"
 
 #include "graph_boost_engine.h"
 
@@ -95,13 +96,32 @@ public:
     // Магистрали - чёрного цвета, отводы - цветные
     // edge_type = 0 - магистраль, edge_type = 2 - отвод, 3 - дюкер, или лупинг
     if(edge.pipe_type() == 2) {
-      out << "[color = brown1, style=\"dashed\"]";
+      out << "[label = \"q=" +
+          boost::lexical_cast<std::string>( edge.edge()->q() ) + 
+          "\\n dq_dp_in = " +
+          boost::lexical_cast<std::string>( edge.edge()->dq_dp_in() ) + 
+          "\\n dq_dp_out = " +
+          boost::lexical_cast<std::string>( edge.edge()->dq_dp_out() ) + 
+          "\", color = brown1, style=\"dashed\"]";
     }
     if(edge.edge_type() == -1) {
-      out << "[color = blue, style=\"dashed\"]";
+      out << "[label = \"q=" +
+        boost::lexical_cast<std::string>( edge.edge()->q() ) + 
+        "\", color = blue, style=\"dashed\"]";
     }
     if(edge.pipe_type() == 3) {
-      out << "[color = green]";
+      out << "[label = \"q=" +
+        boost::lexical_cast<std::string>( edge.edge()->q() ) + 
+        "\", color = green]";
+    }
+    else {
+      out << "[label = \"q =" + 
+          boost::lexical_cast<std::string>( edge.edge()->q() ) + 
+          "\\n dq_dp_in = " +
+          boost::lexical_cast<std::string>( edge.edge()->dq_dp_in() ) + 
+          "\\n dq_dp_out = " +
+          boost::lexical_cast<std::string>( edge.edge()->dq_dp_out() ) + 
+          "\"]";
     }
   }
 private:

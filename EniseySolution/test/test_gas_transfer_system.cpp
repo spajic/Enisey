@@ -38,3 +38,11 @@ TEST_F(GasTransferSystemFromVestaTest, MakesInitialApprox) {
   /// \todo Добавить автоматические проверки на корректность.
   gts.WriteToGraphviz(graphviz_filename);
 }
+TEST_F(GasTransferSystemFromVestaTest, CountsAllEdges) {
+  gts.MakeInitialApprox();
+  gts.CountAllEdges();
+  const std::string graphviz_filename = 
+    "C:\\Enisey\\out\\GTSCountsAllEdges.dot";
+  /// \todo Добавить автоматические проверки на корректность.
+  gts.WriteToGraphviz(graphviz_filename);
+}

@@ -14,7 +14,13 @@ class GraphBoostEdge;
 class GraphBoostVertex {
  public:
   GraphBoostVertex();
-
+  /* Расчитать состав газа в вершине, путём смешивания всех входящих в вершину
+  рёбер. Дело в том, что мы не меняем состав газа вершины непостредственно. 
+  Это делается ей самой на основании смешения входящих газовых потоков, либо
+  InOutGRS для входов. Выполнять нужно в топологическом порядке. */
+  void MixGasFlowsFromAdjacentEdges();
+  /* Взять состав газа из предка. Выполнять в топологическом порядке.*/
+  void InitialMix();
   /* Тип итератора, разыменование которого даёт ссылку на ребро графа.
   Для получения входящих и исходящих из узла рёбер.*/
   typedef opqit::opaque_iterator<GraphBoostEdge, opqit::bidir> iter_edge;
@@ -33,7 +39,9 @@ class GraphBoostVertex {
   // Функции получения итераторов на входящие в узел узлы.
   iter_node InVerticesBegin();
   iter_node inVerticesEnd();
-  // Функции задания и получения давления. Не влияют на PIsReady().
+  /** Функции задания и получения давления. Не влияют на PIsReady().
+  \todo Может вообще убрать P из Gas. Оно не нужно при смешивании, в отличие от
+  всего остального там присутствующего, и создаёт путаницу.*/
   void set_p(float p);
   float p();
   // Функции задания и получения температруы.
@@ -83,10 +91,12 @@ class GraphBoostVertex {
   float p_max();
   void set_p_max(float p_max);
 private:
+  Gas gas_;
+
   GraphBoostEngine* engine_;
   int id_in_graph_;
   int id_vesta_;
-
+  
   bool p_is_ready_;
   bool q_is_ready_;
   bool has_in_out_;
@@ -106,7 +116,7 @@ private:
   // анализе графа.
   float q_in_dominators_subtree_;
 
-  Gas gas_;
+
 
   std::list<int> in_out_id_list;
 };

@@ -6,11 +6,50 @@
 #include "graph_boost_edge.h"
 #include "graph_boost_vertex_child_vertex_iterator.h"
 #include "graph_boost_engine.h"
+#include "edge.h"
 
 /* Эти заголовки нужны для того, чтобы предоставить итераторы
 OutEdgesBegin/End, InEdgesBegin/End.*/
 #include <opqit/opaque_iterator.hpp>
 #include "boost/iterator/transform_iterator.hpp"
+
+void GraphBoostVertex::InitialMix() {
+  if( IsGraphInput() == true ) {
+    return;
+  }
+  gas_.composition = InVerticesBegin()->gas().composition;
+}
+
+/* Расчёт состава газа путём смешения входящих рёбер.
+Нужно учесть то, что рёбра могут быть реверсивны.
+Если входящее ребро реверсивно - его не считаем.
+Если исходящее ребро реверсивно - его как раз считаем.*/
+void GraphBoostVertex::MixGasFlowsFromAdjacentEdges() {
+  /* Создаём пустой газовый поток, будем к нему примешвивать.
+  А результат запишем в gas. Давление и расход оставляем какие были.*/
+  Gas result; 
+  if( IsGraphInput() == true ) { // Если данная вершина - вход
+    /* Начинаем работать с gas, который заполняется при загрузке графа.*/
+    result = gas_;
+  }
+  for(auto in_e = InEdgesBegin(); in_e != InEdgesEnd(); ++in_e) {
+    if( in_e->edge()->IsReverse() == true ) {
+      continue; // Реверсивный вход на самом деле не входит в вершину.
+    }
+    // Примешиваем потоки газа.
+    result.Mix( in_e->edge()->gas_out() );
+  } // Конец перебора входящих рёбер.
+
+  for(auto out_e = OutEdgesBegin(); out_e != OutEdgesEnd(); ++out_e) {
+    if( out_e->edge()->IsReverse() == false ) {
+      continue; // Реверсивный выход на самом деле нужен.
+    }
+    // Примешиваем потоки газа.
+    result.Mix( out_e->edge()->gas_in() );
+  } // Конец перебора входящих рёбер.
+  gas_.composition = result.composition;
+  gas_.work_parameters.t = result.work_parameters.t;
+}
 
 /** EdgeDereferenceFunctor функтор, принимает в качестве параметра
 дескриптор ребра графа, а возвращает ссылку на ребро, которую получает
