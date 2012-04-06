@@ -4,7 +4,6 @@
 #include "graph_boost_engine.h"
 #include "choice.h"
 #include "graph_boost_edge.h"
-#include "graph_boost_vertex_child_vertex_iterator.h"
 #include "graph_boost_engine.h"
 #include "edge.h"
 #include "math.h" // Для abs.
@@ -183,62 +182,52 @@ struct NodeDereferenceFunctor : public std::unary_function<
   }
   GraphBoostEngine::graph_type *g_;
 };
-/* Функтор для получения входящего узла ребра по дескриптору ребра.*/
-struct StartNodeOfEdgeFunctor : public std::unary_function<
-    GraphBoostEngine::graph_type::edge_descriptor, // Тип аргумента.
-    GraphBoostVertex&> { //Тип возрващаемого значения.
-  /*g - указатель на граф, из которого по дескриптору нужно будет получать
-  искомую ссылку на узел.*/
-  StartNodeOfEdgeFunctor(GraphBoostEngine::graph_type *g) : g_(g) { }
-  /*Необходимость модификатора const здесь не очевидна, но без него не 
-  работало. Стоит поподробнее разобраться с const!*/
-  GraphBoostVertex& operator()(
-      GraphBoostEngine::graph_type::edge_descriptor edge_desc) const {
-    GraphBoostEdge e = (*g_)[edge_desc];
-    return (*g_)[e.in_vertex_id()];
-  }
-  GraphBoostEngine::graph_type *g_;
-};
-/// \todo Есть inv_adjacent_vertices! Переделать!
-/* Получить входящие узлы для узла не так-то просто! В BGL есть только
-adjacent_vertices - это исходящие узлы. Чтобы получить входящие нужно
-взять входящие рёбра, и их исходные вершины.*/
-GraphBoostVertex::iter_node GraphBoostVertex::InVerticesBegin() {
-  // Получаем входящие рёбра.
-  boost::graph_traits<GraphBoostEngine::graph_type>::in_edge_iterator
-    in_ei_first, in_ei_last;	
-  boost::tie(in_ei_first, in_ei_last) = 
-    boost::in_edges(id_in_graph_, engine_->graph_);
+GraphBoostVertex::iter_node GraphBoostVertex::OutVerticesBegin() {
+  // Получаем исходящие узлы.
+  boost::graph_traits<GraphBoostEngine::graph_type>::adjacency_iterator
+    out_v_first, out_v_last;	
+  boost::tie(out_v_first, out_v_last) = 
+    boost::adjacent_vertices(id_in_graph_, engine_->graph_);
   boost::transform_iterator<
-    StartNodeOfEdgeFunctor, 
-    GraphBoostEngine::graph_type::in_edge_iterator>
-    iter(in_ei_first, StartNodeOfEdgeFunctor(&(engine_->graph_)));  
+    typename NodeDereferenceFunctor, 
+    GraphBoostEngine::graph_type::adjacency_iterator>
+    iter(out_v_first, NodeDereferenceFunctor(&(engine_->graph_)));  
+  return iter;
+}
+GraphBoostVertex::iter_node GraphBoostVertex::OutVerticesEnd() {
+  // Получаем исходящие узлы.
+  boost::graph_traits<GraphBoostEngine::graph_type>::adjacency_iterator
+    out_v_first, out_v_last;	
+  boost::tie(out_v_first, out_v_last) = 
+    boost::adjacent_vertices(id_in_graph_, engine_->graph_);
+  boost::transform_iterator<
+    typename NodeDereferenceFunctor, 
+    GraphBoostEngine::graph_type::adjacency_iterator>
+    iter(out_v_last, NodeDereferenceFunctor(&(engine_->graph_)));  
+  return iter;
+}
+GraphBoostVertex::iter_node GraphBoostVertex::InVerticesBegin() {
+  // Получаем входящие узлы.
+  GraphBoostEngine::graph_type::inv_adjacency_iterator in_v_first, in_v_last;	
+  boost::tie(in_v_first, in_v_last) = 
+    boost::inv_adjacent_vertices(id_in_graph_, engine_->graph_);
+  boost::transform_iterator<
+    typename NodeDereferenceFunctor, 
+    GraphBoostEngine::graph_type::inv_adjacency_iterator>
+    iter(in_v_first, NodeDereferenceFunctor(&(engine_->graph_)));  
   return iter;
 }
 GraphBoostVertex::iter_node GraphBoostVertex::inVerticesEnd() {
+  // Получаем исходящие узлы.
   // Получаем входящие рёбра.
-  boost::graph_traits<GraphBoostEngine::graph_type>::in_edge_iterator
-    in_ei_first, in_ei_last;	
-  boost::tie(in_ei_first, in_ei_last) = 
-    boost::in_edges(id_in_graph_, engine_->graph_);
+  GraphBoostEngine::graph_type::inv_adjacency_iterator in_v_first, in_v_last;	
+  boost::tie(in_v_first, in_v_last) = 
+    boost::inv_adjacent_vertices(id_in_graph_, engine_->graph_);
   boost::transform_iterator<
-    StartNodeOfEdgeFunctor, 
-    GraphBoostEngine::graph_type::in_edge_iterator>
-    iter(in_ei_last, StartNodeOfEdgeFunctor(&(engine_->graph_)));  
+    typename NodeDereferenceFunctor, 
+    GraphBoostEngine::graph_type::inv_adjacency_iterator>
+    iter(in_v_last, NodeDereferenceFunctor(&(engine_->graph_)));  
   return iter;
-}
-
-/**\todo Дальнейшие итераторы были реализованы раньше, в рамках проекта London.
-Там мне не удалось докопаться до решения, реализованного выше, и там
-итераторы реализоавны через самодельные классы-обёртки, реализующие
-Boost::IteratorFacade. Очевидно, что это бесполезное монструозное усложнение,
-от которого нужно будет избвавиться. Сделать как сделано выше.*/
-
-GraphBoostVertex::iter_node GraphBoostVertex::OutVerticesBegin() {
-  return GraphBoostVertexChildVertexIterator(engine_, id_in_graph_, true);
-}
-GraphBoostVertex::iter_node GraphBoostVertex::OutVerticesEnd() {
-  return GraphBoostVertexChildVertexIterator(engine_, id_in_graph_, false);
 }
 
 // Функции задания и получения давления.
@@ -267,6 +256,7 @@ void GraphBoostVertex::set_id_dominator_in_graph(int id_dominator_in_graph) {
 }
 
 GraphBoostVertex::GraphBoostVertex() : 
+    slae_row_(-1),
     engine_(NULL),
     id_in_graph_(-1),
     id_vesta_(-1),
