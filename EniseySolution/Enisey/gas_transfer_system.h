@@ -2,6 +2,8 @@
 Класс GasTransferSystem - придставление газотранспортной системы (ГТС).*/
 #pragma once
 #include <string>
+#include <vector>
+#include <map>
 // Forward-declarations.
 class GraphBoost;
 
@@ -12,6 +14,12 @@ class GasTransferSystem {
   GasTransferSystem();
   /** Удаляет объект GraphBoost g_.*/
   ~GasTransferSystem();
+  /** Сопоставить узлам графа номера уравнений СЛАУ.
+  Узлам, для которых PIsReady() == false номера от и выше.
+  Узлам PIsReady не участвуют в расчёте, для них номер = -1.*/
+  void SetSlaeRowNumsForVertices();
+  /** Формирование СЛАУ. */
+  void FormSlae();
   /** Суммарный дисбаланс в системе. Сумма дисбалансов всех вершин.*/
   float CountDisbalance();
   /** Загрузить граф из файлов Весты, находящихся в папке path.
@@ -30,8 +38,16 @@ class GasTransferSystem {
   Не влияет на P, Q вершин.*/
   void MixVertices();
  private:
+   /// Количество строк в СЛАУ.
+  int slae_size_;
   GraphBoost *g_; ///< Внутреннее представление графа - GraphBoost.
+  std::map<std::pair<int, int>, float> A_; ///< Матрица СЛАУ.
+  std::vector<float> B_; ///< Вектор правых частей СЛАУ.
+  std::vector<float> DeltaP_; ///< Вектор решений СЛАУ.
   /** Первоначальное смешение газовых потоков. Просто "протягиваем"
   состав газа от входа к выходам.*/
   void MakeInitialMix();
+  /** Выполнить решение составленной СЛАУ. 
+  В результате заполняется вектор DeltaP_.*/
+  void SolveSlae();
 };
