@@ -19,7 +19,8 @@ class GraphBoost {
   typedef opqit::opaque_iterator<GraphBoostVertex, opqit::random> iterator;
   GraphBoost();
   ~GraphBoost();
-
+  /// Проверить, существует ли ребро.
+  bool EdgeExists(int in_v_id, int out_v_id);
   /// Получить ссылку на ребро графа по id вх-й и исх-й вершины.
   GraphBoostEdge& GetEdge(int in_v_id, int out_v_id);
 

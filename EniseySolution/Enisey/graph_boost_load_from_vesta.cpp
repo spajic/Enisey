@@ -64,6 +64,10 @@ void GraphBoostLoadFromVesta(GraphBoost* graph, VestaFilesData *vfd) {
         vfd->vertices_hash[edge_data.in_vertex_id].id_graph;
     int id_out_vertex_in_graph = 
         vfd->vertices_hash[edge_data.out_vertex_id].id_graph;
+    /* Пока просто не добавляем параллельные рёбра.*/
+    if( graph->EdgeExists(id_in_vertex_in_graph, id_out_vertex_in_graph) ) { 
+      continue;
+    }
     GraphBoostEdge edge(id_in_vertex_in_graph, id_out_vertex_in_graph);
     edge.set_edge_id_vesta(edge_id_vesta);
     edge.set_edge_type(edge_data.edge_type);
