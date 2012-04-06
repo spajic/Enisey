@@ -25,8 +25,12 @@ class GraphBoostVertex {
   float CountDisbalance();
   /** Находится ли дисбаланс в вершине в допустимых рамках. */
   bool AcceptableDisbalance(float const max_disb);
+  /** Получение номера строки СЛАУ, соотв-й узлу.*/
+  int slae_row();
+  /** Задание номера строки СЛАУ, соотв-й узлу.*/
+  void set_slae_row(int row);
   /* Тип итератора, разыменование которого даёт ссылку на ребро графа.
-  Для получения входящих и исходящих из узла рёбер.*/
+  Для получения входящихи устаё и исходящих из узла рёбер.*/
   typedef opqit::opaque_iterator<GraphBoostEdge, opqit::bidir> iter_edge;
   // Функции получения итераторов на исходящие из узла рёбра.
   iter_edge OutEdgesBegin();
@@ -95,6 +99,7 @@ class GraphBoostVertex {
   float p_max();
   void set_p_max(float p_max);
 private:
+  float slae_row_;
   Gas gas_;
 
   GraphBoostEngine* engine_;

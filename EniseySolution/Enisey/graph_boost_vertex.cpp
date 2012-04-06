@@ -14,6 +14,8 @@ OutEdgesBegin/End, InEdgesBegin/End.*/
 #include <opqit/opaque_iterator.hpp>
 #include "boost/iterator/transform_iterator.hpp"
 
+void GraphBoostVertex::set_slae_row(int row) { slae_row_ = row; }
+int GraphBoostVertex::slae_row() { return slae_row_; }
 /* Нюансы расчёта дисбаланса:
 1. Вообще дисбаланс = (сумма расходов входящих) - (сумма исходящих рёбер). 
 У входящих q > 0, у исходящих тоже q > 0.

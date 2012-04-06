@@ -30,7 +30,8 @@ bool ModelPipeSequential::IsReverse() {
 
 float ModelPipeSequential::q() { return q_; }
 float ModelPipeSequential::dq_dp_in() { return dq_dp_in_; }
-float ModelPipeSequential::dq_dp_out() { return dq_dp_out_; }
+float ModelPipeSequential::dq_dp_out() { 
+  return dq_dp_out_; }
 
 void ModelPipeSequential::CallFindSequentialQ(
     const Gas &gas_in,
