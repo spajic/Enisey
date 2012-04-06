@@ -45,6 +45,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>C:\Enisey\bin\EniseySolution\Enisey\$(Configuration)\</OutDir>
+    <IntDir>C:\Enisey\bin\EniseySolution\Enisey\intermediate\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -53,7 +55,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir);C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir);C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
@@ -76,36 +78,46 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;C:\ProgramData\NVIDIA Corporation\NVIDIA GPU Computing SDK 4.0\C\common\lib\Win32;%(AdditionalLibraryDirectories);$(CudaToolkitLibDir)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cvm_ia32.lib;cudart.lib;cutil32d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <CudaCompile Include="edge_model_pipe_sequential_cuda.cu">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </CudaCompile>
     <CudaCompile Include="manager_edge_model_pipe_sequential_cuda.cu">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </CudaCompile>
     <None Include="edge_model_pipe_sequential_cuda.cuh">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
     <None Include="functions_pipe_cuda.cuh">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
     <None Include="gas_count_functions.cuh">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
     <None Include="gas_count_functions_cuda.cuh">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
     <None Include="model_pipe_sequential_functions.cuh">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
     <None Include="ReadMe.txt" />
   </ItemGroup>
@@ -118,7 +130,6 @@
     <ClCompile Include="graph_boost.cpp" />
     <ClCompile Include="graph_boost_edge.cpp" />
     <ClCompile Include="graph_boost_vertex.cpp" />
-    <ClCompile Include="graph_boost_vertex_child_vertex_iterator.cpp" />
     <ClCompile Include="graph_boost_vertex_iterator_native.cpp" />
     <ClCompile Include="graph_boost_vertex_iterator_topological.cpp" />
     <ClCompile Include="loader_vesta.cpp" />
@@ -141,7 +152,6 @@
     <ClInclude Include="graph_boost_edge.h" />
     <ClInclude Include="graph_boost_engine.h" />
     <ClInclude Include="graph_boost_vertex.h" />
-    <ClInclude Include="graph_boost_vertex_child_vertex_iterator.h" />
     <ClInclude Include="graph_boost_vertex_iterator_native.h" />
     <ClInclude Include="graph_boost_vertex_iterator_topological.h" />
     <ClInclude Include="loader_vesta.h" />
@@ -149,6 +159,7 @@
     <ClInclude Include="manager_edge_model_pipe_sequential.h" />
     <ClInclude Include="manager_edge_model_pipe_sequential_cuda.cuh">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="model_pipe_sequential.h" />
     <ClInclude Include="passport_pipe.h" />
