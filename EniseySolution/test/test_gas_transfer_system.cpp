@@ -45,4 +45,5 @@ TEST_F(GasTransferSystemFromVestaTest, CountsAllEdges) {
     "C:\\Enisey\\out\\GTSCountsAllEdges.dot";
   /// \todo Добавить автоматические проверки на корректность.
   gts.WriteToGraphviz(graphviz_filename);
+  float d = gts.CountDisbalance();
 }

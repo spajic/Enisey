@@ -29,6 +29,9 @@ class MyVertexWriter {
       labels.push_back("ro = " + 
         boost::lexical_cast<std::string>( vertex.gas().composition.density_std_cond ) 
       );
+      labels.push_back("disb=" + 
+          boost::lexical_cast<std::string>( vertex.CountDisbalance() ) 
+      );
     //}
     if(vertex.is_all_children_dominator() == yes) {
       labels.push_back("Q = " + boost::lexical_cast<std::string>(vertex.q_in_dominators_subtree()).substr(0, 5) );

@@ -24,6 +24,14 @@ GasTransferSystem::GasTransferSystem() {
 GasTransferSystem::~GasTransferSystem() {
   delete g_;
 }
+float GasTransferSystem::CountDisbalance() {
+  float d(0.0);
+  for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological();
+      ++v) {
+      d += v->CountDisbalance();
+  }
+  return d;
+}
 void GasTransferSystem::LoadFromVestaFiles(std::string const path) {
   VestaFilesData vfd;
   LoadMatrixConnections(path + "MatrixConnections.dat", &vfd);

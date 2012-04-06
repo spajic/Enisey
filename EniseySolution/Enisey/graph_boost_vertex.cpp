@@ -7,11 +7,40 @@
 #include "graph_boost_vertex_child_vertex_iterator.h"
 #include "graph_boost_engine.h"
 #include "edge.h"
+#include "math.h" // Для abs.
 
 /* Эти заголовки нужны для того, чтобы предоставить итераторы
 OutEdgesBegin/End, InEdgesBegin/End.*/
 #include <opqit/opaque_iterator.hpp>
 #include "boost/iterator/transform_iterator.hpp"
+
+/* Нюансы расчёта дисбаланса:
+1. Вообще дисбаланс = (сумма расходов входящих) - (сумма исходящих рёбер). 
+У входящих q > 0, у исходящих тоже q > 0.
+Для реверсивных у входящих q < 0 и мы его вычитаем, у исх-х q < 0 и прибавляем.
+2. Если у вершины есть InOut с известным InOutAmount его тоже нужно учесть.
+InOutAmount > 0, если входит, < 0, если выходит. Тоже просто прибавляем.
+3. Если у вершины есть InOut c заданным P, но неизвестным Q, определить в ней 
+дисбаланс мы не можем, полагаем равным нулю.
+4. Дисбаланс всегда положителен - модуль разницы входящих и исходящих потоков.
+*/
+float GraphBoostVertex::CountDisbalance() {
+  if( PIsReady() == true) { // Если есть вход с заданным P, значит Q = ?, d=0.
+    return 0;
+  }
+  float d(0); // Искомый дисбаланс.
+  for(auto v_in = InEdgesBegin(); v_in != InEdgesEnd(); ++v_in) {
+    d += v_in->edge()->q();
+  } // Конец перебора входящих рёбер.
+  for(auto v_out = OutEdgesBegin(); v_out != OutEdgesEnd(); ++v_out) {
+    d -= v_out->edge()->q();
+  } // Конец перебора исходящих рёбер.
+  d += InOutAmount();
+  return abs(d);
+}
+bool GraphBoostVertex::AcceptableDisbalance(float const max_disb) {
+  return CountDisbalance() < max_disb;
+}
 
 void GraphBoostVertex::InitialMix() {
   if( IsGraphInput() == true ) {
