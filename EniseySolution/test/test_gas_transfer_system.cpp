@@ -6,6 +6,8 @@
 #include "test_utils.h"
 
 #include <string>
+#include <iostream>
+#include <list>
 
 const std::string path_to_vesta_files = "C:\\Enisey\\data\\saratov_gorkiy\\";
 
@@ -41,9 +43,22 @@ TEST_F(GasTransferSystemFromVestaTest, MakesInitialApprox) {
 TEST_F(GasTransferSystemFromVestaTest, CountsAllEdges) {
   gts.MakeInitialApprox();
   gts.CountAllEdges();
+  gts.MixVertices();
   const std::string graphviz_filename = 
     "C:\\Enisey\\out\\GTSCountsAllEdges.dot";
   /// \todo Добавить автоматические проверки на корректность.
   gts.WriteToGraphviz(graphviz_filename);
   float d = gts.CountDisbalance();
+  std::cout << "Disb1 = " << d << std::endl;
+  std::list<float> disbs;
+  gts.SetSlaeRowNumsForVertices();
+  for(int n = 0; n < 32; ++n) {
+    gts.CountNewIteration();
+    float d = gts.CountDisbalance();
+    disbs.push_back(d);
+  }
+  for(auto d = disbs.begin(); d != disbs.end(); ++d) {
+    std::cout << *d << std::endl;
+  }
+  gts.WriteToGraphviz("C:\\Enisey\\out\\Result.dot");
 }

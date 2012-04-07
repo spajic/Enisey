@@ -17,6 +17,10 @@
 #include "manager_edge_model_pipe_sequential.h"
 // Для вывода в GraphViz
 #include "writer_graphviz.h"
+// Для решения СЛАУ.
+#include "cvm.h"
+// Для отладочной печати.
+#include <fstream>
 
 GasTransferSystem::GasTransferSystem() {
   g_ = new GraphBoost();
@@ -35,7 +39,8 @@ void GasTransferSystem::SetSlaeRowNumsForVertices() {
     }
   }
   // Устанавливаем размер СЛАУ - количество узлов с PIsReady = false.
-  slae_size_ = n + 1;
+  // На последней итерации цикла сделано n++, поэтому здесь просто n.
+  slae_size_ = n;
 }
 /**Алгоритм формирования СЛАУ: Для всех узлов с PIsReady = false 
 1. Сопоставить узлу номер строки в СЛАУ n.
@@ -52,12 +57,13 @@ void GasTransferSystem::SetSlaeRowNumsForVertices() {
 void GasTransferSystem::FormSlae() {
   A_.clear();
   B_.clear();
+  B_.resize(slae_size_);
   for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological(); 
       ++v) {
-    int n = v->slae_row();
     if(v->PIsReady() == true) {
       continue;
     }
+    int n = v->slae_row();
     if( v->HasInOut() == true ) { // 2. Если в узле есть InOutAmount...
       B_[n] -= v->InOutAmount();
     }
@@ -66,16 +72,11 @@ void GasTransferSystem::FormSlae() {
       int i = v_in->slae_row();
       auto e_in = g_->GetEdge( v_in->id_in_graph(), v->id_in_graph() );
       B_[n] -= e_in.edge()->q();
-      if(v_in->PIsReady() == true) {
-        A_[std::make_pair(n, i)] += 0;
-      } else {
-        A_[std::make_pair(n, i)] += e_in.edge()->dq_dp_in();
+      if(v_in->PIsReady() == false) {
+        A_[std::make_pair(n, i)] += e_in.edge()->dq_dp_in();        
       }
-      if(v->PIsReady() == true) {
-        A_[std::make_pair(n, n)] += 0;
-      } else {
-        A_[std::make_pair(n, n)] += e_in.edge()->dq_dp_out();
-      }
+      A_[std::make_pair(n, n)] += e_in.edge()->dq_dp_out();
+      // Конец обхода входящих рёбер.
       /** \todo Спрятать методы edge за GraphBoostEdge. Там же сделать 
       проверку, что для PIsReady производная равна нулю.*/
     }
@@ -85,23 +86,59 @@ void GasTransferSystem::FormSlae() {
       int i = v_out->slae_row();
       auto e_out = g_->GetEdge( v->id_in_graph(), v_out->id_in_graph() );
       B_[n] += e_out.edge()->q();
-      if(v_out->PIsReady() == true) {
-        A_[std::make_pair(n, i)] -= 0;
-      } else {
+      if(v_out->PIsReady() == false) {
         A_[std::make_pair(n, i)] -= e_out.edge()->dq_dp_out();
       }
-      if(v->PIsReady() == true) {
-        A_[std::make_pair(n, n)] -= e_out.edge()->dq_dp_in(); 
-      } else {
-        A_[std::make_pair(n, n)] -= 0;
-      }
+      A_[std::make_pair(n, n)] -= e_out.edge()->dq_dp_in();  
     } // Конец обхода исходящих рёбер.
   } // Конец обхода вершин графа.
 }
 // Решить сформированную СЛАУ и найти вектор DeltaP_.
 void GasTransferSystem::SolveSlae() {
-  // Используем пока библиотеку CVM для решения СЛАУ.
-
+  // Используем пока библиотеку CVM для решения СЛАУ. 
+  // В CVM индексация с единицы.
+  // Заполняем матрицу A.
+  cvm::srmatrix A(slae_size_);
+  for(auto a = A_.begin(); a != A_.end(); ++a) {
+    int row = a->first.first;
+    int col = a->first.second;
+    A(row + 1, col + 1) = a->second;
+  }
+  // Заполняем вектор B.
+  cvm::rvector B(slae_size_);
+  for(int n = 0; n < slae_size_; ++n) {
+    B(n + 1) = B_[n];
+  }
+  cvm::rvector DeltaP(slae_size_);
+  // Для отладки выведем построенные A, B.
+  std::ofstream a_fs("C:\\Enisey\\out\\A.txt");
+  a_fs << A;
+  std::ofstream b_fs("C:\\Enisey\\out\\B.txt");
+  b_fs << B;
+  DeltaP.solve(A, B);
+  std::ofstream p_fs("C:\\Enisey\\out\\DeltaP.txt");
+  p_fs << DeltaP;
+  // Копируем решение в DeltaP_.
+  DeltaP_.clear();
+  DeltaP_.resize(slae_size_);
+  /// \todo Инициализацию работу со СЛАУ - в отдельную функцию.
+  for(int n = 0; n < slae_size_; ++n) {
+    DeltaP_[n] = DeltaP[n + 1];
+  }
+}
+void GasTransferSystem::CountNewIteration() {
+  FormSlae();
+  SolveSlae();
+//  WriteToGraphviz("C:\\Enisey\\out\\MixVertices.dot");
+  for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological(); 
+      ++v) {
+    if(v->PIsReady() == true) {
+      continue;
+    }
+    v->set_p( v->p() + DeltaP_[ v->slae_row() ] / 3.0);
+  }
+  CountAllEdges();
+  MixVertices();
 }
 float GasTransferSystem::CountDisbalance() {
   float d(0.0);

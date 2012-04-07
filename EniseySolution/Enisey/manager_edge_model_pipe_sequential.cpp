@@ -9,20 +9,19 @@
 
 ManagerEdgeModelPipeSequential::ManagerEdgeModelPipeSequential()
 {
+  models_.reserve(128);
+  edges_.reserve(128);
+  /// \todo Взять размер вектора исходя из кол-во объектов ГТС.
   max_index_ = 0;
-  models_.resize(128000);
-  edges_.resize(128000); 
 }
 
 Edge* ManagerEdgeModelPipeSequential::CreateEdge(const Passport* passport)
 {
-  ModelPipeSequential pipe(passport);
-  models_[max_index_] = pipe;
+  models_.push_back( ModelPipeSequential(passport) );
 
   EdgeModelPipeSequential edge;
   edge.pointer_to_model_ = &(models_[max_index_]);
-
-  edges_[max_index_] = edge;
+  edges_.push_back(edge);
   ++max_index_;
   return &(edges_[max_index_ - 1]);
 }

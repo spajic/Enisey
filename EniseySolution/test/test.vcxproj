@@ -88,6 +88,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Enisey\edge_model_pipe_sequential.cpp" />
+    <ClCompile Include="..\Enisey\functions_gas.cpp" />
+    <ClCompile Include="..\Enisey\functions_pipe.cpp" />
     <ClCompile Include="..\Enisey\gas_transfer_system.cpp" />
     <ClCompile Include="..\Enisey\graph_boost.cpp" />
     <ClCompile Include="..\Enisey\graph_boost_edge.cpp" />

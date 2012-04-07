@@ -24,8 +24,8 @@ class MyVertexWriter {
       params.push_back("shape = square");
     } 
     //if(vertex.PIsReady()) {
-      labels.push_back("P = " + boost::lexical_cast<std::string>(vertex.gas().work_parameters.p).substr(0, 5)  );
-      labels.push_back("T = " + boost::lexical_cast<std::string>(vertex.gas().work_parameters.t).substr(0, 5)  );
+      labels.push_back("P = " + boost::lexical_cast<std::string>(vertex.gas().work_parameters.p / 0.0980665).substr(0, 5)  );
+      labels.push_back("T = " + boost::lexical_cast<std::string>(-273.15 + vertex.gas().work_parameters.t).substr(0, 5)  );
       labels.push_back("ro = " + 
         boost::lexical_cast<std::string>( vertex.gas().composition.density_std_cond ) 
       );

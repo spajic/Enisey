@@ -122,6 +122,8 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="functions_gas.cpp" />
+    <ClCompile Include="functions_pipe.cpp" />
     <ClCompile Include="gas_transfer_system.cpp" />
     <ClCompile Include="graph_boost_initial_approx.cpp" />
     <ClCompile Include="graph_boost_load_from_vesta.cpp" />

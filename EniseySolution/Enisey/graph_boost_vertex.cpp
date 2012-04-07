@@ -77,8 +77,16 @@ void GraphBoostVertex::MixGasFlowsFromAdjacentEdges() {
     // Примешиваем потоки газа.
     result.Mix( out_e->edge()->gas_in() );
   } // Конец перебора входящих рёбер.
-  gas_.composition = result.composition;
-  gas_.work_parameters.t = result.work_parameters.t;
+  if(result.composition.density_std_cond > 0) {
+    gas_.composition = result.composition;
+  } else {
+    gas_.composition.density_std_cond = 0.68;
+  }
+  if(result.work_parameters.t > 0) {
+    gas_.work_parameters.t = result.work_parameters.t;
+  } else {
+    gas_.work_parameters.t = 278.15;
+  }
 }
 
 /** EdgeDereferenceFunctor функтор, принимает в качестве параметра
