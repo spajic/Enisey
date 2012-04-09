@@ -199,8 +199,8 @@ int FindSequentialQ(
   // Подумать, как разумно настроить метод деления отрезка пополам для решения 
   // данной задачи.
   // ToDo: корректно обрабатывать возвращаемое значение (для аварийных случаев).
-  float start = 0.01;
-  float finish = 10000;
+  float start = 0.0000000001;
+  float finish = 100000;
   float eps_x = 0.0000001;
   float eps_y = 0.000001;
 
@@ -251,7 +251,7 @@ int FindSequentialQ(
     length_of_segment, number_of_segments, // длина сегмента и кол-во сегментов
     t_out, &p_out);
   int iters = 0;
-  while(abs( middle_val ) > eps_y && abs(a - b) > eps_x) {
+  while(/*abs( middle_val ) > eps_y && abs(a - b) > eps_x &&*/ iters < 40) {
     iters++;
     if(middle_val < 0) 
       a = middle;
@@ -271,8 +271,8 @@ int FindSequentialQ(
 
   // Записываем результат в out-параметр.
   *q_out = middle; 
-  std::cout << ("q= " +boost::lexical_cast<std::string>(middle) + " iters " + 
-    boost::lexical_cast<std::string>(iters) + "\n");
+  //std::cout << ("q= " +boost::lexical_cast<std::string>(middle) + " iters " + 
+  //  boost::lexical_cast<std::string>(iters) + "\n");
 
   // Возвращаем код завершения без ошибки.
   return 0;

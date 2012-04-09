@@ -84,7 +84,7 @@ void ModelPipeSequential::Count() {
   /*Ф-я расчёта q всегда принимает Pвх > Pвых и возвращает q > 0.*/
 	/** \todo: как-то разобраться цивилизованно с количеством сегментов
   при расчёте трубы методом последовательного счёта.*/
-	int segments = 10; 
+	int segments = std::max( 1, static_cast<int>(passport_.length_)/10 ); 
   CallFindSequentialQ( // Расчитываем q(Pвх, Pвых)
       real_in, real_out, passport_, segments, 
       &( t_res ), &q_ ); 
@@ -97,7 +97,7 @@ void ModelPipeSequential::Count() {
   шаг дифференцирования. Попробовать центральную производную. 
   Построить графики, чтобы визуально оценить наличие предела.*/
   // Рассчитываем производные.
-  float eps = 0.0001; 
+  float eps = 0.00001; 
 
   // Расчитываем производную q по p_вх.
   float q_p_in_plus_eps(0.0); // q(p_вх + eps, p_вых).
@@ -106,7 +106,12 @@ void ModelPipeSequential::Count() {
   CallFindSequentialQ( // q(Pвх + eps, Pвых)
       gas_dq_dp_in, real_out, passport_, segments,
       &( t_dummy ), &q_p_in_plus_eps );
-  dq_dp_in_ = (q_p_in_plus_eps - q_) / eps;
+  float q_p_in_minus_eps(0.0);
+  gas_dq_dp_in.work_parameters.p -= 2*eps;
+  CallFindSequentialQ( // q(Pвх - eps, Pвых)
+    gas_dq_dp_in, real_out, passport_, segments,
+    &( t_dummy ), &q_p_in_minus_eps );
+  dq_dp_in_ = (q_p_in_plus_eps - q_p_in_minus_eps) / (2*eps);
 
   // Рассчитываем производную q по p_вых.
   float q_p_out_plus_eps(0.0); // q(p_вх, p_вых + eps).
@@ -115,7 +120,12 @@ void ModelPipeSequential::Count() {
   CallFindSequentialQ( // q(Pвх, Pвых + eps)
       real_in, gas_dq_dp_out, passport_, segments,
       &( t_dummy ), &q_p_out_plus_eps );
-  dq_dp_out_ = (q_p_out_plus_eps - q_) / eps;
+  float q_p_out_minus_eps(0.0);
+  gas_dq_dp_out.work_parameters.p -= 2*eps;
+  CallFindSequentialQ( // q(Pвх, Pвых - eps)
+    real_in, gas_dq_dp_out, passport_, segments,
+    &( t_dummy ), &q_p_out_minus_eps );
+  dq_dp_out_ = (q_p_out_plus_eps - q_p_out_minus_eps) / (2*eps);
    
   // Если труба реверсивна - расход отрицательный, 
   // производные - меняются местами и знаком, температура выхода идёт во вход.

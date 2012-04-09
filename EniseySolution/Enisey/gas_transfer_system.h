@@ -28,9 +28,10 @@ class GasTransferSystem {
   Имея вектор DeltaP_ всем вершинам задать приращение.
   Произвести перерасчёт всех рёбер.
   Дисбаланс должен уменьшиться.*/
-  void CountNewIteration();
+  void CountNewIteration(float g);
   /** Суммарный дисбаланс в системе. Сумма дисбалансов всех вершин.*/
   float CountDisbalance();
+  int GetIntDisbalance();
   /** Загрузить граф из файлов Весты, находящихся в папке path.
   Путь передаётся с последним слешем, например "C:\\vesta\\files\\"*/
   void LoadFromVestaFiles(std::string const path);

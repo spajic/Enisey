@@ -126,7 +126,7 @@ void GasTransferSystem::SolveSlae() {
     DeltaP_[n] = DeltaP[n + 1];
   }
 }
-void GasTransferSystem::CountNewIteration() {
+void GasTransferSystem::CountNewIteration(float g) {
   FormSlae();
   SolveSlae();
 //  WriteToGraphviz("C:\\Enisey\\out\\MixVertices.dot");
@@ -135,7 +135,7 @@ void GasTransferSystem::CountNewIteration() {
     if(v->PIsReady() == true) {
       continue;
     }
-    v->set_p( v->p() + DeltaP_[ v->slae_row() ] / 3.0);
+    v->set_p( v->p() + DeltaP_[ v->slae_row() ] * g);
   }
   CountAllEdges();
   MixVertices();
@@ -148,6 +148,17 @@ float GasTransferSystem::CountDisbalance() {
   }
   return d;
 }
+int GasTransferSystem::GetIntDisbalance() {
+  int s = 0;
+  for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological();
+    ++v) {
+      if( v->CountDisbalance() > 0.1 ) {
+        ++s;
+      }
+  }
+  return s;
+}
+
 void GasTransferSystem::LoadFromVestaFiles(std::string const path) {
   VestaFilesData vfd;
   LoadMatrixConnections(path + "MatrixConnections.dat", &vfd);
