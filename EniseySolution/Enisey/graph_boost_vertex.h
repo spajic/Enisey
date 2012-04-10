@@ -99,7 +99,7 @@ class GraphBoostVertex {
   double p_max();
   void set_p_max(double p_max);
 private:
-  double slae_row_;
+  int slae_row_;
   Gas gas_;
 
   GraphBoostEngine* engine_;
