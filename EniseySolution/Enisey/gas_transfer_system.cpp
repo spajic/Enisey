@@ -144,7 +144,7 @@ double GasTransferSystem::CountDisbalance() {
   double d(0.0);
   for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological();
       ++v) {
-      d += v->CountDisbalance();
+      d += abs( v->CountDisbalance() );
   }
   return d;
 }
@@ -152,7 +152,7 @@ int GasTransferSystem::GetIntDisbalance() {
   int s = 0;
   for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological();
     ++v) {
-      if( v->CountDisbalance() > 0.1 ) {
+      if( v->AcceptableDisbalance(0.1) == false ) {
         ++s;
       }
   }

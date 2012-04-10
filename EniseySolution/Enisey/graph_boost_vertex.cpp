@@ -23,8 +23,7 @@ int GraphBoostVertex::slae_row() { return slae_row_; }
 InOutAmount > 0, если входит, < 0, если выходит. Тоже просто прибавляем.
 3. Если у вершины есть InOut c заданным P, но неизвестным Q, определить в ней 
 дисбаланс мы не можем, полагаем равным нулю.
-4. Дисбаланс всегда положителен - модуль разницы входящих и исходящих потоков.
-*/
+4. Дисбаланс имеет знак - если больше нуля - преобладает вход, иначе - выход.*/
 double GraphBoostVertex::CountDisbalance() {
   if( PIsReady() == true) { // Если есть вход с заданным P, значит Q = ?, d=0.
     return 0;
@@ -37,10 +36,10 @@ double GraphBoostVertex::CountDisbalance() {
     d -= v_out->edge()->q();
   } // Конец перебора исходящих рёбер.
   d += InOutAmount();
-  return abs(d);
+  return d;
 }
 bool GraphBoostVertex::AcceptableDisbalance(double const max_disb) {
-  return CountDisbalance() < max_disb;
+  return abs( CountDisbalance() ) < max_disb;
 }
 
 void GraphBoostVertex::InitialMix() {

@@ -21,7 +21,8 @@ class GraphBoostVertex {
   void MixGasFlowsFromAdjacentEdges();
   /** Взять состав газа из предка. Выполнять в топологическом порядке.*/
   void InitialMix();
-  /** Расчёт дисбаланса в вершине */
+  /** Расчёт дисбаланса в вершине. Дисбаланс имеет знак, если больше нуля,
+  преобладает вход, меньше нуля - преобладает выход.*/
   double CountDisbalance();
   /** Находится ли дисбаланс в вершине в допустимых рамках. */
   bool AcceptableDisbalance(double const max_disb);
