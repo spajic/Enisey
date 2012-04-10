@@ -51,7 +51,7 @@ TEST_F(GasTransferSystemFromVestaTest, CountsAllEdges) {
   double d = gts.CountDisbalance();
   std::cout << "Disb1 = " << d << std::endl;
   std::list<double> disbs;
-  double g = 1.0 / 3.0;
+  double g = 1.0 / 2.0;
   double d_prev = 1000000;
   gts.SetSlaeRowNumsForVertices();
   for(int n = 0; n < 35; ++n) {
