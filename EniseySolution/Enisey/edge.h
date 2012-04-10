@@ -15,5 +15,5 @@ public:
   virtual double q() = 0;
   virtual double dq_dp_in() = 0;
   virtual double dq_dp_out() = 0;
-  virtual double IsReverse() = 0;
+  virtual bool IsReverse() = 0;
 };

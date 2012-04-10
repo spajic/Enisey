@@ -19,7 +19,7 @@ double EdgeModelPipeSequential::dq_dp_in() {
 double EdgeModelPipeSequential::dq_dp_out() {
   return pointer_to_model_->dq_dp_out();
 }
-double EdgeModelPipeSequential::IsReverse() {
+bool EdgeModelPipeSequential::IsReverse() {
   return  pointer_to_model_->IsReverse();
 }
 const Gas& EdgeModelPipeSequential::gas_in() {

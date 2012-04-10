@@ -19,6 +19,6 @@ public:
   double q();
   double dq_dp_in();
   double dq_dp_out();
-  double IsReverse();
+  bool IsReverse();
   ModelPipeSequential* pointer_to_model_;
 };
