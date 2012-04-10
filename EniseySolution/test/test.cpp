@@ -52,7 +52,7 @@ TEST(PipeSequential, CountSequentialOut) {
   // Производим расчёт параметров газа на выходе.
   double p_out(-999.0);
   double t_out(-999.0);
-  double number_of_segments = 10;
+  int number_of_segments = 10;
   double length_of_segment = passport.length_ / number_of_segments;
   /* Получены результаты:
   p_out = 2.9721224, t_out = 280.14999 
