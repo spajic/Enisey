@@ -44,13 +44,11 @@ void GasTransferSystem::SetSlaeRowNumsForVertices() {
 }
 /**Алгоритм формирования СЛАУ: Для всех узлов с PIsReady = false 
 1. Сопоставить узлу номер строки в СЛАУ n.
-2. Если в узле есть InOutAmount, то Bn -= InOutAmount.
+2. Bi -= n->CountDisbalance()
 3. Если в узел входит узел i, по ребру (i, n) расход q(i,n),
-     Bn -= q(i,n)
      Ani += dq_dpi
      Ann += dq_dpn
 4. Если из узла выходит узел i, по ребру (n, i) расход q(n,i),
-     Bn += q(n,i)
      Ani -= dq_dpi
      Ann -= dq_dpn.
 5. Если в узле N PIsReady = true(), то dq_dpN = 0 для любого ребра.*/
@@ -64,32 +62,27 @@ void GasTransferSystem::FormSlae() {
       continue;
     }
     int n = v->slae_row();
-    if( v->HasInOut() == true ) { // 2. Если в узле есть InOutAmount...
-      B_[n] -= v->InOutAmount();
-    }
+    // 2. Bn -= v->CountDisbalance()
+    B_[n] -= v->CountDisbalance();
     // 3. Если в узел входит узел i, по ребру (i,n) расход q(i,n)...
     for(auto v_in = v->InVerticesBegin(); v_in != v->inVerticesEnd(); ++v_in) {
-      int i = v_in->slae_row();
       auto e_in = g_->GetEdge( v_in->id_in_graph(), v->id_in_graph() );
-      B_[n] -= e_in.edge()->q();
-      if(v_in->PIsReady() == false) {
-        A_[std::make_pair(n, i)] += e_in.edge()->dq_dp_in();        
-      }
       A_[std::make_pair(n, n)] += e_in.edge()->dq_dp_out();
-      // Конец обхода входящих рёбер.
-      /** \todo Спрятать методы edge за GraphBoostEdge. Там же сделать 
-      проверку, что для PIsReady производная равна нулю.*/
+      if(v_in->PIsReady() == false) {
+        int i = v_in->slae_row();
+        A_[std::make_pair(n, i)] += e_in.edge()->dq_dp_in();        
+      } // Конец обхода входящих рёбер.
+      /** \todo Спрятать методы edge за GraphBoostEdge.*/
     }
     //  4. Если из узла выходит узел i, по ребру (n,i) расход q(n,i)...
     for(auto v_out = v->OutVerticesBegin(); v_out != v->OutVerticesEnd(); 
         ++v_out) {
-      int i = v_out->slae_row();
       auto e_out = g_->GetEdge( v->id_in_graph(), v_out->id_in_graph() );
-      B_[n] += e_out.edge()->q();
+      A_[std::make_pair(n, n)] -= e_out.edge()->dq_dp_in();  
       if(v_out->PIsReady() == false) {
+        int i = v_out->slae_row();
         A_[std::make_pair(n, i)] -= e_out.edge()->dq_dp_out();
       }
-      A_[std::make_pair(n, n)] -= e_out.edge()->dq_dp_in();  
     } // Конец обхода исходящих рёбер.
   } // Конец обхода вершин графа.
 }
