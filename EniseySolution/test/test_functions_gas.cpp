@@ -60,9 +60,7 @@ TEST(Gas, GasCountFunctions) {
 
   /* Проверим на адекватность так же функции, 
   которые зависят и от паспорта трубы*/
-  PassportPipe passport;
-  FillTestPassportPipe(&passport);
-
+  PassportPipe passport = MakeTestPassportPipe();
   // re = 31017164.0
   // lambda = 0.010797811
   double re = FindRe(params.q, composition.density_std_cond, mju, passport.d_inner_);
@@ -94,6 +92,6 @@ TEST(Gas, GasCountFunctions) {
   // Проверки для re и lambda
   // Для re задаём свою точность, потому что число большое
   double eps_re = 1;
-  EXPECT_LE(abs(re - 31017164.0), eps_re);
+  EXPECT_LE(abs(re - 31017165.308), eps_re);
   EXPECT_LE(abs(lambda - 0.010797811), eps);
 }
