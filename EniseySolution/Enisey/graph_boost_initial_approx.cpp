@@ -18,8 +18,8 @@
 среди всех объектов графа.*/
 void FindOverallMinAndMaxPressureConstraints(
     GraphBoost *graph, 
-    float *overall_p_max,
-    float *overall_p_min) {
+    double *overall_p_max,
+    double *overall_p_min) {
   /** \todo Реально здесь нужно просто обойти все рёбра. Так же бывает
   нужно обойти все рёбра в топологическом порядке. Нужно сделать итераторы,
   которые будут давать возможность обходоить рёбра графа в топ-м порядке
@@ -39,15 +39,15 @@ void FindOverallMinAndMaxPressureConstraints(
 
 void SetPressureConstraintsForVertices(
     GraphBoost *graph,
-    float overall_p_min,
-    float overall_p_max ) {
+    double overall_p_min,
+    double overall_p_max ) {
   /*1. В топологическом порядке "сверху вниз" для каждго узла его ограничение 
   на максимальное давление 
   p_max = min( min( passport.p_max исх-х труб ), min( p_max вх-х узлов ) ).*/
   for(auto v = graph->VertexBeginTopological();
       v != graph->VertexEndTopological(); ++v) { 
     // Задаём неправдоподобный min, чтобы любой реальный был его меньше.
-    float min_of_out_p_max( 1000.0 );
+    double min_of_out_p_max( 1000.0 );
     // Вычисляем min(passport.p_max) для всех исходящих из узла рёбер.
     for(auto out_e = v->OutEdgesBegin();
         out_e != v->OutEdgesEnd(); ++out_e) {
@@ -56,7 +56,7 @@ void SetPressureConstraintsForVertices(
     } // Конец цикла по исходящим рёбрам.
     /* Находим min ( p_max вх-х узлов) - рассчитанные на предыдущих шагах 
     ограничения.*/
-    float min_of_in_vertices(1000.0);
+    double min_of_in_vertices(1000.0);
     for(auto in_v = v->InVerticesBegin(); in_v != v->inVerticesEnd(); ++in_v) {
       min_of_in_vertices = std::min(min_of_in_vertices, in_v->p_max());
     }
@@ -72,12 +72,12 @@ void SetPressureConstraintsForVertices(
   for(auto v = graph->VertexEndTopological() - 1;
       first_done == false; --v) {
     // Вычисляем max(passport.p_min) для входящих в узел рёбер.
-    float max_of_in_p_min(-1.0);    
+    double max_of_in_p_min(-1.0);    
     for(auto in_e = v->InEdgesBegin(); in_e != v->InEdgesEnd(); ++in_e) {
       max_of_in_p_min = std::max(max_of_in_p_min, in_e->p_min_passport());
     } // Конец цикла по входящим в узел рёбрам.
     // Вычисляем max( p_min исх-х узлов).
-    float max_of_out_v = -1.0;
+    double max_of_out_v = -1.0;
     for(auto out_v = v->OutVerticesBegin(); out_v != v->OutVerticesEnd(); 
         ++out_v) {
       max_of_out_v = std::max(max_of_out_v, out_v->p_min());
@@ -91,8 +91,8 @@ void SetPressureConstraintsForVertices(
 
 bool ChechPressureConstraintsForVertices(
     GraphBoost *graph,
-    float overall_p_min,
-    float overall_p_max ) {
+    double overall_p_min,
+    double overall_p_max ) {
   //1. overall_p_min, overall_p_max должны быть > 0, p_min <= p_max.
   if(overall_p_max <= 0.0) {
     return false;
@@ -122,7 +122,7 @@ bool ChechPressureConstraintsForVertices(
 }
 
 // Задать для всех входов указанное давление.
-void SetPressureForInsAndOuts(GraphBoost *g, float p_in, float p_out) {
+void SetPressureForInsAndOuts(GraphBoost *g, double p_in, double p_out) {
   // Все входы в топологическом порядке должны быть сначала?
   for(auto v = g->VertexBeginTopological(); v != g->VertexEndTopological(); 
       ++v) {
@@ -145,24 +145,24 @@ Pвх - давление на входе пути - должно быть изв
 x - длина ребра на входе пути
 l - общая длина пути (включая x);
 Pвых - давление в вершине, явл-ся концом пути.*/
-float CountPressureApproxByPath(
+double CountPressureApproxByPath(
     GraphBoost *g,
     std::vector<GraphBoostEdge> *path) {
   // Входящее ребро и его свойства.
   GraphBoostEdge in_e = path->front();
-  float x = in_e.pipe_length;
+  double x = in_e.pipe_length;
   GraphBoostVertex first_v = g->engine()->graph_[in_e.in_vertex_id()];
-  float p_in = first_v.p();
+  double p_in = first_v.p();
   // Давление на выходе.
   GraphBoostEdge out_e = path->back();
   GraphBoostVertex last_v = g->engine()->graph_[out_e.out_vertex_id()];
-  float p_out = last_v.p();
+  double p_out = last_v.p();
   // Рассчитываем общую длину пути.
-  float l = 0.0;
+  double l = 0.0;
   for(auto e = path->begin(); e != path->end(); ++e) {
     l += e->pipe_length;
   }
-  float p_res = 
+  double p_res = 
       sqrt( 
           (p_in*p_in) - 
           (x/l) * ( (p_in*p_in) - (p_out*p_out) ) 
@@ -172,8 +172,8 @@ float CountPressureApproxByPath(
 
 void SetInitialApproxPressures(
     GraphBoost *g,
-    float overall_p_max,
-    float overall_p_min) {
+    double overall_p_max,
+    double overall_p_min) {
   SetPressureForInsAndOuts(
       g, 
       overall_p_max, // Если давление на входе не известно - задаём макс.
@@ -185,7 +185,7 @@ void SetInitialApproxPressures(
       continue;
     }
     // Находим min p вх узлов.
-    float min_p_v_in = 1000.0;
+    double min_p_v_in = 1000.0;
     for(auto in_v = v->InVerticesBegin(); in_v != v->inVerticesEnd(); ++in_v) {
       min_p_v_in = std::min(min_p_v_in, in_v->p());
     }
@@ -212,13 +212,13 @@ void SetInitialApproxPressures(
       v_next = v_next->OutVerticesBegin(); // Первый попавшийся выход.
     } // Путь сформирован.
 
-    float p_count = CountPressureApproxByPath(
+    double p_count = CountPressureApproxByPath(
         g, // Указатель на текущий граф.
         &(path) // Путь от текущей вершины до вершины с известным p.
     );
     /* Задаваемое значение должно соответствовать ограничениям.
     Если выходит за рамки [pmin, pmax], то задаём по ближнему краю.*/
-    float p_res = std::min( p_count, v->p_max() );
+    double p_res = std::min( p_count, v->p_max() );
     p_res = std::max( p_res, v->p_min() );
     v->set_p(p_res);
   } // Конец обхода всех вершин в топологическом порядке.
@@ -226,7 +226,7 @@ void SetInitialApproxPressures(
 
 /* Задать начальные приближения температур в графе.
 Начиная от входов с известным T, температура падает до Tос за 50 км.*/
-void SetInitialApproxTemperatures(GraphBoost *g, float t_os) {
+void SetInitialApproxTemperatures(GraphBoost *g, double t_os) {
   for(auto v = g->VertexBeginTopological(); v != g->VertexEndTopological(); 
       ++v) {
     if(v->gas().work_parameters.t > 0) { // Уже задано
@@ -234,9 +234,9 @@ void SetInitialApproxTemperatures(GraphBoost *g, float t_os) {
     }
     auto v_in = v->InVerticesBegin();
     auto e = g->GetEdge( v_in->id_in_graph(), v->id_in_graph() );
-    float l = e.pipe_length;
-    float t_in = v_in->t();
-    float t_res = std::max( t_os, t_in - (l/50)*(t_in-t_os) );
+    double l = e.pipe_length;
+    double t_in = v_in->t();
+    double t_res = std::max( t_os, t_in - (l/50)*(t_in-t_os) );
     v->set_t(t_res);
   }
 }

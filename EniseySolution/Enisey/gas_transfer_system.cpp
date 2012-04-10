@@ -126,7 +126,7 @@ void GasTransferSystem::SolveSlae() {
     DeltaP_[n] = DeltaP[n + 1];
   }
 }
-void GasTransferSystem::CountNewIteration(float g) {
+void GasTransferSystem::CountNewIteration(double g) {
   FormSlae();
   SolveSlae();
 //  WriteToGraphviz("C:\\Enisey\\out\\MixVertices.dot");
@@ -140,8 +140,8 @@ void GasTransferSystem::CountNewIteration(float g) {
   CountAllEdges();
   MixVertices();
 }
-float GasTransferSystem::CountDisbalance() {
-  float d(0.0);
+double GasTransferSystem::CountDisbalance() {
+  double d(0.0);
   for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological();
       ++v) {
       d += v->CountDisbalance();
@@ -171,8 +171,8 @@ void const GasTransferSystem::WriteToGraphviz(std::string const filename) {
   writer.WriteGraphToFile(*g_, filename);
 }
 void GasTransferSystem::MakeInitialApprox() {
-  float overall_p_min(999.0);
-  float overall_p_max(-999.0);
+  double overall_p_min(999.0);
+  double overall_p_max(-999.0);
   FindOverallMinAndMaxPressureConstraints(
       g_, 
       &overall_p_max,

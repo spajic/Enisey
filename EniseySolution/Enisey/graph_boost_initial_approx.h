@@ -7,8 +7,8 @@ class GraphBoost;
 /** Найти максимальное и минимальное ограничение среди всех объектов ГТС*/
 void FindOverallMinAndMaxPressureConstraints(
   GraphBoost *graph, 
-  float *overall_p_max,
-  float *overall_p_min);
+  double *overall_p_max,
+  double *overall_p_min);
 
 /**Задать для графа поле давлений - начальное приближение.
 Начальное приближение должно удовлетворять следующим условиям:<pre>
@@ -25,8 +25,8 @@ void FindOverallMinAndMaxPressureConstraints(
 \param graph Граф, для которого нужно задать начальное приближение.*/
 void SetInitialApproxPressures(
     GraphBoost *g,
-    float overall_p_max,
-    float overall_p_min);
+    double overall_p_max,
+    double overall_p_min);
 
 /**Задать для всех вершин графа ограничения по давлению.<pre>
 Входные данные для алгоритма:
@@ -59,8 +59,8 @@ void SetInitialApproxPressures(
 */
 void SetPressureConstraintsForVertices(
     GraphBoost *graph,
-    float overall_p_min,
-    float overall_p_max );
+    double overall_p_min,
+    double overall_p_max );
 
 /** Проверить непротиворечивость задания ограничений на давление в графе.<pre>
  1. overall_p_min, overall_p_max должны быть > 0.
@@ -69,9 +69,9 @@ void SetPressureConstraintsForVertices(
 Возвращает true, если всё корректно. */
 bool ChechPressureConstraintsForVertices(
     GraphBoost *graph,
-    float overall_p_min,
-    float overall_p_max );
+    double overall_p_min,
+    double overall_p_max );
 
 /** Затдать начальные приближения температур в графе.
 Пока простой алгоритм: температура линейно падает до Тос за 50 км.*/
-void SetInitialApproxTemperatures(GraphBoost *g, float t_os);
+void SetInitialApproxTemperatures(GraphBoost *g, double t_os);

@@ -3,7 +3,7 @@
 Невыполнение EXPECT - не фатально, выполнение продолжается.
 
 Интересные EXPECT'ы:
-FLOAT_EQ, DOUBLE_EQ; — неточное сравнение float, double.
+double_EQ, DOUBLE_EQ; — неточное сравнение double, double.
 NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 
 Тесты можно группировать по файлам и включить (#include) их в test.cpp.
@@ -50,10 +50,10 @@ TEST(PipeSequential, CountSequentialOut) {
   params_in.q = 387.843655734; // [м3/сек]
 
   // Производим расчёт параметров газа на выходе.
-  float p_out(-999.0);
-  float t_out(-999.0);
-  float number_of_segments = 10;
-  float length_of_segment = passport.length_ / number_of_segments;
+  double p_out(-999.0);
+  double t_out(-999.0);
+  double number_of_segments = 10;
+  double length_of_segment = passport.length_ / number_of_segments;
   /* Получены результаты:
   p_out = 2.9721224, t_out = 280.14999 
   (В Весте - p_out = 2.9769, t_out = 279.78)
@@ -75,7 +75,7 @@ TEST(PipeSequential, CountSequentialOut) {
       // Результаты: out-параметры.
       &t_out, &p_out); 
 
-  float eps = 1.0e-4;
+  double eps = 1.0e-4;
   ASSERT_LE(abs(p_out - 2.9721224), eps);
   ASSERT_LE(abs(t_out - 280.14999), eps);
 }
@@ -330,8 +330,8 @@ TEST(DISABLED_InitialApprox, CorrectnessOfInitialConstraintsForVertices) {
   GraphBoost graph;
   GraphBoostLoadFromVesta(&graph, &vfd);
   // 2. Рассчитываем overall ограничения по всему графу.
-  float overall_p_min(999.0);
-  float overall_p_max(-999.0);
+  double overall_p_min(999.0);
+  double overall_p_max(-999.0);
   FindOverallMinAndMaxPressureConstraints(
       &graph, 
       &overall_p_max,
@@ -366,8 +366,8 @@ TEST(DISABLED_InitialApprox, InitialApprox) {
   GraphBoost graph;
   GraphBoostLoadFromVesta(&graph, &vfd);
   // 2. Рассчитываем overall ограничения по всему графу.
-  float overall_p_min(999.0);
-  float overall_p_max(-999.0);
+  double overall_p_min(999.0);
+  double overall_p_max(-999.0);
   FindOverallMinAndMaxPressureConstraints(
     &graph, 
     &overall_p_max,

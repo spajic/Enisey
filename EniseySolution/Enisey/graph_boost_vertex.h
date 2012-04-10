@@ -22,9 +22,9 @@ class GraphBoostVertex {
   /** Взять состав газа из предка. Выполнять в топологическом порядке.*/
   void InitialMix();
   /** Расчёт дисбаланса в вершине */
-  float CountDisbalance();
+  double CountDisbalance();
   /** Находится ли дисбаланс в вершине в допустимых рамках. */
-  bool AcceptableDisbalance(float const max_disb);
+  bool AcceptableDisbalance(double const max_disb);
   /** Получение номера строки СЛАУ, соотв-й узлу.*/
   int slae_row();
   /** Задание номера строки СЛАУ, соотв-й узлу.*/
@@ -50,21 +50,21 @@ class GraphBoostVertex {
   /** Функции задания и получения давления. Не влияют на PIsReady().
   \todo Может вообще убрать P из Gas. Оно не нужно при смешивании, в отличие от
   всего остального там присутствующего, и создаёт путаницу.*/
-  void set_p(float p);
-  float p();
+  void set_p(double p);
+  double p();
   // Функции задания и получения температруы.
-  void set_t(float t);
-  float t();
+  void set_t(double t);
+  double t();
 
   void set_id_in_graph(int id_in_graph);
   int id_in_graph();
   void set_id_vesta(int id_vesta);
   int id_vesta();
 
-  void AddInputWithSetP(int id_inout, float p, float t, GasCompositionReduced composition);
-  void AddInputWithSetQ(int id_inout, float q, float t, GasCompositionReduced composition);
-  void AddOutputWithSetP(int id_inout, float p);
-  void AddOutputWithSetQ(int id_inout, float q);
+  void AddInputWithSetP(int id_inout, double p, double t, GasCompositionReduced composition);
+  void AddInputWithSetQ(int id_inout, double q, double t, GasCompositionReduced composition);
+  void AddOutputWithSetP(int id_inout, double p);
+  void AddOutputWithSetQ(int id_inout, double q);
 
   bool PIsReady();
   bool QIsReady();
@@ -76,7 +76,7 @@ class GraphBoostVertex {
   bool IsGraphInput();
   bool IsGraphOutput();
 
-  float InOutAmount();
+  double InOutAmount();
 
   void set_engine(GraphBoostEngine* engine);
   GraphBoostEngine* engine();
@@ -90,16 +90,16 @@ class GraphBoostVertex {
 
   void set_id_distant_dominator(int id_distant_dominator);
   int id_distant_dominator();
-  void set_q_in_domintator_subtree(float q);
-  float q_in_dominators_subtree();
+  void set_q_in_domintator_subtree(double q);
+  double q_in_dominators_subtree();
 // Для вычисления ограничений PMin, PMax с учётом предков и детей.
 // Используется при задании начальных приближений.
-  float p_min();
-  void set_p_min(float p_min);
-  float p_max();
-  void set_p_max(float p_max);
+  double p_min();
+  void set_p_min(double p_min);
+  double p_max();
+  void set_p_max(double p_max);
 private:
-  float slae_row_;
+  double slae_row_;
   Gas gas_;
 
   GraphBoostEngine* engine_;
@@ -111,19 +111,19 @@ private:
   bool has_in_out_;
   bool is_graph_input_;
   bool is_graph_output_;
-  float in_out_amount_;
-  float amount_in_dominator_subtree_;
+  double in_out_amount_;
+  double amount_in_dominator_subtree_;
   Choice is_all_children_dominator_;
   int id_dominator_in_graph_;
   int id_distant_dominator_;
 
 // Для вычисления ограничений PMin, PMax с учётом предков и детей.
-  float p_min_;
-  float p_max_;
+  double p_min_;
+  double p_max_;
 
   // Сумма q в поддереве доминаторов - для расчёта q при предварительном
   // анализе графа.
-  float q_in_dominators_subtree_;
+  double q_in_dominators_subtree_;
 
 
 

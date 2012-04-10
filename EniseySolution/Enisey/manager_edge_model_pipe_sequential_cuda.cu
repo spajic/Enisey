@@ -16,12 +16,12 @@
 __global__ 
 void FindQResultCudaKernel(
 	int size,
-	float* den_sc, float* co2, float* n2, 
-	float2* p_and_t, float* p_target,
-	float* length,
-	float2* d_in_out,
-	float4* hydr_rough_env_exch,
-	float* q_result
+	double* den_sc, double* co2, double* n2, 
+	double2* p_and_t, double* p_target,
+	double* length,
+	double2* d_in_out,
+	double4* hydr_rough_env_exch,
+	double* q_result
 )
 {
 	int index = threadIdx.x + blockIdx.x * blockDim.x;
@@ -29,25 +29,25 @@ void FindQResultCudaKernel(
 	{
 		// Загружаем данные
 		// Состав газа
-		float den_sc_ = den_sc[index];
-		float co2_ = co2[index];
-		float n2_ = n2[index];
+		double den_sc_ = den_sc[index];
+		double co2_ = co2[index];
+		double n2_ = n2[index];
 		// Давление и температура на входе
-		float2 p_and_t_ = p_and_t[index];
+		double2 p_and_t_ = p_and_t[index];
 		// Пасспотные параметры трубы
-		float length_ = length[index];
-		float2 d_in_out_ = d_in_out[index];
-		float4 hydr_rough_env_exch_ = hydr_rough_env_exch[index];
-		float p_target_ = p_target[index];
+		double length_ = length[index];
+		double2 d_in_out_ = d_in_out[index];
+		double4 hydr_rough_env_exch_ = hydr_rough_env_exch[index];
+		double p_target_ = p_target[index];
 		
 		// Вычисляем базовые свойства газового потока
-		float r_sc_ = FindRStandartConditionsCuda(den_sc_);
-		float t_pc_ = FindTPseudoCriticalCuda(den_sc_, co2_, n2_);
-		float p_pc_ = FindPPseudoCriticalCuda(den_sc_, co2_, n2_);
+		double r_sc_ = FindRStandartConditionsCuda(den_sc_);
+		double t_pc_ = FindTPseudoCriticalCuda(den_sc_, co2_, n2_);
+		double p_pc_ = FindPPseudoCriticalCuda(den_sc_, co2_, n2_);
 
-		float q_out = 0;
-		float p_out = 0;
-		float t_out = 0;
+		double q_out = 0;
+		double p_out = 0;
+		double t_out = 0;
 		
 		FindSequentialQCudaRefactored(
 			 p_target_,
@@ -87,30 +87,30 @@ ManagerEdgeModelPipeSequentialCuda::ManagerEdgeModelPipeSequentialCuda()
 		cutilSafeCall( cudaSetDevice(i) );
 		cutilSafeCall( cudaStreamCreate(&(thread_data_[i].stream)) );
 
-		cudaMalloc((void**)&(thread_data_[i].length_dev_),				max_count_of_edges * sizeof(float) / gpu_count_);
-		cudaMalloc((void**)&thread_data_[i].d_in_out_dev_,				max_count_of_edges * sizeof(float2) / gpu_count_);
-		cudaMalloc((void**)&thread_data_[i].hydr_rough_env_exch_dev_,	max_count_of_edges * sizeof(float4) / gpu_count_);
-		cudaMalloc((void**)&thread_data_[i].p_in_and_t_in_dev_,			max_count_of_edges * sizeof(float2) / gpu_count_);
-		cudaMalloc((void**)&thread_data_[i].p_target_dev_,				max_count_of_edges * sizeof(float) / gpu_count_);
-		cudaMalloc((void**)&thread_data_[i].q_result_dev_,				max_count_of_edges * sizeof(float) / gpu_count_);
-		cudaMalloc((void**)&thread_data_[i].den_sc_dev_,				max_count_of_edges * sizeof(float) / gpu_count_);
-		cudaMalloc((void**)&thread_data_[i].co2_dev_,					max_count_of_edges * sizeof(float) / gpu_count_);
-		cudaMalloc((void**)&thread_data_[i].n2_dev_,					max_count_of_edges * sizeof(float) / gpu_count_);
+		cudaMalloc((void**)&(thread_data_[i].length_dev_),				max_count_of_edges * sizeof(double) / gpu_count_);
+		cudaMalloc((void**)&thread_data_[i].d_in_out_dev_,				max_count_of_edges * sizeof(double2) / gpu_count_);
+		cudaMalloc((void**)&thread_data_[i].hydr_rough_env_exch_dev_,	max_count_of_edges * sizeof(double4) / gpu_count_);
+		cudaMalloc((void**)&thread_data_[i].p_in_and_t_in_dev_,			max_count_of_edges * sizeof(double2) / gpu_count_);
+		cudaMalloc((void**)&thread_data_[i].p_target_dev_,				max_count_of_edges * sizeof(double) / gpu_count_);
+		cudaMalloc((void**)&thread_data_[i].q_result_dev_,				max_count_of_edges * sizeof(double) / gpu_count_);
+		cudaMalloc((void**)&thread_data_[i].den_sc_dev_,				max_count_of_edges * sizeof(double) / gpu_count_);
+		cudaMalloc((void**)&thread_data_[i].co2_dev_,					max_count_of_edges * sizeof(double) / gpu_count_);
+		cudaMalloc((void**)&thread_data_[i].n2_dev_,					max_count_of_edges * sizeof(double) / gpu_count_);
 
 		// Пасспортные параметры
-		cutilSafeCall(cudaMallocHost((void**)&(thread_data_[i].length_), max_count_of_edges * sizeof(float) / gpu_count_) );
-		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].d_in_out_, max_count_of_edges * sizeof(float2) / gpu_count_) );
-		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].hydr_rough_env_exch_, max_count_of_edges * sizeof(float4) / gpu_count_) );
+		cutilSafeCall(cudaMallocHost((void**)&(thread_data_[i].length_), max_count_of_edges * sizeof(double) / gpu_count_) );
+		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].d_in_out_, max_count_of_edges * sizeof(double2) / gpu_count_) );
+		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].hydr_rough_env_exch_, max_count_of_edges * sizeof(double4) / gpu_count_) );
 		
 
 
 		// Рабочие параметры
-		cutilSafeCall(cudaMallocHost((void**)&(thread_data_[i].p_in_and_t_in_), max_count_of_edges * sizeof(float2) / gpu_count_) );
-		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].p_target_, max_count_of_edges * sizeof(float) / gpu_count_) );
-		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].q_result_, max_count_of_edges * sizeof(float) / gpu_count_) );
-		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].den_sc_, max_count_of_edges * sizeof(float) / gpu_count_) );
-		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].co2_, max_count_of_edges * sizeof(float) / gpu_count_) );
-		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].n2_, max_count_of_edges * sizeof(float) / gpu_count_) );
+		cutilSafeCall(cudaMallocHost((void**)&(thread_data_[i].p_in_and_t_in_), max_count_of_edges * sizeof(double2) / gpu_count_) );
+		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].p_target_, max_count_of_edges * sizeof(double) / gpu_count_) );
+		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].q_result_, max_count_of_edges * sizeof(double) / gpu_count_) );
+		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].den_sc_, max_count_of_edges * sizeof(double) / gpu_count_) );
+		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].co2_, max_count_of_edges * sizeof(double) / gpu_count_) );
+		cutilSafeCall(cudaMallocHost((void**)&thread_data_[i].n2_, max_count_of_edges * sizeof(double) / gpu_count_) );
 	}
 	
 }
@@ -172,12 +172,12 @@ Edge* ManagerEdgeModelPipeSequentialCuda::CreateEdge(const Passport* passport)
 	//cutilSafeCall( cudaSetDevice(i) );
 	thread_data_[i].length_[index] = pass.length_;
 	
-	float2 d_in_out_temp;
+	double2 d_in_out_temp;
 	d_in_out_temp.x = pass.d_inner_;
 	d_in_out_temp.y =  pass.d_outer_;
 	thread_data_[i].d_in_out_[index] = d_in_out_temp;
 	
-	float4 hydr_rough_env_exch_temp;
+	double4 hydr_rough_env_exch_temp;
 	hydr_rough_env_exch_temp.x = pass.hydraulic_efficiency_coeff_;
 	hydr_rough_env_exch_temp.y = pass.roughness_coeff_;
 	hydr_rough_env_exch_temp.z = pass.t_env_;
@@ -211,7 +211,7 @@ void ManagerEdgeModelPipeSequentialCuda::set_gas_in(const Gas* gas, int index)
 	thread_data_[i].co2_[index] = gas->composition.co2;
 	thread_data_[i].n2_[index] = gas->composition.n2;
 
-	float2 p_in_and_t_in_temp;
+	double2 p_in_and_t_in_temp;
 	p_in_and_t_in_temp.x = gas->work_parameters.p;
 	p_in_and_t_in_temp.y = gas->work_parameters.t;
 
@@ -246,9 +246,9 @@ void ManagerEdgeModelPipeSequentialCuda::FinishAddingEdges()
 	{	
 		cutilSafeCall( cudaSetDevice(i) );
 
-		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].length_dev_,				thread_data_[i].length_,				(sizeof(float) * max_count_of_edges) / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
-		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].d_in_out_dev_,		thread_data_[i].d_in_out_,				sizeof(float2) * max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
-		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].hydr_rough_env_exch_dev_,thread_data_[i].hydr_rough_env_exch_,sizeof(float4) * max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
+		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].length_dev_,				thread_data_[i].length_,				(sizeof(double) * max_count_of_edges) / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
+		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].d_in_out_dev_,		thread_data_[i].d_in_out_,				sizeof(double2) * max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
+		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].hydr_rough_env_exch_dev_,thread_data_[i].hydr_rough_env_exch_,sizeof(double4) * max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
 	}
 }
 
@@ -267,11 +267,11 @@ void ManagerEdgeModelPipeSequentialCuda::CountAll()
 	{
 		cutilSafeCall( cudaSetDevice(i) );
 
-		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].p_in_and_t_in_dev_, thread_data_[i].p_in_and_t_in_,	sizeof(float2) * max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
-		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].p_target_dev_, thread_data_[i].p_target_,			sizeof(float) * max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
-		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].den_sc_dev_, thread_data_[i].den_sc_,				sizeof(float) *max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
-		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].co2_dev_, thread_data_[i].co2_,						sizeof(float) * max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
-		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].n2_dev_, thread_data_[i].n2_,						sizeof(float) * max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
+		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].p_in_and_t_in_dev_, thread_data_[i].p_in_and_t_in_,	sizeof(double2) * max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
+		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].p_target_dev_, thread_data_[i].p_target_,			sizeof(double) * max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
+		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].den_sc_dev_, thread_data_[i].den_sc_,				sizeof(double) *max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
+		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].co2_dev_, thread_data_[i].co2_,						sizeof(double) * max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
+		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].n2_dev_, thread_data_[i].n2_,						sizeof(double) * max_count_of_edges / gpu_count_, cudaMemcpyHostToDevice, thread_data_[i].stream) );
 
 		// выполняем расчёт на device
 		FindQResultCudaKernel<<<512, 64, 0, thread_data_[i].stream>>>(
@@ -284,7 +284,7 @@ void ManagerEdgeModelPipeSequentialCuda::CountAll()
 			thread_data_[i].q_result_dev_);
 
 		// копируем рассчитанное q обратно на host
-		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].q_result_, thread_data_[i].q_result_dev_, sizeof(float) * max_count_of_edges / gpu_count_, cudaMemcpyDeviceToHost, thread_data_[i].stream) );
+		cutilSafeCall(cudaMemcpyAsync(thread_data_[i].q_result_, thread_data_[i].q_result_dev_, sizeof(double) * max_count_of_edges / gpu_count_, cudaMemcpyDeviceToHost, thread_data_[i].stream) );
 	}
 
 	for(int i = 0; i < gpu_count_; i++)
@@ -294,7 +294,7 @@ void ManagerEdgeModelPipeSequentialCuda::CountAll()
 	}
 }
 
-float ManagerEdgeModelPipeSequentialCuda::q(int index)
+double ManagerEdgeModelPipeSequentialCuda::q(int index)
 {
 	int i = 0;
 	if(index < max_count_of_edges / gpu_count_)

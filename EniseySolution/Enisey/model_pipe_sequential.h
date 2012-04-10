@@ -32,9 +32,9 @@ class ModelPipeSequential {
   dq_dp = ( q(p + eps) - q(p) ) / eps.
   */
   void Count();
-  float q(); ///< Поулчить расчитанный расход.
-  float dq_dp_in(); ///< Получить производную по Pвх.
-  float dq_dp_out(); ///< Получить производную по Pвых.
+  double q(); ///< Поулчить расчитанный расход.
+  double dq_dp_in(); ///< Получить производную по Pвх.
+  double dq_dp_out(); ///< Получить производную по Pвых.
   bool IsReverse(); ///< Направление потока обратное? (м.б. прямым и обратным)
  private:
   /// Вызов функции расчёта q с стуктурированными параметрами.
@@ -43,11 +43,11 @@ class ModelPipeSequential {
       const Gas &gas_out,
       const PassportPipe &passport,
       const int number_of_segments,
-      float *t_out,
-      float *q_out); 
-  float q_; ///< Расход.
-  float dq_dp_in_; ///< Производная q по Pвх.
-  float dq_dp_out_; ///< Производная q по Pвых.
+      double *t_out,
+      double *q_out); 
+  double q_; ///< Расход.
+  double dq_dp_in_; ///< Производная q по Pвх.
+  double dq_dp_out_; ///< Производная q по Pвых.
   PassportPipe passport_; ///< Паспорт трубы.
   Gas gas_in_; ///< Объект Газ на входе.
   Gas gas_out_; ///< Объект Газ на выходе.

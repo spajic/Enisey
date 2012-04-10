@@ -48,15 +48,15 @@ TEST_F(GasTransferSystemFromVestaTest, CountsAllEdges) {
     "C:\\Enisey\\out\\GTSCountsAllEdges.dot";
   /// \todo Добавить автоматические проверки на корректность.
   gts.WriteToGraphviz(graphviz_filename);
-  float d = gts.CountDisbalance();
+  double d = gts.CountDisbalance();
   std::cout << "Disb1 = " << d << std::endl;
-  std::list<float> disbs;
-  float g = 1.0 / 3.0;
-  float d_prev = 1000000;
+  std::list<double> disbs;
+  double g = 1.0 / 3.0;
+  double d_prev = 1000000;
   gts.SetSlaeRowNumsForVertices();
   for(int n = 0; n < 35; ++n) {
     gts.CountNewIteration(g);
-    float d = gts.CountDisbalance();
+    double d = gts.CountDisbalance();
     if(d_prev < d) {
       g *= 0.9;
     }

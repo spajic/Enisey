@@ -44,6 +44,6 @@ TEST_F( ModelPipeSequentialTest, CountsDerivativesForReverseFlow ) {
   reverse_pipe.set_gas_out( &gas_in );
   reverse_pipe.Count();
   // Производные должны быть обменены местами и знаками.
-  EXPECT_FLOAT_EQ(reverse_pipe.dq_dp_in(), -pipe.dq_dp_out() );
-  EXPECT_FLOAT_EQ(reverse_pipe.dq_dp_out(), -pipe.dq_dp_in() ); 
+  EXPECT_DOUBLE_EQ(reverse_pipe.dq_dp_in(), -pipe.dq_dp_out() );
+  EXPECT_DOUBLE_EQ(reverse_pipe.dq_dp_out(), -pipe.dq_dp_in() ); 
 }

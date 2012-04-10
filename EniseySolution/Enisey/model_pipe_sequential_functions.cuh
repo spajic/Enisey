@@ -7,26 +7,26 @@
 //#include "gas_count_functions.cuh" - теперь в functions_gas.h
 #include "functions_gas.h"
 
-float ReturnPNextSequential(
-	float p_work, float t_work, float q, // рабочие параметры газового потока
-	float den_sc, // состав газа
-	float r_sc,   // базовые свойства газа          			
-	float lambda, float z, // свойства газа при рабочих условиях
-	float d_inner, // пасспорт трубы
-	float length_of_segment) // длина сегмента
+double ReturnPNextSequential(
+	double p_work, double t_work, double q, // рабочие параметры газового потока
+	double den_sc, // состав газа
+	double r_sc,   // базовые свойства газа          			
+	double lambda, double z, // свойства газа при рабочих условиях
+	double d_inner, // пасспорт трубы
+	double length_of_segment) // длина сегмента
 {
-	// static const float kPi = 3.14159265358979323846264338327950288419716939937510;
+	// static const double kPi = 3.14159265358979323846264338327950288419716939937510;
 	// Вычитаемое для расчёта p_next
-	float minus = 10*q*q * (length_of_segment) * 
+	double minus = 10*q*q * (length_of_segment) * 
 		(16*r_sc * (den_sc*den_sc) * lambda * z * t_work) / 
 		(3.1415926535897932384626433832795*3.1415926535897932384626433832795 *
 		pow(d_inner/10, 5) );
-	float p_next = p_work*p_work - minus;
+	double p_next = p_work*p_work - minus;
 	// Если полученный квадрат давление больше нуля,
 	// возвращаем квадратный корень из него
 	if(p_next > 0)
 	{
-		return pow(p_next, static_cast<float>(0.5));		 
+		return pow(p_next, static_cast<double>(0.5));		 
 	}
 	// иначе - считаем, что давление упало до нуля.
 	else
@@ -36,23 +36,23 @@ float ReturnPNextSequential(
 	return p_next;
 };
 
-float ReturnTNextSequential(
-	float p_next, // результат рабботы ReturnPNextSequential
-	float p_work, float t_work, float q, // рабочие параметры газового потока
-	float den_sc, // состав газа
-	float c, float di, // свойства газа при рабочих условиях
-	float d_outer, // пасспорт трубы
-	float t_env, float heat_exchange_coeff, // свойства окуражающей среды
-	float length_of_segment)
+double ReturnTNextSequential(
+	double p_next, // результат рабботы ReturnPNextSequential
+	double p_work, double t_work, double q, // рабочие параметры газового потока
+	double den_sc, // состав газа
+	double c, double di, // свойства газа при рабочих условиях
+	double d_outer, // пасспорт трубы
+	double t_env, double heat_exchange_coeff, // свойства окуражающей среды
+	double length_of_segment)
 {
 	// kPi = 3.14159265358979323846264338327950288419716939937510
 	// коэф-т при (T-Tos) [б.р]
-	float s1 = (length_of_segment * d_outer * heat_exchange_coeff * 3.1415926535897932384626433832795) / 
+	double s1 = (length_of_segment * d_outer * heat_exchange_coeff * 3.1415926535897932384626433832795) / 
 		(c * q * den_sc);
 
 	// Коэф-т при (PNext - P) [К/МПа] 
-	float s2 = di*1000000; 
-	float t_next = t_work - s1 * (t_work - t_env) + s2 * (p_next - p_work);
+	double s2 = di*1000000; 
+	double t_next = t_work - s1 * (t_work - t_env) + s2 * (p_next - p_work);
 	// Если полученная температура меньше температуры окружающей среды, то 
 	// считаем, что вышли на температуру окружающей среды
 	if(t_next < t_env)
@@ -65,31 +65,31 @@ float ReturnTNextSequential(
 // Рассчитать параметры газового потока на выходе трубы
 // по свойствам газа, рабочим параметрам на входе трубы, свойствам трубы, св-вам внешней среды, количеству разбиений
 void FindSequentialOut(
-	float p_work, float t_work, float q,  // рабочие параметры газового потока на входе
-	float den_sc, float co2, float n2, // состав газа
-	float d_inner, float d_outer, float roughness_coeff, float hydraulic_efficiency_coeff, // св-ва трубы
-	float t_env, float heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
-	float length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
-	float* t_out, float* p_out) // out - параметры, значения на выходе 
+	double p_work, double t_work, double q,  // рабочие параметры газового потока на входе
+	double den_sc, double co2, double n2, // состав газа
+	double d_inner, double d_outer, double roughness_coeff, double hydraulic_efficiency_coeff, // св-ва трубы
+	double t_env, double heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
+	double length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
+	double* t_out, double* p_out) // out - параметры, значения на выходе 
 {
 	// В цикле последовательно рассчитываем трубу в "узловых точках"
-	float p_next = p_work;
-	float t_next = t_work;
-	float p_current = p_work;
-	float t_current = t_work;
+	double p_next = p_work;
+	double t_next = t_work;
+	double p_current = p_work;
+	double t_current = t_work;
 
-	float p_pseudo_critical = FindPPseudoCritical(den_sc, co2, n2);
-	float t_pseudo_critical = FindTPseudoCritical(den_sc, co2, n2);
-	float r_sc = FindRStandartConditions(den_sc);
+	double p_pseudo_critical = FindPPseudoCritical(den_sc, co2, n2);
+	double t_pseudo_critical = FindTPseudoCritical(den_sc, co2, n2);
+	double r_sc = FindRStandartConditions(den_sc);
 
-	float p_reduced = 0;
-	float t_reduced = 0;
-	float z = 0;
-	float c = 0;
-	float mju = 0;
-	float di = 0;
-	float re = 0;
-	float lambda = 0;
+	double p_reduced = 0;
+	double t_reduced = 0;
+	double z = 0;
+	double c = 0;
+	double mju = 0;
+	double di = 0;
+	double re = 0;
+	double lambda = 0;
 		
 	for(int i = number_of_segments; i != 0; --i)
 	{
@@ -125,14 +125,14 @@ void FindSequentialOut(
 // Нужно, чтобы функция по q возрастала
 // И чтобы вначале отрезка была отрицательна, проходила через ноль,
 // и в конце отрезка была положительна. (Для решения методом деления отрезка пополам).
-float EquationToSolve(
-	float p_target,
-	float p_work, float t_work, float q,  // рабочие параметры газового потока на входе
-	float den_sc, float co2, float n2, // состав газа
-	float d_inner, float d_outer, float roughness_coeff, float hydraulic_efficiency_coeff, // св-ва трубы
-	float t_env, float heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
-	float length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
-	float* t_out, float* p_out)
+double EquationToSolve(
+	double p_target,
+	double p_work, double t_work, double q,  // рабочие параметры газового потока на входе
+	double den_sc, double co2, double n2, // состав газа
+	double d_inner, double d_outer, double roughness_coeff, double hydraulic_efficiency_coeff, // св-ва трубы
+	double t_env, double heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
+	double length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
+	double* t_out, double* p_out)
 {
 	FindSequentialOut(
 		p_work, t_work, q,  // рабочие параметры газового потока на входе
@@ -147,13 +147,13 @@ float EquationToSolve(
 // Параметры для этой функции - p_target + все те е, что для FindSequentialOut
 // за следующим исключением - q - теперь out-параметр, убираем парметр p_out
 int FindSequentialQ(
-	float p_target, // давление, которое должно получиться в конце
-	float p_work, float t_work,  // рабочие параметры газового потока на входе
-	float den_sc, float co2, float n2, // состав газа
-	float d_inner, float d_outer, float roughness_coeff, float hydraulic_efficiency_coeff, // св-ва трубы
-	float t_env, float heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
-	float length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
-	float* t_out, float* q_out) // out - параметры, значения на выходе )
+	double p_target, // давление, которое должно получиться в конце
+	double p_work, double t_work,  // рабочие параметры газового потока на входе
+	double den_sc, double co2, double n2, // состав газа
+	double d_inner, double d_outer, double roughness_coeff, double hydraulic_efficiency_coeff, // св-ва трубы
+	double t_env, double heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
+	double length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
+	double* t_out, double* q_out) // out - параметры, значения на выходе )
 {
 	// Решаем уравнение методом деления отрезка пополам
 	// Параметры метода - start, finish - определяют отрезок, где ищется решение
@@ -162,13 +162,13 @@ int FindSequentialQ(
 	// Подумать, как разумно настроить метод деления отрезка пополам для решения 
 	// данной задачи.
 	// ToDo: корректно обрабатывать возвращаемое значение (для аварийных случаев).
-	float start = 0.1;
-	float finish = 10000;
-	float eps_x = 0.1;
-	float eps_y = 0.0001;
+	double start = 0.1;
+	double finish = 10000;
+	double eps_x = 0.1;
+	double eps_y = 0.0001;
 
 	// Заглушка для вызова функции EquationToSolve
-	float p_out;
+	double p_out;
 	// Проверки
 	// Предполагается, что функция должна возрастать, начинаться ниже нуля, заканчиваться выше нуля.
 	if(EquationToSolve(
@@ -202,11 +202,11 @@ int FindSequentialQ(
 	}
 
 	// local values
-	float a = start;
-	float b = finish;
+	double a = start;
+	double b = finish;
 
-	float middle = (a + b) / 2;
-	float middle_val = EquationToSolve(
+	double middle = (a + b) / 2;
+	double middle_val = EquationToSolve(
 		p_target,
 		p_work, t_work, middle,  // рабочие параметры газового потока на входе
 		den_sc, co2, n2, // состав газа

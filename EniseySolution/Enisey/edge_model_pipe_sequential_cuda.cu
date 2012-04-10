@@ -38,7 +38,7 @@ std::string EdgeModelPipeSequentialCuda::GetName()
 	return "EdgeModelPipeSequentialCuda";
 }
 
-float EdgeModelPipeSequentialCuda::q()
+double EdgeModelPipeSequentialCuda::q()
 {
 	return manager_->q(index_);
 }

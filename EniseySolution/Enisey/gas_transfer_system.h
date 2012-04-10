@@ -28,9 +28,9 @@ class GasTransferSystem {
   Имея вектор DeltaP_ всем вершинам задать приращение.
   Произвести перерасчёт всех рёбер.
   Дисбаланс должен уменьшиться.*/
-  void CountNewIteration(float g);
+  void CountNewIteration(double g);
   /** Суммарный дисбаланс в системе. Сумма дисбалансов всех вершин.*/
-  float CountDisbalance();
+  double CountDisbalance();
   int GetIntDisbalance();
   /** Загрузить граф из файлов Весты, находящихся в папке path.
   Путь передаётся с последним слешем, например "C:\\vesta\\files\\"*/
@@ -51,9 +51,9 @@ class GasTransferSystem {
    /// Количество строк в СЛАУ.
   int slae_size_;
   GraphBoost *g_; ///< Внутреннее представление графа - GraphBoost.
-  std::map<std::pair<int, int>, float> A_; ///< Матрица СЛАУ.
-  std::vector<float> B_; ///< Вектор правых частей СЛАУ.
-  std::vector<float> DeltaP_; ///< Вектор решений СЛАУ.
+  std::map<std::pair<int, int>, double> A_; ///< Матрица СЛАУ.
+  std::vector<double> B_; ///< Вектор правых частей СЛАУ.
+  std::vector<double> DeltaP_; ///< Вектор решений СЛАУ.
   /** Первоначальное смешение газовых потоков. Просто "протягиваем"
   состав газа от входа к выходам.*/
   void MakeInitialMix();

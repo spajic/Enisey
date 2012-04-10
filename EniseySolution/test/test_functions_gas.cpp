@@ -33,13 +33,13 @@ TEST(Gas, GasCountFunctions) {
   // p_pseudo_critical = 4.6355228 [МПа]
   // z_standart_conditions = 0.99798650 [б.р.]
   // r_standart_conditions = 503.37848 [Дж / (кг * К)]
-  float t_pseudo_critical = FindTPseudoCritical(
+  double t_pseudo_critical = FindTPseudoCritical(
     composition.density_std_cond, composition.co2, composition.n2);
-  float p_pseudo_critical = FindPPseudoCritical(
+  double p_pseudo_critical = FindPPseudoCritical(
     composition.density_std_cond, composition.co2, composition.n2);
-  float z_standart_conditions = FindZStandartConditions(
+  double z_standart_conditions = FindZStandartConditions(
     composition.density_std_cond, composition.co2, composition.n2);
-  float r_standart_conditions = FindRStandartConditions(
+  double r_standart_conditions = FindRStandartConditions(
     composition.density_std_cond);
 
   // Вычисление характеристик газа при рабочем давлении и температуре
@@ -50,13 +50,13 @@ TEST(Gas, GasCountFunctions) {
   // mju = 1.0930206e-5	(значение в Весте mju = 1.093e-5)
   // z = 0.91878355		(значение в Весте z = 0.91878)
   // ro = 23.002302
-  float p_reduced = FindPReduced(params.p, p_pseudo_critical);
-  float t_reduced = FindTReduced(params.t, t_pseudo_critical);
-  float c = FindC(t_reduced, p_reduced, r_standart_conditions);
-  float di = FindDi(p_reduced, t_reduced);
-  float mju = FindMju(p_reduced, t_reduced);
-  float z = FindZ(p_reduced, t_reduced);
-  float ro = FindRo(composition.density_std_cond, params.p, params.t, z);
+  double p_reduced = FindPReduced(params.p, p_pseudo_critical);
+  double t_reduced = FindTReduced(params.t, t_pseudo_critical);
+  double c = FindC(t_reduced, p_reduced, r_standart_conditions);
+  double di = FindDi(p_reduced, t_reduced);
+  double mju = FindMju(p_reduced, t_reduced);
+  double z = FindZ(p_reduced, t_reduced);
+  double ro = FindRo(composition.density_std_cond, params.p, params.t, z);
 
   /* Проверим на адекватность так же функции, 
   которые зависят и от паспорта трубы*/
@@ -65,8 +65,8 @@ TEST(Gas, GasCountFunctions) {
 
   // re = 31017164.0
   // lambda = 0.010797811
-  float re = FindRe(params.q, composition.density_std_cond, mju, passport.d_inner_);
-  float lambda = FindLambda(re, passport.d_inner_, passport.roughness_coeff_, passport.hydraulic_efficiency_coeff_);
+  double re = FindRe(params.q, composition.density_std_cond, mju, passport.d_inner_);
+  double lambda = FindLambda(re, passport.d_inner_, passport.roughness_coeff_, passport.hydraulic_efficiency_coeff_);
 
   // Видно, что значения mju и z практически совпали с Вестой,
   // с немного отличается. 
@@ -74,7 +74,7 @@ TEST(Gas, GasCountFunctions) {
   // Если значения вдруг станут вычислятся по другому, тест даст нам знать.
 
   // Задаём точность сравнения eps
-  float eps = 1.0e-4;
+  double eps = 1.0e-4;
 
   // Проверки базовых параметров
   EXPECT_LE(abs(t_pseudo_critical - 194.07213), eps);
@@ -93,7 +93,7 @@ TEST(Gas, GasCountFunctions) {
 
   // Проверки для re и lambda
   // Для re задаём свою точность, потому что число большое
-  float eps_re = 1;
+  double eps_re = 1;
   EXPECT_LE(abs(re - 31017164.0), eps_re);
   EXPECT_LE(abs(lambda - 0.010797811), eps);
 }

@@ -12,35 +12,35 @@
 \param den_sc Плотность при стандартных условиях [кг/м3]
 \param co2 Доля содержания CO2 [б.р.]
 \param n2 Доля содержания N2 [б.р.] */
-float FindTPseudoCritical(float den_sc, float co2, float n2);
-float FindPPseudoCritical(float den_sc, float co2, float n2);
+double FindTPseudoCritical(double den_sc, double co2, double n2);
+double FindPPseudoCritical(double den_sc, double co2, double n2);
 // Фактор сжимаемости при с.у. [б.р.]
-float FindZStandartConditions(float den_sc, float co2, float n2);
+double FindZStandartConditions(double den_sc, double co2, double n2);
 // Газовая постоянная при с.у. [Джоуль / (Моль*Кельвин)]
-float FindRStandartConditions(float den_sc);
+double FindRStandartConditions(double den_sc);
 // Далее - функции вычисления параметров при рабочих давлении и тем-ре
 // Вычислить приведённые давление и температуру
-float FindPReduced(float p_work, float p_pseudo_critical);
-float FindTReduced(float t_work, float t_pseudo_critical);
+double FindPReduced(double p_work, double p_pseudo_critical);
+double FindTReduced(double t_work, double t_pseudo_critical);
 // Теплоёмкость при р.у. [Дж/(кг*К)]
-float FindC(
-    float t_reduced, 
-    float p_reduced, 
-    float r_standart_conditions);
+double FindC(
+    double t_reduced, 
+    double p_reduced, 
+    double r_standart_conditions);
 // Коэффициент Джоуля-Томпсона при рабочих условиях
-float FindDi(float p_reduced, float t_reduced);
+double FindDi(double p_reduced, double t_reduced);
 // Динамическая вязкость при рабочих условиях
-float FindMju(float p_reduced, float t_reduced);
+double FindMju(double p_reduced, double t_reduced);
 // Коэффициент сжимаемости при рабочих условиях [б.р.]
-float FindZ(float p_reduced, float t_reduced);
+double FindZ(double p_reduced, double t_reduced);
 // Плотность при рабочих условиях [кг/м3]
-float FindRo(float den_sc, float p_work, float t_work, float z);
+double FindRo(double den_sc, double p_work, double t_work, double z);
 // Число Рейнольдса
-float FindRe(float q, float den_sc, float mju, float d_inner);
+double FindRe(double q, double den_sc, double mju, double d_inner);
 // Коэффициент гидравлического сопротивления (число Лямбда) 
 // Требует, чтобы число Рейнольдса было рассчитано!
-float FindLambda(
-    float re, 
-    float d_inner, 
-    float roughness_coefficient, 
-    float hydraulic_efficiency_coefficient);
+double FindLambda(
+    double re, 
+    double d_inner, 
+    double roughness_coefficient, 
+    double hydraulic_efficiency_coefficient);

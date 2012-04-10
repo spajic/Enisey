@@ -61,7 +61,7 @@ void LoadPipeLines(std::string file_name, VestaFilesData *vsd) {
     int pipe_id = -1;
     int pipe_type = -1;
     int pipe_mg = -1; // Номер нитки МГ.
-    float pipe_height_difference = 0;
+    double pipe_height_difference = 0;
     f >> pipe_id >> pipe_type >> pipe_mg;
     f >> passport.hydraulic_efficiency_coeff_ >> passport.heat_exchange_coeff_;
     f >> passport.t_env_; 
@@ -86,11 +86,11 @@ void LoadInOutGRS(std::string file_name, VestaFilesData *vsd) {
     * разобраться с этим */
     int control_pressure = -1; // Признак контроля давления.
     int id_pipeline = -1; // Идентификатор нитки.
-    float humidity = -1; // Влажность газа.
-    float Pst = -1; // Новые параметры Pst, A, B, Qmax.
-    float A = -1; 
-    float B = -1;
-    float Qmax = -1; 
+    double humidity = -1; // Влажность газа.
+    double Pst = -1; // Новые параметры Pst, A, B, Qmax.
+    double A = -1; 
+    double B = -1;
+    double Qmax = -1; 
     f >> inout.id >> inout.q;
     inout.q /= 0.0864; // Перевод из [млн м3/cут] в [м3/cек].
     f >> inout.temp; 

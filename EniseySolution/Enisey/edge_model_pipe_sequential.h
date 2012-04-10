@@ -16,9 +16,9 @@ public:
   const Gas& gas_in();
   const Gas& gas_out();
   std::string GetName();
-  float q();
-  float dq_dp_in();
-  float dq_dp_out();
-  float IsReverse();
+  double q();
+  double dq_dp_in();
+  double dq_dp_out();
+  double IsReverse();
   ModelPipeSequential* pointer_to_model_;
 };

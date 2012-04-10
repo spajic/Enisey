@@ -15,28 +15,28 @@ struct GpuThreadData
 {
   cudaStream_t stream;
 
-  float* length_dev_;
-  float2* d_in_out_dev_;
-  float4* hydr_rough_env_exch_dev_;
-  float2* p_in_and_t_in_dev_;
-  float* p_target_dev_;
-  float* q_result_dev_;
-  float* den_sc_dev_;
-  float* co2_dev_;
-  float* n2_dev_;
+  double* length_dev_;
+  double2* d_in_out_dev_;
+  double4* hydr_rough_env_exch_dev_;
+  double2* p_in_and_t_in_dev_;
+  double* p_target_dev_;
+  double* q_result_dev_;
+  double* den_sc_dev_;
+  double* co2_dev_;
+  double* n2_dev_;
 
   // Пасспортные параметры трубы
-  float* length_;
-  float2* d_in_out_;
-  float4* hydr_rough_env_exch_;
+  double* length_;
+  double2* d_in_out_;
+  double4* hydr_rough_env_exch_;
 
   // Рабочие параметры
-  float* den_sc_;
-  float* co2_; 
-  float* n2_;
-  float2* p_in_and_t_in_;
-  float* p_target_;
-  float* q_result_;
+  double* den_sc_;
+  double* co2_; 
+  double* n2_;
+  double2* p_in_and_t_in_;
+  double* p_target_;
+  double* q_result_;
 };
 
 // Менеджер рёбер - труб на Cuda.
@@ -52,7 +52,7 @@ public:
   Edge* CreateEdge(const Passport* passport);
   void set_gas_in(const Gas* gas, int index);
   void set_gas_out(const Gas* gas, int index);
-  float q(int index);
+  double q(int index);
   void FinishAddingEdges();
 private:
   static const int max_count_of_edges = 128000;

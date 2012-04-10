@@ -14,16 +14,16 @@ public:
   PassportPipe();
   std::string GetName(); 
 
-  float length_;						// Длина [км]
-  float d_outer_;						// Внешний диаметр [мм]
-  float d_inner_;						// Внутренний диаметр [мм]
-  float p_max_;						// Макс. допустимое давл-е [МПа]
-  float p_min_;						// Мин. допустимое давл-е [МПа]
-  float hydraulic_efficiency_coeff_;	// Коэф-т гидавлич эф-ти [б.р.]
-  float roughness_coeff_;				// Коэф-т эквив. шерхов-ти [б.р.]
+  double length_;						// Длина [км]
+  double d_outer_;						// Внешний диаметр [мм]
+  double d_inner_;						// Внутренний диаметр [мм]
+  double p_max_;						// Макс. допустимое давл-е [МПа]
+  double p_min_;						// Мин. допустимое давл-е [МПа]
+  double hydraulic_efficiency_coeff_;	// Коэф-т гидавлич эф-ти [б.р.]
+  double roughness_coeff_;				// Коэф-т эквив. шерхов-ти [б.р.]
   // Включаем в пасспорт температур о.с. потому что она задаётся при создании
   // трубы и далее не меняется (по-крайней мере пока - в контексте рассмотр.
   // задач)
-  float heat_exchange_coeff_;			// К-т теплообм с окр. ср.[Вт / (м2*К)]
-  float t_env_;						// Темп. окр. среды [К]
+  double heat_exchange_coeff_;			// К-т теплообм с окр. ср.[Вт / (м2*К)]
+  double t_env_;						// Темп. окр. среды [К]
 };

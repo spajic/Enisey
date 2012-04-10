@@ -16,7 +16,7 @@ public:
 	void set_gas_in(const Gas* gas);
 	void set_gas_out(const Gas* gas);
 	std::string GetName();
-	float q();
+	double q();
 
 private:
 	int index_;

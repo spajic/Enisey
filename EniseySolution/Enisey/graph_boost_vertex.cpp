@@ -25,11 +25,11 @@ InOutAmount > 0, если входит, < 0, если выходит. Тоже �
 дисбаланс мы не можем, полагаем равным нулю.
 4. Дисбаланс всегда положителен - модуль разницы входящих и исходящих потоков.
 */
-float GraphBoostVertex::CountDisbalance() {
+double GraphBoostVertex::CountDisbalance() {
   if( PIsReady() == true) { // Если есть вход с заданным P, значит Q = ?, d=0.
     return 0;
   }
-  float d(0); // Искомый дисбаланс.
+  double d(0); // Искомый дисбаланс.
   for(auto v_in = InEdgesBegin(); v_in != InEdgesEnd(); ++v_in) {
     d += v_in->edge()->q();
   } // Конец перебора входящих рёбер.
@@ -39,7 +39,7 @@ float GraphBoostVertex::CountDisbalance() {
   d += InOutAmount();
   return abs(d);
 }
-bool GraphBoostVertex::AcceptableDisbalance(float const max_disb) {
+bool GraphBoostVertex::AcceptableDisbalance(double const max_disb) {
   return CountDisbalance() < max_disb;
 }
 
@@ -239,17 +239,17 @@ GraphBoostVertex::iter_node GraphBoostVertex::inVerticesEnd() {
 }
 
 // Функции задания и получения давления.
-void GraphBoostVertex::set_p(float p) {
+void GraphBoostVertex::set_p(double p) {
   gas_.work_parameters.p = p;
 }
-float GraphBoostVertex::p() {
+double GraphBoostVertex::p() {
   return gas_.work_parameters.p;
 }
 // Функции задания и получения температуры.
-void GraphBoostVertex::set_t(float t) {
+void GraphBoostVertex::set_t(double t) {
   gas_.work_parameters.t = t;
 }
-float GraphBoostVertex::t() {
+double GraphBoostVertex::t() {
   return gas_.work_parameters.t;
 }
 
@@ -314,11 +314,11 @@ int GraphBoostVertex::id_distant_dominator()
 {
   return id_distant_dominator_;
 }
-void GraphBoostVertex::set_q_in_domintator_subtree(float q)
+void GraphBoostVertex::set_q_in_domintator_subtree(double q)
 {
   q_in_dominators_subtree_ = q;
 }
-float GraphBoostVertex::q_in_dominators_subtree()
+double GraphBoostVertex::q_in_dominators_subtree()
 {
   return q_in_dominators_subtree_;
 }
@@ -330,14 +330,14 @@ float GraphBoostVertex::q_in_dominators_subtree()
 //	bool q_is_ready_; Задан ли расход - м.б. если вершина принадлежит неразвлетвлённому пути от входа/выхода с заданным q
 //	bool is_graph_input_; Является ли вершина входом графа.
 //	bool is_graph_output_;	Является ли вершина выходом графа.
-//	float in_out_amount_; Сумма расходов входов/выходов в узле.
+//	double in_out_amount_; Сумма расходов входов/выходов в узле.
 
 // Различные функции добавления к вершине входов/выходов по своему меняют состояние вершины
 // и заносят id входа/выхода из Весты в список данной вершины. 
 
 // Добавляем вход с заданным P - такой можно добавить только один!
 // Признак того, что уже добавлен - p_is_ready_ = true;
-void GraphBoostVertex::AddInputWithSetP(int id_in_out, float p, float t, GasCompositionReduced composition)
+void GraphBoostVertex::AddInputWithSetP(int id_in_out, double p, double t, GasCompositionReduced composition)
 {
   if(PIsReady() == true)
   {
@@ -356,7 +356,7 @@ void GraphBoostVertex::AddInputWithSetP(int id_in_out, float p, float t, GasComp
 
 // Добавляем вход c заданным Q.
 // Если уже был задан вход/выход с заданным P, то этого делать нельзя.
-void GraphBoostVertex::AddInputWithSetQ(int id_in_out, float q, float t, GasCompositionReduced composition)
+void GraphBoostVertex::AddInputWithSetQ(int id_in_out, double q, double t, GasCompositionReduced composition)
 {
   if(PIsReady() == true)
   {
@@ -374,7 +374,7 @@ void GraphBoostVertex::AddInputWithSetQ(int id_in_out, float q, float t, GasComp
 }
 
 // Добавляем выход с заданным P. Вход/выход с заданным P может быть только один.
-void GraphBoostVertex::AddOutputWithSetP(int id_in_out, float p)
+void GraphBoostVertex::AddOutputWithSetP(int id_in_out, double p)
 {
   if(PIsReady() == true)
   {
@@ -390,7 +390,7 @@ void GraphBoostVertex::AddOutputWithSetP(int id_in_out, float p)
 }
 
 // Добавляем выход с заданным Q
-void GraphBoostVertex::AddOutputWithSetQ(int id_in_out, float q)
+void GraphBoostVertex::AddOutputWithSetQ(int id_in_out, double q)
 {
   if(PIsReady() == true)
   {
@@ -438,12 +438,12 @@ bool GraphBoostVertex::HasInOut()
 {
   return has_in_out_;
 }
-float GraphBoostVertex::InOutAmount()
+double GraphBoostVertex::InOutAmount()
 {
   return in_out_amount_;
 }
 
-float GraphBoostVertex::p_min() { return p_min_; }
-void GraphBoostVertex::set_p_min(float p_min) { p_min_ = p_min;}
-float GraphBoostVertex::p_max() { return p_max_; }
-void GraphBoostVertex::set_p_max(float p_max) { p_max_ = p_max;}
+double GraphBoostVertex::p_min() { return p_min_; }
+void GraphBoostVertex::set_p_min(double p_min) { p_min_ = p_min;}
+double GraphBoostVertex::p_max() { return p_max_; }
+void GraphBoostVertex::set_p_max(double p_max) { p_max_ = p_max;}

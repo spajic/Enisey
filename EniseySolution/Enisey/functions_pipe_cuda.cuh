@@ -7,26 +7,26 @@
 #include "gas_count_functions_cuda.cuh"
 
 __device__
-inline float ReturnPNextSequentialCuda(
-	float p_work, float t_work, float q, // рабочие параметры газового потока
-	float den_sc, // состав газа
-	float r_sc,   // базовые свойства газа          			
-	float lambda, float z, // свойства газа при рабочих условиях
-	float d_inner, // пасспорт трубы
-	float length_of_segment) // длина сегмента
+inline double ReturnPNextSequentialCuda(
+	double p_work, double t_work, double q, // рабочие параметры газового потока
+	double den_sc, // состав газа
+	double r_sc,   // базовые свойства газа          			
+	double lambda, double z, // свойства газа при рабочих условиях
+	double d_inner, // пасспорт трубы
+	double length_of_segment) // длина сегмента
 {
-	// static const float kPi = 3.14159265358979323846264338327950288419716939937510;
+	// static const double kPi = 3.14159265358979323846264338327950288419716939937510;
 	// Вычитаемое для расчёта p_next
-	float minus = 10*q*q * (length_of_segment) * 
+	double minus = 10*q*q * (length_of_segment) * 
 		(16*r_sc * (den_sc*den_sc) * lambda * z * t_work) / 
 		(3.1415926535897932384626433832795*3.1415926535897932384626433832795 *
 		pow(d_inner/10, 5) );
-	float p_next = p_work*p_work - minus;
+	double p_next = p_work*p_work - minus;
 	// Если полученный квадрат давление больше нуля,
 	// возвращаем квадратный корень из него
 	if(p_next > 0)
 	{
-		return pow(p_next, static_cast<float>(0.5));		 
+		return pow(p_next, static_cast<double>(0.5));		 
 	}
 	// иначе - считаем, что давление упало до нуля.
 	else
@@ -37,23 +37,23 @@ inline float ReturnPNextSequentialCuda(
 };
 
 __device__
-inline float ReturnTNextSequentialCuda(
-	float p_next, // результат рабботы ReturnPNextSequential
-	float p_work, float t_work, float q, // рабочие параметры газового потока
-	float den_sc, // состав газа
-	float c, float di, // свойства газа при рабочих условиях
-	float d_outer, // пасспорт трубы
-	float t_env, float heat_exchange_coeff, // свойства окуражающей среды
-	float length_of_segment)
+inline double ReturnTNextSequentialCuda(
+	double p_next, // результат рабботы ReturnPNextSequential
+	double p_work, double t_work, double q, // рабочие параметры газового потока
+	double den_sc, // состав газа
+	double c, double di, // свойства газа при рабочих условиях
+	double d_outer, // пасспорт трубы
+	double t_env, double heat_exchange_coeff, // свойства окуражающей среды
+	double length_of_segment)
 {
 	// kPi = 3.14159265358979323846264338327950288419716939937510
 	// коэф-т при (T-Tos) [б.р]
-	float s1 = (length_of_segment * d_outer * heat_exchange_coeff * 3.1415926535897932384626433832795) / 
+	double s1 = (length_of_segment * d_outer * heat_exchange_coeff * 3.1415926535897932384626433832795) / 
 		(c * q * den_sc);
 
 	// Коэф-т при (PNext - P) [К/МПа] 
-	float s2 = di*1000000; 
-	float t_next = t_work - s1 * (t_work - t_env) + s2 * (p_next - p_work);
+	double s2 = di*1000000; 
+	double t_next = t_work - s1 * (t_work - t_env) + s2 * (p_next - p_work);
 	// Если полученная температура меньше температуры окружающей среды, то 
 	// считаем, что вышли на температуру окружающей среды
 	if(t_next < t_env)
@@ -66,27 +66,27 @@ inline float ReturnTNextSequentialCuda(
 
 __device__
 inline void FindSequentialOutCudaRefactored(
-	float p_work, float t_work, float q,  // рабочие параметры газового потока на входе
-	float p_pc, float t_pc, float r_sc, float den_sc,
-	float d_inner, float d_outer, float roughness_coeff, float hydraulic_efficiency_coeff, // св-ва трубы
-	float t_env, float heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
-	float length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
-	float* p_out, float* t_out) // out - параметры, значения на выходе 
+	double p_work, double t_work, double q,  // рабочие параметры газового потока на входе
+	double p_pc, double t_pc, double r_sc, double den_sc,
+	double d_inner, double d_outer, double roughness_coeff, double hydraulic_efficiency_coeff, // св-ва трубы
+	double t_env, double heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
+	double length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
+	double* p_out, double* t_out) // out - параметры, значения на выходе 
 {
 	// В цикле последовательно рассчитываем трубу в "узловых точках"
-	float p_next = p_work;
-	float t_next = t_work;
-	float p_current = p_work;
-	float t_current = t_work;
+	double p_next = p_work;
+	double t_next = t_work;
+	double p_current = p_work;
+	double t_current = t_work;
 
-	float p_reduced = 0;
-	float t_reduced = 0;
-	float z = 0;
-	float c = 0;
-	float mju = 0;
-	float di = 0;
-	float re = 0;
-	float lambda = 0;
+	double p_reduced = 0;
+	double t_reduced = 0;
+	double z = 0;
+	double c = 0;
+	double mju = 0;
+	double di = 0;
+	double re = 0;
+	double lambda = 0;
 		
 	for(int i = number_of_segments; i != 0; --i)
 	{
@@ -116,14 +116,14 @@ inline void FindSequentialOutCudaRefactored(
 };
 
 __device__
-inline float EquationToSolveCudaRefactored(
-	float p_target,
-	float p_work, float t_work, float q,  // рабочие параметры газового потока на входе
-	float p_pc, float t_pc, float r_sc, float den_sc,
-	float d_inner, float d_outer, float roughness_coeff, float hydraulic_efficiency_coeff, // св-ва трубы
-	float t_env, float heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
-	float length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
-	float* p_out, float* t_out) // out - параметры, значения на выходе 
+inline double EquationToSolveCudaRefactored(
+	double p_target,
+	double p_work, double t_work, double q,  // рабочие параметры газового потока на входе
+	double p_pc, double t_pc, double r_sc, double den_sc,
+	double d_inner, double d_outer, double roughness_coeff, double hydraulic_efficiency_coeff, // св-ва трубы
+	double t_env, double heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
+	double length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
+	double* p_out, double* t_out) // out - параметры, значения на выходе 
 {
 	FindSequentialOutCudaRefactored(
 		 p_work,  t_work,  q,  // рабочие параметры газового потока на входе
@@ -136,15 +136,15 @@ inline float EquationToSolveCudaRefactored(
 }
 
 __device__
-inline float FindSequentialQCudaRefactored(
-	float p_target,
-	float p_work, float t_work,  // рабочие параметры газового потока на входе
-	float p_pc, float t_pc, float r_sc, float den_sc,
-	float d_inner, float d_outer, float roughness_coeff, float hydraulic_efficiency_coeff, // св-ва трубы
-	float t_env, float heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
-	float length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
-	float* p_out, float* t_out,
-	float* q_out) // out - параметры, значения на выходе 
+inline double FindSequentialQCudaRefactored(
+	double p_target,
+	double p_work, double t_work,  // рабочие параметры газового потока на входе
+	double p_pc, double t_pc, double r_sc, double den_sc,
+	double d_inner, double d_outer, double roughness_coeff, double hydraulic_efficiency_coeff, // св-ва трубы
+	double t_env, double heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
+	double length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
+	double* p_out, double* t_out,
+	double* q_out) // out - параметры, значения на выходе 
 {
 	// Решаем уравнение методом деления отрезка пополам
 	// Параметры метода - start, finish - определяют отрезок, где ищется решение
@@ -153,13 +153,13 @@ inline float FindSequentialQCudaRefactored(
 	// Подумать, как разумно настроить метод деления отрезка пополам для решения 
 	// данной задачи.
 	// ToDo: корректно обрабатывать возвращаемое значение (для аварийных случаев).
-	float a = 200; // start
-	float b = 400; // finish
-	float eps_x = 0.1;
-	float eps_y = 0.001;
+	double a = 200; // start
+	double b = 400; // finish
+	double eps_x = 0.1;
+	double eps_y = 0.001;
 
 	// Заглушка для вызова функции EquationToSolve
-	//float p_out;
+	//double p_out;
 	// Проверки
 	// Предполагается, что функция должна возрастать, начинаться ниже нуля, заканчиваться выше нуля.
 	/*if(EquationToSolveCudaRefactored(
@@ -192,8 +192,8 @@ inline float FindSequentialQCudaRefactored(
 		return -3;
 	}*/
 
-	float middle = (a + b) / 2;
-	float middle_val = EquationToSolveCudaRefactored(
+	double middle = (a + b) / 2;
+	double middle_val = EquationToSolveCudaRefactored(
 		p_target,
 		p_work, t_work, middle,  // рабочие параметры газового потока на входе
 		p_pc, t_pc, r_sc, den_sc,
@@ -231,31 +231,31 @@ inline float FindSequentialQCudaRefactored(
 // по свойствам газа, рабочим параметрам на входе трубы, свойствам трубы, св-вам внешней среды, количеству разбиений
 __device__
 inline void FindSequentialOutCuda(
-	float p_work, float t_work, float q,  // рабочие параметры газового потока на входе
-	float den_sc, float co2, float n2, // состав газа
-	float d_inner, float d_outer, float roughness_coeff, float hydraulic_efficiency_coeff, // св-ва трубы
-	float t_env, float heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
-	float length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
-	float* t_out, float* p_out) // out - параметры, значения на выходе 
+	double p_work, double t_work, double q,  // рабочие параметры газового потока на входе
+	double den_sc, double co2, double n2, // состав газа
+	double d_inner, double d_outer, double roughness_coeff, double hydraulic_efficiency_coeff, // св-ва трубы
+	double t_env, double heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
+	double length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
+	double* t_out, double* p_out) // out - параметры, значения на выходе 
 {
 	// В цикле последовательно рассчитываем трубу в "узловых точках"
-	float p_next = p_work;
-	float t_next = t_work;
-	float p_current = p_work;
-	float t_current = t_work;
+	double p_next = p_work;
+	double t_next = t_work;
+	double p_current = p_work;
+	double t_current = t_work;
 
-	float p_pseudo_critical = FindPPseudoCriticalCuda(den_sc, co2, n2);
-	float t_pseudo_critical = FindTPseudoCriticalCuda(den_sc, co2, n2);
-	float r_sc = FindRStandartConditionsCuda(den_sc);
+	double p_pseudo_critical = FindPPseudoCriticalCuda(den_sc, co2, n2);
+	double t_pseudo_critical = FindTPseudoCriticalCuda(den_sc, co2, n2);
+	double r_sc = FindRStandartConditionsCuda(den_sc);
 
-	float p_reduced = 0;
-	float t_reduced = 0;
-	float z = 0;
-	float c = 0;
-	float mju = 0;
-	float di = 0;
-	float re = 0;
-	float lambda = 0;
+	double p_reduced = 0;
+	double t_reduced = 0;
+	double z = 0;
+	double c = 0;
+	double mju = 0;
+	double di = 0;
+	double re = 0;
+	double lambda = 0;
 		
 	for(int i = number_of_segments; i != 0; --i)
 	{
@@ -292,14 +292,14 @@ inline void FindSequentialOutCuda(
 // И чтобы вначале отрезка была отрицательна, проходила через ноль,
 // и в конце отрезка была положительна. (Для решения методом деления отрезка пополам).
 __device__
-inline float EquationToSolveCuda(
-	float p_target,
-	float p_work, float t_work, float q,  // рабочие параметры газового потока на входе
-	float den_sc, float co2, float n2, // состав газа
-	float d_inner, float d_outer, float roughness_coeff, float hydraulic_efficiency_coeff, // св-ва трубы
-	float t_env, float heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
-	float length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
-	float* t_out, float* p_out)
+inline double EquationToSolveCuda(
+	double p_target,
+	double p_work, double t_work, double q,  // рабочие параметры газового потока на входе
+	double den_sc, double co2, double n2, // состав газа
+	double d_inner, double d_outer, double roughness_coeff, double hydraulic_efficiency_coeff, // св-ва трубы
+	double t_env, double heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
+	double length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
+	double* t_out, double* p_out)
 {
 	FindSequentialOutCuda(
 		p_work, t_work, q,  // рабочие параметры газового потока на входе
@@ -315,13 +315,13 @@ inline float EquationToSolveCuda(
 // за следующим исключением - q - теперь out-параметр, убираем парметр p_out
 __device__
 inline int FindSequentialQCuda(
-	float p_target, // давление, которое должно получиться в конце
-	float p_work, float t_work,  // рабочие параметры газового потока на входе
-	float den_sc, float co2, float n2, // состав газа
-	float d_inner, float d_outer, float roughness_coeff, float hydraulic_efficiency_coeff, // св-ва трубы
-	float t_env, float heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
-	float length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
-	float* t_out, float* q_out) // out - параметры, значения на выходе )
+	double p_target, // давление, которое должно получиться в конце
+	double p_work, double t_work,  // рабочие параметры газового потока на входе
+	double den_sc, double co2, double n2, // состав газа
+	double d_inner, double d_outer, double roughness_coeff, double hydraulic_efficiency_coeff, // св-ва трубы
+	double t_env, double heat_exchange_coeff, // св-ва внешней среды (тоже входят в пасспорт трубы)
+	double length_of_segment, int number_of_segments, // длина сегмента и кол-во сегментов
+	double* t_out, double* q_out) // out - параметры, значения на выходе )
 {
 	// Решаем уравнение методом деления отрезка пополам
 	// Параметры метода - start, finish - определяют отрезок, где ищется решение
@@ -330,13 +330,13 @@ inline int FindSequentialQCuda(
 	// Подумать, как разумно настроить метод деления отрезка пополам для решения 
 	// данной задачи.
 	// ToDo: корректно обрабатывать возвращаемое значение (для аварийных случаев).
-	float start = 0.1;
-	float finish = 10000;
-	float eps_x = 0.1;
-	float eps_y = 0.0001;
+	double start = 0.1;
+	double finish = 10000;
+	double eps_x = 0.1;
+	double eps_y = 0.0001;
 
 	// Заглушка для вызова функции EquationToSolve
-	float p_out;
+	double p_out;
 	// Проверки
 	// Предполагается, что функция должна возрастать, начинаться ниже нуля, заканчиваться выше нуля.
 	if(EquationToSolveCuda(
@@ -370,11 +370,11 @@ inline int FindSequentialQCuda(
 	}
 
 	// local values
-	float a = start;
-	float b = finish;
+	double a = start;
+	double b = finish;
 
-	float middle = (a + b) / 2;
-	float middle_val = EquationToSolveCuda(
+	double middle = (a + b) / 2;
+	double middle_val = EquationToSolveCuda(
 		p_target,
 		p_work, t_work, middle,  // рабочие параметры газового потока на входе
 		den_sc, co2, n2, // состав газа

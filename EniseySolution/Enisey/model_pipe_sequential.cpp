@@ -28,9 +28,9 @@ bool ModelPipeSequential::IsReverse() {
   return (gas_in_.work_parameters.p < gas_out_.work_parameters.p);
 }
 
-float ModelPipeSequential::q() { return q_; }
-float ModelPipeSequential::dq_dp_in() { return dq_dp_in_; }
-float ModelPipeSequential::dq_dp_out() { 
+double ModelPipeSequential::q() { return q_; }
+double ModelPipeSequential::dq_dp_in() { return dq_dp_in_; }
+double ModelPipeSequential::dq_dp_out() { 
   return dq_dp_out_; }
 
 void ModelPipeSequential::CallFindSequentialQ(
@@ -38,8 +38,8 @@ void ModelPipeSequential::CallFindSequentialQ(
     const Gas &gas_out,
     const PassportPipe &passport,
     const int number_of_segments,
-    float *t_out,
-    float *q_out) {
+    double *t_out,
+    double *q_out) {
   FindSequentialQ(
       // Давление, которое должно получиться в конце.
       gas_out.work_parameters.p, 
@@ -78,9 +78,9 @@ void ModelPipeSequential::Count() {
   }
   /* Температура, которая получится на выхое трубы, т.е. на выходе, если
   течение прямое, или на входе, если течение реверсивное.*/
-  float t_res = 0; 
+  double t_res = 0; 
   // Для рассчитанных температур, отбрасывах при расчёте производных.
-  float t_dummy = 0; 
+  double t_dummy = 0; 
   /*Ф-я расчёта q всегда принимает Pвх > Pвых и возвращает q > 0.*/
 	/** \todo: как-то разобраться цивилизованно с количеством сегментов
   при расчёте трубы методом последовательного счёта.*/
@@ -97,16 +97,16 @@ void ModelPipeSequential::Count() {
   шаг дифференцирования. Попробовать центральную производную. 
   Построить графики, чтобы визуально оценить наличие предела.*/
   // Рассчитываем производные.
-  float eps = 0.00001; 
+  double eps = 0.00001; 
 
   // Расчитываем производную q по p_вх.
-  float q_p_in_plus_eps(0.0); // q(p_вх + eps, p_вых).
+  double q_p_in_plus_eps(0.0); // q(p_вх + eps, p_вых).
   Gas gas_dq_dp_in = real_in;
   gas_dq_dp_in.work_parameters.p += eps;
   CallFindSequentialQ( // q(Pвх + eps, Pвых)
       gas_dq_dp_in, real_out, passport_, segments,
       &( t_dummy ), &q_p_in_plus_eps );
-  float q_p_in_minus_eps(0.0);
+  double q_p_in_minus_eps(0.0);
   gas_dq_dp_in.work_parameters.p -= 2*eps;
   CallFindSequentialQ( // q(Pвх - eps, Pвых)
     gas_dq_dp_in, real_out, passport_, segments,
@@ -114,13 +114,13 @@ void ModelPipeSequential::Count() {
   dq_dp_in_ = (q_p_in_plus_eps - q_p_in_minus_eps) / (2*eps);
 
   // Рассчитываем производную q по p_вых.
-  float q_p_out_plus_eps(0.0); // q(p_вх, p_вых + eps).
+  double q_p_out_plus_eps(0.0); // q(p_вх, p_вых + eps).
   Gas gas_dq_dp_out = real_out;
   gas_dq_dp_out.work_parameters.p += eps;
   CallFindSequentialQ( // q(Pвх, Pвых + eps)
       real_in, gas_dq_dp_out, passport_, segments,
       &( t_dummy ), &q_p_out_plus_eps );
-  float q_p_out_minus_eps(0.0);
+  double q_p_out_minus_eps(0.0);
   gas_dq_dp_out.work_parameters.p -= 2*eps;
   CallFindSequentialQ( // q(Pвх, Pвых - eps)
     real_in, gas_dq_dp_out, passport_, segments,
