@@ -30,6 +30,8 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 #include "test_gas_transfer_system.cpp"
 // Тесты класса GraphBoost.
 #include "test_graph_boost.cpp"
+// Тесты класса SlaeSolverCVM.
+#include "test_slae_solver_cvm.cpp"
 
 /* Тест расчёта трубы методом последовательного счёта.
 Тестировать будем так - зададим входные данные, получим расчётные рез-ты

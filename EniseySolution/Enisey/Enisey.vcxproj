@@ -140,6 +140,7 @@
     <ClCompile Include="manager_edge_model_pipe_sequential.cpp" />
     <ClCompile Include="model_pipe_sequential.cpp" />
     <ClCompile Include="passport_pipe.cpp" />
+    <ClCompile Include="slae_solver_cvm.cpp" />
     <ClCompile Include="writer_graphviz.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +169,7 @@
     <ClInclude Include="model_pipe_sequential.h" />
     <ClInclude Include="passport_pipe.h" />
     <ClInclude Include="passport.h" />
+    <ClInclude Include="slae_solver_cvm.h" />
     <ClInclude Include="writer_graphviz.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
