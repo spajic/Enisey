@@ -23,7 +23,7 @@ class GraphBoost {
   bool EdgeExists(int in_v_id, int out_v_id);
   /// Получить ссылку на ребро графа по id вх-й и исх-й вершины.
   /// Могут быть параллельные рёбра!
-  GraphBoostEdge& GetEdge(int in_v_id, int out_v_id);
+  /// GraphBoostEdge& GetEdge(int in_v_id, int out_v_id);
   /** Тип итератора, разыменование которого даёт ссылку на ребро графа.
   Для получения входящихи устаё и исходящих из узла рёбер.*/
   typedef opqit::opaque_iterator<GraphBoostEdge, opqit::bidir> iter_edge;

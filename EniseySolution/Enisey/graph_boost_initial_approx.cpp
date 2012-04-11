@@ -203,10 +203,10 @@ void SetInitialApproxPressures(
     А давление у меня пока бывает ещё только во входах...*/
     while(v_cur->IsGraphOutput() == false) {
       path.push_back( 
-          g->GetEdge(
+          *(g->ParallelEdgesBegin(
               v_cur->id_in_graph(), // id входа.
               v_next->id_in_graph() // id выхода.
-          )
+          ) ) // Первое из параллельных рёбер.
       ); // Записали первое ребро пути.
       v_cur = v_next;
       v_next = v_next->OutVerticesBegin(); // Первый попавшийся выход.
@@ -233,8 +233,9 @@ void SetInitialApproxTemperatures(GraphBoost *g, double t_os) {
       continue;
     }
     auto v_in = v->InVerticesBegin();
-    auto e = g->GetEdge( v_in->id_in_graph(), v->id_in_graph() );
-    double l = e.pipe_length;
+    // Первое из параллельных рёбер.
+    auto e = g->ParallelEdgesBegin( v_in->id_in_graph(), v->id_in_graph() );
+    double l = e->pipe_length;
     double t_in = v_in->t();
     double t_res = std::max( t_os, t_in - (l/50)*(t_in-t_os) );
     v->set_t(t_res);

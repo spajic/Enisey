@@ -36,17 +36,7 @@ bool GraphBoost::EdgeExists(int in_v_id, int out_v_id) {
     );
   return edge_exists;
 }
-GraphBoostEdge& GraphBoost::GetEdge(int in_v_id, int out_v_id) {
-  bool edge_exists(false);
-  GraphBoostEngine::graph_type::edge_descriptor edge_desc;
-  boost::tie(edge_desc, edge_exists) = 
-      boost::edge(
-          in_v_id,
-          out_v_id,
-          engine_->graph_
-      );
-  return engine_->graph_[edge_desc];
-}
+
 struct EdgeDereferenceFunctor : public std::unary_function<
     GraphBoostEngine::graph_type::edge_descriptor, // Тип аргумента.
     GraphBoostEdge&> { //Тип возрващаемого значения.

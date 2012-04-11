@@ -66,23 +66,31 @@ void GasTransferSystem::FormSlae() {
     B_[n] -= v->CountDisbalance();
     // 3. Если в узел входит узел i, по ребру (i,n) расход q(i,n)...
     for(auto v_in = v->InVerticesBegin(); v_in != v->inVerticesEnd(); ++v_in) {
-      auto e_in = g_->GetEdge( v_in->id_in_graph(), v->id_in_graph() );
-      A_[std::make_pair(n, n)] += e_in.edge()->dq_dp_out();
-      if(v_in->PIsReady() == false) {
-        int i = v_in->slae_row();
-        A_[std::make_pair(n, i)] += e_in.edge()->dq_dp_in();        
-      } // Конец обхода входящих рёбер.
-      /** \todo Спрятать методы edge за GraphBoostEdge.*/
+      for(auto e_in = // Обход параллельных рёбер (v_in, v).
+              g_->ParallelEdgesBegin( v_in->id_in_graph(), v->id_in_graph() );
+          e_in != g_->ParallelEdgesEnd(v_in->id_in_graph(), v->id_in_graph());
+          ++ e_in) {
+        A_[std::make_pair(n, n)] += e_in->edge()->dq_dp_out();
+        if(v_in->PIsReady() == false) {
+          int i = v_in->slae_row();
+          A_[std::make_pair(n, i)] += e_in->edge()->dq_dp_in();        
+        } // Конец обхода входящих рёбер.
+      } // Конец обхода параллельных рёбер.
     }
+    /** \todo Спрятать методы edge за GraphBoostEdge.*/
     //  4. Если из узла выходит узел i, по ребру (n,i) расход q(n,i)...
     for(auto v_out = v->OutVerticesBegin(); v_out != v->OutVerticesEnd(); 
         ++v_out) {
-      auto e_out = g_->GetEdge( v->id_in_graph(), v_out->id_in_graph() );
-      A_[std::make_pair(n, n)] -= e_out.edge()->dq_dp_in();  
-      if(v_out->PIsReady() == false) {
-        int i = v_out->slae_row();
-        A_[std::make_pair(n, i)] -= e_out.edge()->dq_dp_out();
-      }
+      for(auto e_out = // Перебор параллельных рёбер (v, v_out).
+              g_->ParallelEdgesBegin( v->id_in_graph(), v_out->id_in_graph() );
+          e_out!= g_->ParallelEdgesEnd(v->id_in_graph(), v_out->id_in_graph());
+          ++e_out) {
+        A_[std::make_pair(n, n)] -= e_out->edge()->dq_dp_in();  
+        if(v_out->PIsReady() == false) {
+          int i = v_out->slae_row();
+          A_[std::make_pair(n, i)] -= e_out->edge()->dq_dp_out();
+        }
+      } // Конец перебора параллельных рёбер (v, v_out).
     } // Конец обхода исходящих рёбер.
   } // Конец обхода вершин графа.
 }
@@ -188,9 +196,13 @@ void GasTransferSystem::CountAllEdges() {
       ++v) {
     for( auto v_out = v->OutVerticesBegin(); v_out != v->OutVerticesEnd();
         ++v_out) {
-      GraphBoostEdge e = g_->GetEdge( v->id_in_graph(), v_out->id_in_graph() );
-      e.edge()->set_gas_in( &( v->gas() ) );
-      e.edge()->set_gas_out( &( v_out->gas() ) );
+      for(auto e = // Перебор параллельных рёбер (v_in, v_out).
+              g_->ParallelEdgesBegin( v->id_in_graph(), v_out->id_in_graph() );
+          e != g_->ParallelEdgesEnd( v->id_in_graph(), v_out->id_in_graph() );
+          ++e ) {
+        e->edge()->set_gas_in( &( v->gas() ) );
+        e->edge()->set_gas_out( &( v_out->gas() ) );
+      } // Конец перебора параллельных рёбер.
     }
   }
   g_->manager()->CountAll();
