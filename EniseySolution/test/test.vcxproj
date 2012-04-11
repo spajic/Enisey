@@ -62,8 +62,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;C:\Enisey\instruments\google test framework\gtest-1.6.0\msvc\gtest\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>cvm_ia32.lib;gtestd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Enisey\bin\EniseySolution\Enisey\Debug;C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;C:\Enisey\instruments\google test framework\gtest-1.6.0\msvc\gtest\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>enisey.lib;cvm_ia32.lib;gtestd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,27 +82,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>cvm_ia32.lib;gtest.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;C:\Enisey\instruments\google test framework\gtest-1.6.0\msvc\gtest\Release;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>enisey.lib;cvm_ia32.lib;gtest.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Enisey\bin\EniseySolution\Enisey\Release;C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;C:\Enisey\instruments\google test framework\gtest-1.6.0\msvc\gtest\Release;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Enisey\edge_model_pipe_sequential.cpp" />
-    <ClCompile Include="..\Enisey\functions_gas.cpp" />
-    <ClCompile Include="..\Enisey\functions_pipe.cpp" />
-    <ClCompile Include="..\Enisey\gas_transfer_system.cpp" />
-    <ClCompile Include="..\Enisey\graph_boost.cpp" />
-    <ClCompile Include="..\Enisey\graph_boost_edge.cpp" />
-    <ClCompile Include="..\Enisey\graph_boost_initial_approx.cpp" />
-    <ClCompile Include="..\Enisey\graph_boost_load_from_vesta.cpp" />
-    <ClCompile Include="..\Enisey\graph_boost_vertex.cpp" />
-    <ClCompile Include="..\Enisey\graph_boost_vertex_iterator_native.cpp" />
-    <ClCompile Include="..\Enisey\graph_boost_vertex_iterator_topological.cpp" />
-    <ClCompile Include="..\Enisey\loader_vesta.cpp" />
-    <ClCompile Include="..\Enisey\manager_edge_model_pipe_sequential.cpp" />
-    <ClCompile Include="..\Enisey\model_pipe_sequential.cpp" />
-    <ClCompile Include="..\Enisey\passport_pipe.cpp" />
-    <ClCompile Include="..\Enisey\writer_graphviz.cpp" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="test_functions_gas.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
