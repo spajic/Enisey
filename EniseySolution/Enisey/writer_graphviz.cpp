@@ -115,6 +115,8 @@ public:
     if(edge.pipe_type() == 3) {
       out << "[label = \"q=" +
         boost::lexical_cast<std::string>( edge.edge()->q() ) + 
+        "\\n L = " +
+        boost::lexical_cast<std::string> (edge.pipe_length) +
         "\", color = green]";
     }
     else {
@@ -124,6 +126,8 @@ public:
           boost::lexical_cast<std::string>( edge.edge()->dq_dp_in() ) + 
           "\\n dq_dp_out = " +
           boost::lexical_cast<std::string>( edge.edge()->dq_dp_out() ) + 
+          "\\n L = " +
+          boost::lexical_cast<std::string> (edge.pipe_length) +
           "\"]";
     }
   }
