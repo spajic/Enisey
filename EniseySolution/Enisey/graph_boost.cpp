@@ -7,11 +7,12 @@
 
 #include "graph_boost_engine.h"
 
+// Для работы с итераторами.
 #include "graph_boost_vertex_iterator_native.h"
-
-#include <opqit/opaque_iterator.hpp>
-
 #include "graph_boost_vertex_iterator_topological.h"
+#include <opqit/opaque_iterator.hpp>
+#include "boost/iterator/transform_iterator.hpp"
+#include "boost/iterator/filter_iterator.hpp"
 
 GraphBoost::GraphBoost()
 {
@@ -45,6 +46,59 @@ GraphBoostEdge& GraphBoost::GetEdge(int in_v_id, int out_v_id) {
           engine_->graph_
       );
   return engine_->graph_[edge_desc];
+}
+struct EdgeDereferenceFunctor : public std::unary_function<
+    GraphBoostEngine::graph_type::edge_descriptor, // Тип аргумента.
+    GraphBoostEdge&> { //Тип возрващаемого значения.
+  /*g - указатель на граф, из которого по дескриптору нужно будет получать
+  искомую ссылку на ребро*/
+  EdgeDereferenceFunctor(GraphBoostEngine::graph_type *g) : g_(g) { }
+  /*Необходимость модификатора const здесь не очевидна, но без него не 
+  работало. Стоит поподробнее разобраться с const!*/
+  GraphBoostEdge& operator()(
+      GraphBoostEngine::graph_type::edge_descriptor desc) const {
+    return (*g_)[desc];
+  }
+  GraphBoostEngine::graph_type *g_;
+};
+struct ParallelEdgesFilterPredicate : public std::unary_function<
+    GraphBoostEdge&, // Тип аргумента.
+    bool> { //Тип возрващаемого значения.
+  /*g - указатель на граф, из которого по дескриптору нужно будет получать
+  искомую ссылку на ребро.
+  out_v_id - идентификатор вершины, которой должно заканчиваться ребро.*/
+  ParallelEdgesFilterPredicate(
+      GraphBoostEngine::graph_type *g,
+      int out_v_id) : g_(g), out_v_id_(out_v_id) { }
+  /*Необходимость модификатора const здесь не очевидна, но без него не 
+  работало. Стоит поподробнее разобраться с const!*/
+  bool operator()(
+      GraphBoostEdge& e) const {
+    return e.out_vertex_id() == out_v_id_;
+  }
+  GraphBoostEngine::graph_type *g_;
+  int out_v_id_;
+};
+
+
+/** Сделаем итератор для параллельных рёбер (v, v_out), отфильтровав
+итератор v.OutEdges по признаку, что конечная вершина = v2.*/
+GraphBoost::iter_edge GraphBoost::ParallelEdgesBegin(
+    int in_v_id, int out_v_id) {
+  return boost::make_filter_iterator(
+      ParallelEdgesFilterPredicate( &(engine_->graph_), out_v_id ),
+      GetVertex(in_v_id).OutEdgesBegin(),
+      GetVertex(in_v_id).OutEdgesEnd() );
+}
+GraphBoost::iter_edge GraphBoost::ParallelEdgesEnd(
+    int in_v_id, int out_v_id) {
+      return boost::make_filter_iterator<ParallelEdgesFilterPredicate>(
+        ParallelEdgesFilterPredicate( &(engine_->graph_), out_v_id ),
+        GetVertex(in_v_id).OutEdgesEnd(),
+        GetVertex(in_v_id).OutEdgesEnd() );
+}
+GraphBoostVertex& GraphBoost::GetVertex(int v_id) {
+  return engine_->graph_[v_id];
 }
 
 GraphBoostEngine* GraphBoost::engine()
