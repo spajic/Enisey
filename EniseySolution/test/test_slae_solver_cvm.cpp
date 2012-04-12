@@ -22,7 +22,7 @@ TEST(SlaeSolverCVMTest, SolvesSimpleSlae) {
 Так сделано для эффективности передачи разреженных матриц. 
 Хотя для них, конечно, есть свои форматы типа CSR.*/
   SlaeSolverCVM solver;
-  std::vector<std::pair<int,int> > A_indexes = MakeSimpleSlaeAIndexes();
+  std::vector<int> A_indexes = MakeSimpleSlaeAIndexes();
   std::vector<double> A_vals = MakeSimpleSlaeAValues();
   std::vector<double> b = MakeSimpleSlaeB();
   std::vector<double> etalon_x = MakeSimpleSlaeX();

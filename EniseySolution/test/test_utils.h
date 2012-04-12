@@ -78,7 +78,7 @@ B - вектор b.
 X - вектор найденного решения. 
 Так сделано для эффективности передачи разреженных матриц. 
 Хотя для них, конечно, есть свои форматы типа CSR.*/
-std::vector<std::pair<int, int> > MakeSimpleSlaeAIndexes();
+std::vector<int> MakeSimpleSlaeAIndexes();
 std::vector<double> MakeSimpleSlaeAValues();
 std::vector<double> MakeSimpleSlaeB();
 std::vector<double> MakeSimpleSlaeX();

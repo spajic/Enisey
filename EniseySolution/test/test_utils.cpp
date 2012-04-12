@@ -56,20 +56,21 @@ Gas MakeTestGasOut() {
 [0 3 0] * [2] = [6]
 [1 2 3]   [3]   [14]
 Формат передачи параметров:
-A_indexes - индексы (строка, столбец) ненулевых коэф-ов А.
+A_indexes - индексы (строка*(длина) + столбец) ненулевых коэф-ов А.
 A_vals - значения этих коэф-ов в соответствующем порядке.
 B - вектор b.
 X - вектор найденного решения. 
 Так сделано для эффективности передачи разреженных матриц. 
 Хотя для них, конечно, есть свои форматы типа CSR.*/
-std::vector<std::pair<int, int> > MakeSimpleSlaeAIndexes() {
-  std::vector<std::pair<int,int> > A_indexes;
-  A_indexes.push_back( std::make_pair(0, 0) );  
-  A_indexes.push_back( std::make_pair(0, 2) );  
-  A_indexes.push_back( std::make_pair(1, 1) );  
-  A_indexes.push_back( std::make_pair(2, 0) );  
-  A_indexes.push_back( std::make_pair(2, 1) );  
-  A_indexes.push_back( std::make_pair(2, 2) );  
+std::vector<int> MakeSimpleSlaeAIndexes() {
+  std::vector<int> A_indexes;
+  int len = 3; // Длина строки.
+  A_indexes.push_back( 0 * len + 0 );  
+  A_indexes.push_back( 0 * len + 2 );  
+  A_indexes.push_back( 1 * len + 1 );  
+  A_indexes.push_back( 2 * len + 0 );  
+  A_indexes.push_back( 2 * len + 1 );  
+  A_indexes.push_back( 2 * len + 2 );  
   return A_indexes;
 } 
 std::vector<double> MakeSimpleSlaeAValues() {

@@ -4,19 +4,23 @@
 #include <vector>
 
 #include "cvm.h"
+#include <math.h>
 
 void SlaeSolverCVM::Solve(
-    std::vector<std::pair<int, int> > const &A_indexes, 
+    std::vector<int> const &A_indexes, 
     std::vector<double> const &A_values, 
     std::vector<double> const &B, 
     std::vector<double> *X) {
+  // Длина вектора B = Длина строки матрицы A.
   int size = B.size();
   cvm::srmatrix A(size);
   auto a_val = A_values.begin();
   for(auto a_index = A_indexes.begin(); a_index != A_indexes.end(); 
       ++a_index) {
-    // В CVM нумерация с единицы.
-    A(a_index->first + 1, a_index->second + 1) = *a_val;
+    // Заполняем матрицу A CVM - нумерация с единицы.
+    int row = *a_index / size;
+    int col = *a_index - row*size;
+    A(row + 1, col + 1) = *a_val;
     ++a_val;
   }
   cvm::rvector B_cvm(size);

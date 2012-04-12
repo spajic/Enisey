@@ -10,7 +10,7 @@ class SlaeSolverCVM : public SlaeSolverI {
   ненулевых коэффициентов A, в соответствующем векторе A_values - их
   значения.*/
   virtual void Solve(
-      std::vector<std::pair<int, int> > const &A_indexes,
+      std::vector<int> const &A_indexes,
       std::vector<double> const &A_values,
       std::vector<double> const &B,
       std::vector<double> *X);
