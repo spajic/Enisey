@@ -6,6 +6,7 @@
 #include "test_utils.h"
 
 #include <vector>
+#include "test_utils.h"
 
 TEST(SlaeSolverCVMTest, SolvesSimpleSlae) {
 /* Проверяем решатель системы на базе CVM.cpp
@@ -21,22 +22,13 @@ TEST(SlaeSolverCVMTest, SolvesSimpleSlae) {
 Так сделано для эффективности передачи разреженных матриц. 
 Хотя для них, конечно, есть свои форматы типа CSR.*/
   SlaeSolverCVM solver;
-  std::vector<std::pair<int,int> > A_indexes;
-  std::vector<double> A_vals;
-  A_indexes.push_back( std::make_pair(0, 0) );  A_vals.push_back( 2 );
-  A_indexes.push_back( std::make_pair(0, 2) );  A_vals.push_back( 1 );
-  A_indexes.push_back( std::make_pair(1, 1) );  A_vals.push_back( 3 );
-  A_indexes.push_back( std::make_pair(2, 0) );  A_vals.push_back( 1 );
-  A_indexes.push_back( std::make_pair(2, 1) );  A_vals.push_back( 2 );
-  A_indexes.push_back( std::make_pair(2, 2) );  A_vals.push_back( 3 );
-  
-  std::vector<double> b;
-  b.push_back(5); b.push_back(6); b.push_back(14);
+  std::vector<std::pair<int,int> > A_indexes = MakeSimpleSlaeAIndexes();
+  std::vector<double> A_vals = MakeSimpleSlaeAValues();
+  std::vector<double> b = MakeSimpleSlaeB();
+  std::vector<double> etalon_x = MakeSimpleSlaeX();
   std::vector<double> x;
   x.reserve( b.size() );
 
   solver.Solve(A_indexes, A_vals, b, &x);
-  EXPECT_DOUBLE_EQ( 1, x[0] );
-  EXPECT_DOUBLE_EQ( 2, x[1] );
-  EXPECT_DOUBLE_EQ( 3, x[2] );
+  EXPECT_TRUE( std::equal( x.begin(), x.end(), etalon_x.begin() ) );
 }

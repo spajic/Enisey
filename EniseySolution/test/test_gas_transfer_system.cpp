@@ -47,7 +47,7 @@ TEST_F(GasTransferSystemFromVestaTest, FindsBalanceForSaratovGorkiy) {
   gts.CountAllEdges();
   gts.MixVertices();
   const std::string graphviz_filename = 
-    "C:\\Enisey\\out\\GTSCountsAllEdges.dot";
+     "C:\\Enisey\\out\\GTSCountsAllEdges.dot";
   /// \todo Добавить автоматические проверки на корректность.
 
   std::list<double> int_disbs;
