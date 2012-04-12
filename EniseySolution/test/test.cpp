@@ -32,7 +32,8 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 #include "test_graph_boost.cpp"
 // Тесты класса SlaeSolverCVM.
 #include "test_slae_solver_cvm.cpp"
-
+// Тесты класса SlaeSolverI.
+#include "test_slae_solver_i.cpp"
 /* Тест расчёта трубы методом последовательного счёта.
 Тестировать будем так - зададим входные данные, получим расчётные рез-ты
 и сравним их с рез-ми Весты для таких же входных данных.

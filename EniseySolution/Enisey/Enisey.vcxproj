@@ -169,6 +169,7 @@
     <ClInclude Include="model_pipe_sequential.h" />
     <ClInclude Include="passport_pipe.h" />
     <ClInclude Include="passport.h" />
+    <ClInclude Include="slae_solver_i.h" />
     <ClInclude Include="slae_solver_cvm.h" />
     <ClInclude Include="writer_graphviz.h" />
   </ItemGroup>
