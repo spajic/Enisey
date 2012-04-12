@@ -22,6 +22,7 @@
 #include "slae_solver_i.h"
 // Для отладочной печати.
 #include <fstream>
+#include <vector>
 
 GasTransferSystem::GasTransferSystem() {
   g_ = new GraphBoost();
@@ -100,36 +101,34 @@ void GasTransferSystem::set_slae_solver(SlaeSolverI *slae_solver) {
 }
 // Решить сформированную СЛАУ и найти вектор DeltaP_.
 void GasTransferSystem::SolveSlae() {
-  // Используем пока библиотеку CVM для решения СЛАУ. 
-  // В CVM индексация с единицы.
-  // Заполняем матрицу A.
-  cvm::srmatrix A(slae_size_);
+  // Переводим map A((row,col), val),  в список (row*col, val) для сортировки.
+  int size = B_.size();
+  std::list<std::pair<int, double> > flat;
   for(auto a = A_.begin(); a != A_.end(); ++a) {
-    int row = a->first.first;
-    int col = a->first.second;
-    A(row + 1, col + 1) = a->second;
+    flat.push_back( 
+        std::make_pair(
+            a->first.first*size + a->first.second, // row*size + col.
+            a->second // value.
+        )
+    );
   }
-  // Заполняем вектор B.
-  cvm::rvector B(slae_size_);
-  for(int n = 0; n < slae_size_; ++n) {
-    B(n + 1) = B_[n];
+  flat.sort();
+  // Заполняем a_indexes, a_vals на основании flat.
+  std::vector<int> a_indexes;
+  a_indexes.reserve( flat.size() );
+  std::vector<double> a_vals;
+  a_vals.reserve( flat.size() );
+  for(auto fl = flat.begin(); fl != flat.end(); ++fl) {
+    a_indexes.push_back(fl->first);
+    a_vals.push_back(fl->second);
   }
-  cvm::rvector DeltaP(slae_size_);
-  // Для отладки выведем построенные A, B.
-  std::ofstream a_fs("C:\\Enisey\\out\\A.txt");
-  a_fs << A;
-  std::ofstream b_fs("C:\\Enisey\\out\\B.txt");
-  b_fs << B;
-  DeltaP.solve(A, B);
-  std::ofstream p_fs("C:\\Enisey\\out\\DeltaP.txt");
-  p_fs << DeltaP;
-  // Копируем решение в DeltaP_.
   DeltaP_.clear();
-  DeltaP_.resize(slae_size_);
-  /// \todo Инициализацию работу со СЛАУ - в отдельную функцию.
-  for(int n = 0; n < slae_size_; ++n) {
-    DeltaP_[n] = DeltaP[n + 1];
-  }
+  DeltaP_.reserve(size);
+  slae_solver_->Solve( // Решаем СЛАУ, результат в вектор DeltaP_.
+      a_indexes,
+      a_vals,
+      B_,
+      &DeltaP_);
 }
 void GasTransferSystem::CountNewIteration(double g) {
   FormSlae();

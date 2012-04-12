@@ -10,6 +10,7 @@
 #include <list>
 #include <fstream>
 #include <iomanip>
+#include "slae_solver_cvm.h"
 
 const std::string path_to_vesta_files = "C:\\Enisey\\data\\saratov_gorkiy\\";
 
@@ -43,6 +44,7 @@ TEST_F(GasTransferSystemFromVestaTest, MakesInitialApprox) {
   gts.WriteToGraphviz(graphviz_filename);
 }
 TEST_F(GasTransferSystemFromVestaTest, FindsBalanceForSaratovGorkiy) {
+  gts.set_slae_solver(new SlaeSolverCVM);
   gts.MakeInitialApprox();
   gts.CountAllEdges();
   gts.MixVertices();
