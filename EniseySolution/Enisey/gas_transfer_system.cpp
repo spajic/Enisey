@@ -19,6 +19,7 @@
 #include "writer_graphviz.h"
 // Для решения СЛАУ.
 #include "cvm.h"
+#include "slae_solver_i.h"
 // Для отладочной печати.
 #include <fstream>
 
@@ -93,6 +94,9 @@ void GasTransferSystem::FormSlae() {
       } // Конец перебора параллельных рёбер (v, v_out).
     } // Конец обхода исходящих рёбер.
   } // Конец обхода вершин графа.
+}
+void GasTransferSystem::set_slae_solver(SlaeSolverI *slae_solver) {
+  slae_solver_ = slae_solver;
 }
 // Решить сформированную СЛАУ и найти вектор DeltaP_.
 void GasTransferSystem::SolveSlae() {

@@ -6,6 +6,7 @@
 #include <map>
 // Forward-declarations.
 class GraphBoost;
+class SlaeSolverI;
 
 /** Класс представляет объект ГТС.*/
 class GasTransferSystem {
@@ -43,10 +44,12 @@ class GasTransferSystem {
   /** Произвести расчёт всех рёбер графа. Т.е. во всех рёбрах должны быть
   доступны расход и производные расхода.*/
   void CountAllEdges();
-  /**Произвести смешивание газовых потоков в вершинах.
+  /** Произвести смешивание газовых потоков в вершинах.
   Выполняется в топологическом порядке, влияет на состав газа, T вершин.
   Не влияет на P, Q вершин.*/
   void MixVertices();
+  /** Установить SlaeSolver.*/
+  void set_slae_solver(SlaeSolverI *slae_slover);
  private:
    /// Количество строк в СЛАУ.
   int slae_size_;
@@ -57,4 +60,5 @@ class GasTransferSystem {
   /** Первоначальное смешение газовых потоков. Просто "протягиваем"
   состав газа от входа к выходам.*/
   void MakeInitialMix();
+  SlaeSolverI *slae_solver_;
 };
