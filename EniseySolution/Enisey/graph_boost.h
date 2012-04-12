@@ -10,9 +10,7 @@
 class GraphBoostEngine;
 class GraphBoostEdge;
 class GraphBoostVertex;
-class ManagerEdgeModelPipeSequential;
-// class GraphBoostVertexIteratorNative;	// Обёртка над итератором, предоставляемым ф-ей vertices()
-// class GraphBoostVertexIteratorTopological; // Перестановка вершин в топологическом порядке
+class ManagerEdge;
 
 class GraphBoost {
  public:
@@ -38,20 +36,13 @@ class GraphBoost {
 
   iterator VertexBeginNative();
   iterator VertexEndNative();
-
   iterator VertexBeginTopological();
   iterator VertexEndTopological();
 
-  //GraphBoostVertexIteratorNative* VertexBeginNative();
-  //GraphBoostVertexIteratorNative* VertexEndNative();
-
-  //GraphBoostVertexIteratorTopological* VertexBeginTopological();
-  //GraphBoostVertexIteratorTopological* VertexEndTopological();
-  ManagerEdgeModelPipeSequential* manager();
+  ManagerEdge* manager();
+  void set_manager(ManagerEdge* manager_edge);
 private:
   GraphBoostEngine *engine_;
+  ManagerEdge* manager_edge_;
   std::vector<unsigned int> topological_ordering;
-  // GraphBoostVertexIteratorNative* vertex_begin_native_;
-
-  ManagerEdgeModelPipeSequential* manager_;
 };

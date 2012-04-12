@@ -99,6 +99,9 @@ void GasTransferSystem::FormSlae() {
 void GasTransferSystem::set_slae_solver(SlaeSolverI *slae_solver) {
   slae_solver_ = slae_solver;
 }
+void GasTransferSystem::set_manager_edge(ManagerEdge* manager_edge) {
+  g_->set_manager(manager_edge);
+}
 // Решить сформированную СЛАУ и найти вектор DeltaP_.
 void GasTransferSystem::SolveSlae() {
   // Переводим map A((row,col), val),  в список (row*col, val) для сортировки.

@@ -7,6 +7,7 @@
 // Forward-declarations.
 class GraphBoost;
 class SlaeSolverI;
+class ManagerEdge;
 
 /** Класс представляет объект ГТС.*/
 class GasTransferSystem {
@@ -50,6 +51,8 @@ class GasTransferSystem {
   void MixVertices();
   /** Установить SlaeSolver.*/
   void set_slae_solver(SlaeSolverI *slae_slover);
+  /** Установить ManagetEdge.*/
+  void set_manager_edge(ManagerEdge* manager_edge);
  private:
    /// Количество строк в СЛАУ.
   int slae_size_;

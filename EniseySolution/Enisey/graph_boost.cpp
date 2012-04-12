@@ -14,15 +14,11 @@
 #include "boost/iterator/transform_iterator.hpp"
 #include "boost/iterator/filter_iterator.hpp"
 
-GraphBoost::GraphBoost()
-{
+GraphBoost::GraphBoost() {
   engine_ = new GraphBoostEngine;
-  manager_ = new ManagerEdgeModelPipeSequential();
 }
-GraphBoost::~GraphBoost()
-{
+GraphBoost::~GraphBoost() {
   delete engine_;
-  delete manager_;
 }
 
 bool GraphBoost::EdgeExists(int in_v_id, int out_v_id) {
@@ -91,12 +87,10 @@ GraphBoostVertex& GraphBoost::GetVertex(int v_id) {
   return engine_->graph_[v_id];
 }
 
-GraphBoostEngine* GraphBoost::engine()
-{
+GraphBoostEngine* GraphBoost::engine() {
   return engine_;
 }
-int GraphBoost::AddVertex(GraphBoostVertex* graph_boost_vertex)
-{
+int GraphBoost::AddVertex(GraphBoostVertex* graph_boost_vertex) {
   int id_of_created_vertex = boost::add_vertex(engine_->graph_);
   // Получаем из графа ссылку на bundled property для созданной вершины
   // и заполняем его.
@@ -110,8 +104,7 @@ int GraphBoost::AddVertex(GraphBoostVertex* graph_boost_vertex)
   return id_of_created_vertex;
 }
 
-void GraphBoost::AddEdge(GraphBoostEdge* graph_boost_edge)
-{
+void GraphBoost::AddEdge(GraphBoostEdge* graph_boost_edge) {
   // Добавляем ребро в граф и полсучаем ссылку на bundled property
   bool result_of_adding_edge;
   boost::graph_traits<GraphBoostEngine::graph_type>::edge_descriptor created_edge_descriptor;
@@ -121,25 +114,21 @@ void GraphBoost::AddEdge(GraphBoostEdge* graph_boost_edge)
   // Заполняем свойства и записываем в граф
   created_edge = *graph_boost_edge;
 }
-
-GraphBoost::iterator GraphBoost::VertexBeginNative()
-{
+GraphBoost::iterator GraphBoost::VertexBeginNative() {
   return GraphBoostVertexIteratorNative(engine_, true);
 }
-GraphBoost::iterator GraphBoost::VertexEndNative()
-{
+GraphBoost::iterator GraphBoost::VertexEndNative() {
   return GraphBoostVertexIteratorNative(engine_, false);
 }
-
-GraphBoost::iterator GraphBoost::VertexBeginTopological()
-{
+GraphBoost::iterator GraphBoost::VertexBeginTopological() {
   return GraphBoostVertexIteratorTopological(engine_, true);
 }
-GraphBoost::iterator GraphBoost::VertexEndTopological()
-{
+GraphBoost::iterator GraphBoost::VertexEndTopological() {
   return GraphBoostVertexIteratorTopological(engine_, false);
 }
-
-ManagerEdgeModelPipeSequential* GraphBoost::manager() {
-  return manager_;
+ManagerEdge* GraphBoost::manager() {
+  return manager_edge_;
+}
+void GraphBoost::set_manager(ManagerEdge *manager_edge) {
+  manager_edge_ = manager_edge;
 }
