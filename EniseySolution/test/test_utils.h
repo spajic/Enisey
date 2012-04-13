@@ -66,19 +66,3 @@ Gas MakeTestGasIn();
 
 void FillTestGasOut(Gas* gas);
 Gas MakeTestGasOut();
-
-/* Всё для составления и решения СЛАУ AX = B
-[2 0 1]   [1]   [5]
-[0 3 0] * [2] = [6]
-[1 2 3]   [3]   [14]
-Формат передачи параметров:
-A_indexes - индексы (строка, столбец) ненулевых коэф-ов А.
-A_vals - значения этих коэф-ов в соответствующем порядке.
-B - вектор b.
-X - вектор найденного решения. 
-Так сделано для эффективности передачи разреженных матриц. 
-Хотя для них, конечно, есть свои форматы типа CSR.*/
-std::vector<int> MakeSimpleSlaeAIndexes();
-std::vector<double> MakeSimpleSlaeAValues();
-std::vector<double> MakeSimpleSlaeB();
-std::vector<double> MakeSimpleSlaeX();
