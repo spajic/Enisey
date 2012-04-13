@@ -13,6 +13,15 @@ class ManagerEdge;
 /** Класс представляет объект ГТС.*/
 class GasTransferSystem : public GasTransferSystemI {
  public:
+   /// Выполнить балансировку системы.
+   void PeroformBalancing(
+     const std::vector<std::string> &MatrixConnectionsFile,
+     const std::vector<std::string> &InOutGRSFile,
+     const std::vector<std::string> &PipeLinesFile,
+     std::vector<std::string> *ResultFile,
+     std::vector<double> *AbsDisbalances,
+     std::vector<int> *IntDisbalances
+     );
   /** Создаёт объект GraphBoost g_.*/
   GasTransferSystem();
   /** Удаляет объект GraphBoost g_.*/
@@ -38,6 +47,11 @@ class GasTransferSystem : public GasTransferSystemI {
   /** Загрузить граф из файлов Весты, находящихся в папке path.
   Путь передаётся с последним слешем, например "C:\\vesta\\files\\"*/
   void LoadFromVestaFiles(std::string const path);
+  /// Загрузка из векторов строк
+  void LoadFromVestaFiles(
+      const std::vector<std::string> &MatrixConnectionsFile,
+      const std::vector<std::string> &InOutGRSFile,
+      const std::vector<std::string> &PipeLineFile);
   /** Выести граф в файл filename. */
   void const WriteToGraphviz(std::string const filename);
   /** Выполнить расчёт начального приближения ограничений, давлений 

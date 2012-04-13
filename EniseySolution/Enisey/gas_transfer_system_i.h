@@ -12,6 +12,15 @@ class ManagerEdge;
 /** Класс представляет абстрактный интерфейс ГТС.*/
 class GasTransferSystemI {
  public:
+   /// Выполнить балансировку системы.
+   virtual void PeroformBalancing(
+     const std::vector<std::string> &MatrixConnectionsFile,
+     const std::vector<std::string> &InOutGRSFile,
+     const std::vector<std::string> &PipeLinesFile,
+     std::vector<std::string> *ResultFile,
+     std::vector<double> *AbsDisbalances,
+     std::vector<int> *IntDisbalances
+  ) = 0;
   /** Создаёт объект GraphBoost g_.*/
   //GasTransferSystemI() = 0;
   /** Удаляет объект GraphBoost g_.*/

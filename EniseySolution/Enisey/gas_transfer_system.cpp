@@ -20,6 +20,7 @@
 // Для решения СЛАУ.
 #include "cvm.h"
 #include "slae_solver_i.h"
+#include "slae_solver_cvm.h"
 // Для отладочной печати.
 #include <fstream>
 #include <vector>
@@ -29,6 +30,55 @@ GasTransferSystem::GasTransferSystem() {
 }
 GasTransferSystem::~GasTransferSystem() {
   delete g_;
+}
+
+/// Выполнить балансировку системы.
+void GasTransferSystem::PeroformBalancing(
+    const std::vector<std::string> &MatrixConnectionsFile,
+    const std::vector<std::string> &InOutGRSFile,
+    const std::vector<std::string> &PipeLinesFile,
+    std::vector<std::string> *ResultFile,
+    std::vector<double> *AbsDisbalances,
+    std::vector<int> *IntDisbalances) {
+  ManagerEdge* manager_edge_model_pipe_sequential = 
+      new ManagerEdgeModelPipeSequential;
+  set_manager_edge(manager_edge_model_pipe_sequential);
+
+  SlaeSolverCVM *slae_solver_cvm = new SlaeSolverCVM;
+  set_slae_solver(slae_solver_cvm);
+
+  LoadFromVestaFiles(
+      MatrixConnectionsFile,
+      InOutGRSFile,
+      PipeLinesFile);
+
+  MakeInitialApprox();
+  CountAllEdges();
+  MixVertices();
+
+  double d = CountDisbalance();
+  AbsDisbalances->push_back(d);
+  IntDisbalances->push_back( GetIntDisbalance() );
+  double g = 1.0 / 2.0;
+  double d_prev = 1000000;
+  SetSlaeRowNumsForVertices();
+  for(int n = 0; n < 35; ++n) {
+    CountNewIteration(g);
+    d = CountDisbalance();
+    AbsDisbalances->push_back(d);
+    if(d_prev < d) {
+      g *= 0.9;
+    }
+    d_prev = d;
+    int d_int = GetIntDisbalance();
+    IntDisbalances->push_back(d_int);
+    if(d_int == 0) {
+      break;
+    }
+  }
+
+  delete manager_edge_model_pipe_sequential;
+  delete slae_solver_cvm;
 }
 void GasTransferSystem::SetSlaeRowNumsForVertices() {
   int n(0);
@@ -173,6 +223,13 @@ void GasTransferSystem::LoadFromVestaFiles(std::string const path) {
   LoadInOutGRS(path + "InOutGRS.dat", &vfd);
   GraphBoostLoadFromVesta(g_, &vfd);
 }
+void GasTransferSystem::LoadFromVestaFiles(
+    const std::vector<std::string> &MatrixConnectionsFile,
+    const std::vector<std::string> &InOutGRSFile,
+    const std::vector<std::string> &PipeLineFile) {
+  
+}
+
 void const GasTransferSystem::WriteToGraphviz(std::string const filename) {
   WriterGraphviz writer;
   writer.WriteGraphToFile(*g_, filename);
