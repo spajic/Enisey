@@ -218,16 +218,54 @@ int GasTransferSystem::GetIntDisbalance() {
 
 void GasTransferSystem::LoadFromVestaFiles(std::string const path) {
   VestaFilesData vfd;
-  LoadMatrixConnections(path + "MatrixConnections.dat", &vfd);
-  LoadPipeLines(path + "PipeLine.dat", &vfd);
-  LoadInOutGRS(path + "InOutGRS.dat", &vfd);
+  std::ifstream mcf(path + "MatrixConnections.dat");
+  LoadMatrixConnections(mcf, &vfd);
+
+  std::ifstream plf(path + "PipeLine.dat");
+  LoadPipeLines(plf, &vfd);
+
+  std::ifstream iogf(path + "InOutGRS.dat");
+  LoadInOutGRS(iogf, &vfd);
+
   GraphBoostLoadFromVesta(g_, &vfd);
+}
+void VectorOfStringToStream(const std::vector<std::string> &v, std::ofstream *o){
+  for(auto l = v.begin(); l!= v.end(); ++l) {
+    *o << *l;
+    if( (l + 1) != v.end() ) {
+      *o << std::endl;
+    }
+  }
 }
 void GasTransferSystem::LoadFromVestaFiles(
     const std::vector<std::string> &MatrixConnectionsFile,
     const std::vector<std::string> &InOutGRSFile,
     const std::vector<std::string> &PipeLineFile) {
   
+  VestaFilesData vsd;
+
+  std::ofstream mco;
+  mco.open("C:\\Enisey\\out\\MatrixConnectionsTemp.txt", std::ios_base::trunc);
+  VectorOfStringToStream(MatrixConnectionsFile, &mco);
+  mco.close();
+  std::ifstream mci("C:\\Enisey\\out\\MatrixConnectionsTemp.txt");
+  LoadMatrixConnections(mci, &vsd);
+
+  std::ofstream plo;
+  plo.open("C:\\Enisey\\out\\PipeLineTemp.txt", std::ios_base::trunc);
+  VectorOfStringToStream(PipeLineFile, &plo);
+  plo.close();
+  std::ifstream pli("C:\\Enisey\\out\\PipeLineTemp.txt");
+  LoadPipeLines(pli, &vsd);
+
+  std::ofstream ioo;
+  ioo.open("C:\\Enisey\\out\\InOutGRSTemp.txt", std::ios_base::trunc);
+  VectorOfStringToStream(InOutGRSFile, &ioo);
+  ioo.close();
+  std::ifstream ioi("C:\\Enisey\\out\\InOutGRSTemp.txt");
+  LoadInOutGRS(ioi, &vsd);
+
+  GraphBoostLoadFromVesta(g_, &vsd);
 }
 
 void const GasTransferSystem::WriteToGraphviz(std::string const filename) {

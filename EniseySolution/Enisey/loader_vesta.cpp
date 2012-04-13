@@ -5,7 +5,7 @@
 #include "loader_vesta.h"
 #include <string>
 #include <hash_map>
-#include <fstream>
+#include <iostream>
 #include "passport_pipe.h"
 
 // Реализации конструкторов по умолчанию для структур из loader_vesta.h
@@ -17,8 +17,7 @@ VertexData::VertexData() : id_vesta(-1), id_graph(-1) {}
 VestaFilesData::VestaFilesData() : num_edges(-1), num_nodes(-1), 
     elems_per_string(-1) {}
 
-void LoadMatrixConnections(std::string file_name, VestaFilesData *vsd) {
-  std::fstream f(file_name);
+void LoadMatrixConnections(std::istream &f, VestaFilesData *vsd) {
   f >> vsd->num_edges >> vsd->num_nodes >> vsd->elems_per_string;
   // Считываем информацию об edges.
   for(int i = 0; i < vsd->num_edges; ++i) {
@@ -50,8 +49,7 @@ void LoadMatrixConnections(std::string file_name, VestaFilesData *vsd) {
     }
   }
 }
-void LoadPipeLines(std::string file_name, VestaFilesData *vsd) {
-  std::fstream f(file_name);
+void LoadPipeLines(std::istream &f, VestaFilesData *vsd) {
   int total_pipes = -1;
   f >> total_pipes;
   for(int pipe_num = 1; pipe_num <= total_pipes; ++pipe_num) {
@@ -76,8 +74,7 @@ void LoadPipeLines(std::string file_name, VestaFilesData *vsd) {
   }  
 }
 
-void LoadInOutGRS(std::string file_name, VestaFilesData *vsd) {
-  std::fstream f(file_name);
+void LoadInOutGRS(std::istream &f, VestaFilesData *vsd) {
   int total_inouts = -1;
   f >> total_inouts;
   for(int num_inout = 1; num_inout <= total_inouts; ++num_inout) {

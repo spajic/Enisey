@@ -65,7 +65,7 @@ struct VestaFilesData {
   </pre>
 Далее в цикле по узлам расчётной схемы ГТС: строки из кол-во_эл-в_в_строке <br>
   Ид_узла ид_вх/вых_объекта(если ребро входит в узел - знак "-") нули.*/
-void LoadMatrixConnections(std::string file_name, VestaFilesData *vsd);
+void LoadMatrixConnections(std::istream &f, VestaFilesData *vsd);
 
 /** Считывает инф-ю из PipeLine.dat в структуру VestaFilesData.
 Файл PipeLine.dat содержит информацию по трубам. <pre>
@@ -85,7 +85,7 @@ void LoadMatrixConnections(std::string file_name, VestaFilesData *vsd);
              к-т шерохов-ть трубы [мм]
               разность высот [м]
  Пример строки: 686 3 43337 0.7007 1.3 2.5 20 55 515 530 4.000 0.03 0</pre>*/
-void LoadPipeLines(std::string file_name, VestaFilesData *vsd);
+void LoadPipeLines(std::istream &f, VestaFilesData *vsd);
 
 /** Считывает инф-ю из InOutGRS.dat в структуру VestaFilesData.
 <pre>
@@ -126,4 +126,4 @@ void LoadPipeLines(std::string file_name, VestaFilesData *vsd);
   238 -1.58500000 0.000 0.0 0.000 0.0 0.0 0.0 0 583 0 0 0.0 0.0 0.0 0.0 0.0
 </pre>
  \todo Уточнить у @МСК значение новых параметров Pст, A, B, Qмак.*/
-void LoadInOutGRS(std::string file_name, VestaFilesData *vsd);
+void LoadInOutGRS(std::istream &f, VestaFilesData *vsd);

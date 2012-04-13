@@ -144,7 +144,8 @@ std::vector<std::string> FileAsVectorOfStrings(std::string filename) {
   return res;
 }
 
-TEST_F(GasTransferSystemITest, PerformBalancingForSaratovGorkiy) {
+TEST(GasTransferSystemITestClean, PerformBalancingForSaratovGorkiy) {
+  GasTransferSystem *gts = new GasTransferSystem;
   std::vector<double> abs_disbs;
   std::vector<int> int_disbs;
   std::vector<std::string> result_of_balancing;
