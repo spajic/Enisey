@@ -1,6 +1,7 @@
 /** \file gas_transfer_system.h
 Класс GasTransferSystem - придставление газотранспортной системы (ГТС).*/
 #pragma once
+#include "gas_transfer_system_i.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -10,7 +11,7 @@ class SlaeSolverI;
 class ManagerEdge;
 
 /** Класс представляет объект ГТС.*/
-class GasTransferSystem {
+class GasTransferSystem : public GasTransferSystemI {
  public:
   /** Создаёт объект GraphBoost g_.*/
   GasTransferSystem();

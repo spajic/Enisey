@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClInclude Include="common_types.h" />
     <ClInclude Include="gas_transfer_system.h" />
+    <ClInclude Include="gas_transfer_system_i.h" />
     <ClInclude Include="graph_boost_initial_approx.h" />
     <ClInclude Include="graph_boost_load_from_vesta.h" />
     <ClInclude Include="choice.h" />

@@ -28,6 +28,8 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 #include "test_model_pipe_sequential.cpp"
 // Тесты класса GasTransferSystem.
 #include "test_gas_transfer_system.cpp"
+// Тесты класса GasTransferSystemI.
+#include "test_gas_transfer_system_i.cpp"
 // Тесты класса GraphBoost.
 #include "test_graph_boost.cpp"
 // Тесты класса SlaeSolverCVM.
