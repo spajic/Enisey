@@ -3,6 +3,8 @@
 #include "Ice/Ice.h"
 #include "slae_solver_ice.h"
 #include "slae_solver_ice_cvm.h"
+#include "gas_transfer_system_ice.h"
+#include "gas_transfer_system_ice_usual.h"
 
 class Server : public Ice::Application {
  public:
@@ -20,6 +22,10 @@ int	Server::run(int, char*[]) {
   Enisey::SlaeSolverIceCVMPtr slae_solver_ice_cvm = 
       new Enisey::SlaeSolverIceCVM;
   slae_solver_ice_cvm->ActivateSelfInAdapter(adapter);
+  // Создаём servant'а, реализующего интерфейс GasTransferSystemIce.
+  Enisey::GasTransferSystemIceUsualPtr gts_usual = 
+      new Enisey::GasTransferSystemIceUsual;
+  gts_usual->ActivateSelfInAdapter(adapter);
   adapter->activate(); // Начинаем слушать соединения от клиентов асинхронно.
   communicator()->waitForShutdown(); // Приостанавливаем данный поток.
   if(interrupted()) {

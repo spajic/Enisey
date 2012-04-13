@@ -14,6 +14,7 @@
 #include "slae_solver_ice_client.h"
 #include "manager_edge_model_pipe_sequential.h"
 #include "gas_transfer_system.h"
+#include "gas_transfer_system_ice_client.h"
 
 const std::string path_to_vesta_files_i = "C:\\Enisey\\data\\saratov_gorkiy\\";
 
@@ -32,7 +33,7 @@ class GasTransferSystemITest : public ::testing::Test {
     delete slae_solver_cvm_;
     delete gts;
   }
-  GasTransferSystemI *gts;
+  GasTransferSystem *gts;
   ManagerEdge *manager_edge_model_pipe_sequential_;
   SlaeSolverI *slae_solver_cvm_;
 };
@@ -145,7 +146,7 @@ std::vector<std::string> FileAsVectorOfStrings(std::string filename) {
 }
 
 TEST(GasTransferSystemITestClean, PerformBalancingForSaratovGorkiy) {
-  GasTransferSystem *gts = new GasTransferSystem;
+  GasTransferSystemI *gts = new GasTransferSystem;
   std::vector<double> abs_disbs;
   std::vector<int> int_disbs;
   std::vector<std::string> result_of_balancing;
@@ -157,6 +158,62 @@ TEST(GasTransferSystemITestClean, PerformBalancingForSaratovGorkiy) {
       &abs_disbs,
       &int_disbs
   ); 
+  // Файл, в который запишем эталонную последовательность дисбалансов для
+  // дальнейшего сравнения. Эта функциональность включается только тогда,
+  // когда нужно сформировать новый эталон.
+  // Файл имеет формат
+  // на строчке: номер итерации, дисбаланс, число узлов c дисбалансом.
+  const std::string etalon_saratov_gorkiy_balance = 
+    "C:\\Enisey\\out\\SaratovGorkiy\\etalon_balance_find.txt";
+  //#define NEW_ETALON
+#ifdef NEW_ETALON
+  std::ofstream etalon_f(etalon_saratov_gorkiy_balance); 
+  etalon_f << std::setprecision(18) << std::fixed;
+  auto i_d = int_disbs.begin();
+  auto a_d = abs_disbs.begin();
+  for(unsigned int iter_num = 0; iter_num < abs_disbs.size(); ++iter_num) {
+    etalon_f << iter_num << " " << *a_d << " " << *i_d << std::endl;
+    ++a_d;
+    ++i_d;
+  }
+#endif  
+  // Загружаем информацию об эталоне и сравниваем с фактом.
+#ifndef NEW_ETALON
+  std::ifstream etalon_f(etalon_saratov_gorkiy_balance);
+  std::list<double> etalon_abs_disbs;
+  std::list<double> etalon_int_disbs;
+  int et_iter(0);
+  double et_abs_d(0.0);
+  double et_int_d(0.0);
+  while(etalon_f >> et_iter >> et_abs_d >> et_int_d) {
+    etalon_abs_disbs.push_back(et_abs_d);
+    etalon_int_disbs.push_back(et_int_d);
+  }
+  ASSERT_EQ( abs_disbs.size(), etalon_abs_disbs.size() );
+  bool abs_disbs_equal = std::equal(
+    etalon_abs_disbs.begin(), etalon_abs_disbs.end(),
+    abs_disbs.begin() );
+  bool int_disbs_equal = std::equal(
+    etalon_int_disbs.begin(), etalon_int_disbs.end(),
+    int_disbs.begin() );
+  EXPECT_TRUE(abs_disbs_equal);
+  EXPECT_TRUE(int_disbs_equal);
+#endif
+}
+
+TEST(GasTransferSystemITestClean, PerformBalancingForSaratovGorkiyICE) {
+  GasTransferSystemI *gts = new GasTransferSystemIceClient;
+  std::vector<double> abs_disbs;
+  std::vector<int> int_disbs;
+  std::vector<std::string> result_of_balancing;
+  gts->PeroformBalancing(
+    FileAsVectorOfStrings(path_to_vesta_files_i + "MatrixConnections.dat"),
+    FileAsVectorOfStrings(path_to_vesta_files_i + "InOutGRS.dat"),
+    FileAsVectorOfStrings(path_to_vesta_files_i + "PipeLine.dat"),
+    &result_of_balancing,
+    &abs_disbs,
+    &int_disbs
+    ); 
   // Файл, в который запишем эталонную последовательность дисбалансов для
   // дальнейшего сравнения. Эта функциональность включается только тогда,
   // когда нужно сформировать новый эталон.

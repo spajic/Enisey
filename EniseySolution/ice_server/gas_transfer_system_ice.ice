@@ -9,7 +9,9 @@ module Enisey {
 	    StringSequence MatrixConnectionsFile,
 		StringSequence InOutGRSFile,
 		StringSequence PipeLinesFile,
-		out StringSequence ResultFile
+		out StringSequence ResultFile,
+		out DoubleSequence AbsDisbalances,
+		out IntSequence IntDisbalances
 	);
   }; // Конец interface GasTransferSystemIce.
 }; // Конец module Enisey.

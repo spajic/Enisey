@@ -1,4 +1,4 @@
-/** \file test_slae_solver_ice_client.cpp
+/** \file slae_solver_ice_client.h
   Решатель СЛАУ, обращающийся к серверу ICE.*/
 #pragma once
 #include "slae_solver_i.h"

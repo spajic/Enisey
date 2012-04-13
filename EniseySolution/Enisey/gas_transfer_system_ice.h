@@ -18,8 +18,8 @@
 // </auto-generated>
 //
 
-#ifndef __C__Enisey_src_EniseySolution_ice_server_gas_transfer_system_ice_h__
-#define __C__Enisey_src_EniseySolution_ice_server_gas_transfer_system_ice_h__
+#ifndef __C__Enisey_src_EniseySolution_Enisey_gas_transfer_system_ice_h__
+#define __C__Enisey_src_EniseySolution_Enisey_gas_transfer_system_ice_h__
 
 #include <Ice/LocalObjectF.h>
 #include <Ice/ProxyF.h>

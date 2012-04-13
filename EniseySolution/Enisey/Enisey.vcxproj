@@ -104,6 +104,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </CudaCompile>
     <None Include="..\ice_server\common_types.ice" />
+    <None Include="..\ice_server\gas_transfer_system_ice.ice" />
     <None Include="..\ice_server\slae_solver_ice.ice" />
     <None Include="edge_model_pipe_sequential_cuda.cuh">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -132,6 +133,8 @@
     <ClCompile Include="functions_gas.cpp" />
     <ClCompile Include="functions_pipe.cpp" />
     <ClCompile Include="gas_transfer_system.cpp" />
+    <ClCompile Include="gas_transfer_system_ice.cpp" />
+    <ClCompile Include="gas_transfer_system_ice_client.cpp" />
     <ClCompile Include="graph_boost_initial_approx.cpp" />
     <ClCompile Include="graph_boost_load_from_vesta.cpp" />
     <ClCompile Include="edge_model_pipe_sequential.cpp" />
@@ -154,6 +157,8 @@
     <ClInclude Include="common_types.h" />
     <ClInclude Include="gas_transfer_system.h" />
     <ClInclude Include="gas_transfer_system_i.h" />
+    <ClInclude Include="gas_transfer_system_ice.h" />
+    <ClInclude Include="gas_transfer_system_ice_client.h" />
     <ClInclude Include="graph_boost_initial_approx.h" />
     <ClInclude Include="graph_boost_load_from_vesta.h" />
     <ClInclude Include="choice.h" />

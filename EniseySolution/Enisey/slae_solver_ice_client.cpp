@@ -1,4 +1,4 @@
-/** \file test_slae_solver_ice_client.h
+/** \file test_slae_solver_ice_client.cpp
   Реализация SlaeSolverIceClient.*/
 #include "slae_solver_ice_client.h"
 #include "Ice/Ice.h"
@@ -18,8 +18,9 @@ void SlaeSolverIceClient::Solve(
         Enisey::SlaeSolverIcePrx::checkedCast(base);
     if(!solver_proxy) {
       std::cout << "Invalid proxy";
+    } else {
+      solver_proxy->Solve(A_indexes, A_values, B, *X);
     }
-    solver_proxy->Solve(A_indexes, A_values, B, *X);
   } catch(const Ice::Exception &ex){  
     std::cerr << ex << std::endl;
   } catch(const char *msg) {

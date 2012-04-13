@@ -10,9 +10,12 @@ class GasTransferSystemIceUsual : public virtual GasTransferSystemIce {
       const ::Enisey::StringSequence &MatrixConnectionsFile, 
       const ::Enisey::StringSequence &InOutGRSFile, 
       const ::Enisey::StringSequence &PipeLinesFile, 
-      ::Enisey::StringSequence &ResultFile,  
+      ::Enisey::StringSequence &ResultFile,
+      ::Enisey::DoubleSequence &AbsDisbalances,
+      ::Enisey::IntSequence &IntDisbalances,
       const ::Ice::Current& /* = ::Ice::Current */
   );
+  void ActivateSelfInAdapter(const Ice::ObjectAdapterPtr &adapter);
 };
 typedef // Тип умного указателя на объект GasTransferSystemIceUsual.
     IceUtil::Handle<GasTransferSystemIceUsual> GasTransferSystemIceUsualPtr;
