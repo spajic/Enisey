@@ -11,17 +11,17 @@
 #include <fstream>
 #include <iomanip>
 #include "slae_solver_cvm.h"
+#include "slae_solver_ice_client.h"
 #include "manager_edge_model_pipe_sequential.h"
 
 const std::string path_to_vesta_files = "C:\\Enisey\\data\\saratov_gorkiy\\";
-
 
 class GasTransferSystemFromVestaTest : public ::testing::Test {
  protected:
   virtual void SetUp() {
     manager_edge_model_pipe_sequential_ = new ManagerEdgeModelPipeSequential;
     gts.set_manager_edge(manager_edge_model_pipe_sequential_);
-    slae_solver_cvm_ = new SlaeSolverCVM;
+    slae_solver_cvm_ = new SlaeSolverIceClient;
     gts.set_slae_solver(slae_solver_cvm_);
     gts.LoadFromVestaFiles(path_to_vesta_files);
   }

@@ -19,3 +19,5 @@ TEST(SlaeSolverITest, SolveSimpleSlaeWithCVMSolver) {
 
   delete abstract_solver;
 }
+/// \todo Отрефакторить тесты SlaeSolver - так чтобы в этот абстрактный
+/// тест просто подставлялись конкретные Solver'ы.
