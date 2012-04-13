@@ -4,6 +4,7 @@
 module Enisey {
   sequence<double> DoubleSequence;
   sequence<int> IntSequence;
+  sequence<string> StringSequence;
 };
 
 #endif

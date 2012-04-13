@@ -48,6 +48,8 @@ typedef ::std::vector< ::Ice::Double> DoubleSequence;
 
 typedef ::std::vector< ::Ice::Int> IntSequence;
 
+typedef ::std::vector< ::std::string> StringSequence;
+
 }
 
 #endif
