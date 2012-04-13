@@ -69,6 +69,7 @@ class SlaeSolverTypedTest : public ::testing::Test {
   std::vector<double> x;
 };
 
+// —писок типов, дл€ которых будут выполн€тьс€ тесты.
 typedef ::testing::Types<
     SlaeSolverCVM, 
     SlaeSolverIceClient
