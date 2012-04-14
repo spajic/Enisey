@@ -58,3 +58,19 @@ TYPED_TEST(GasTransferSystemTypedTest, PerformsBalancingOfSaratovGorkiy) {
   ); 
   CompareGTSDisbalancesFactToEtalon(abs_disbalances, int_disbalances);
 }
+
+TYPED_TEST(GasTransferSystemTypedTest, FormsResultFile) {
+  abstract_gts->PeroformBalancing(
+    FileAsVectorOfStrings(path_to_vesta_files + "MatrixConnections.dat"),
+    FileAsVectorOfStrings(path_to_vesta_files + "InOutGRS.dat"),
+    FileAsVectorOfStrings(path_to_vesta_files + "PipeLine.dat"),
+    &result_of_balancing,
+    &abs_disbalances,
+    &int_disbalances
+    ); 
+  std::ofstream f("C:\\Enisey\\out\\VestaResultFile.txt");
+  for(auto s = result_of_balancing.begin(); s != result_of_balancing.end(); 
+      ++s) {
+    f << *s << std::endl;
+  }
+}

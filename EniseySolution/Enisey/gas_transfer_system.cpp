@@ -77,6 +77,8 @@ void GasTransferSystem::PeroformBalancing(
     }
   }
 
+  g_->OutputToVesta(ResultFile);
+
   delete manager_edge_model_pipe_sequential;
   delete slae_solver_cvm;
 }

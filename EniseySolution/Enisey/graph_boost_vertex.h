@@ -99,6 +99,7 @@ class GraphBoostVertex {
   void set_p_min(double p_min);
   double p_max();
   void set_p_max(double p_max);
+  const std::list<int>& in_out_id_list();
 private:
   int slae_row_;
   Gas gas_;
@@ -126,7 +127,5 @@ private:
   // анализе графа.
   double q_in_dominators_subtree_;
 
-
-
-  std::list<int> in_out_id_list;
+  std::list<int> in_out_id_list_;
 };

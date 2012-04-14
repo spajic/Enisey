@@ -345,7 +345,7 @@ void GraphBoostVertex::AddInputWithSetP(int id_in_out, double p, double t, GasCo
   else
   {
     has_in_out_ = true;
-    in_out_id_list.push_back(id_in_out);
+    in_out_id_list_.push_back(id_in_out);
     p_is_ready_ = true;
     gas_.work_parameters.p = p;
     gas_.work_parameters.t = t;
@@ -364,7 +364,7 @@ void GraphBoostVertex::AddInputWithSetQ(int id_in_out, double q, double t, GasCo
   else
   {
     has_in_out_ = true;
-    in_out_id_list.push_back(id_in_out);
+    in_out_id_list_.push_back(id_in_out);
     gas_.work_parameters.q += q;
     gas_.work_parameters.t = t;
     gas_.composition = composition;
@@ -382,7 +382,7 @@ void GraphBoostVertex::AddOutputWithSetP(int id_in_out, double p)
   else
   {
     has_in_out_ = true;
-    in_out_id_list.push_back(id_in_out);
+    in_out_id_list_.push_back(id_in_out);
     p_is_ready_ = true;
     gas_.work_parameters.p = p;
   }
@@ -398,7 +398,7 @@ void GraphBoostVertex::AddOutputWithSetQ(int id_in_out, double q)
   else
   {
     has_in_out_ = true;
-    in_out_id_list.push_back(id_in_out);
+    in_out_id_list_.push_back(id_in_out);
     in_out_amount_ += q;
   }
 }
@@ -446,3 +446,7 @@ double GraphBoostVertex::p_min() { return p_min_; }
 void GraphBoostVertex::set_p_min(double p_min) { p_min_ = p_min;}
 double GraphBoostVertex::p_max() { return p_max_; }
 void GraphBoostVertex::set_p_max(double p_max) { p_max_ = p_max;}
+
+const std::list<int>& GraphBoostVertex::in_out_id_list() {
+  return in_out_id_list_;
+}

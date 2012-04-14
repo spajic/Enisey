@@ -17,8 +17,13 @@ class GraphBoost {
   typedef opqit::opaque_iterator<GraphBoostVertex, opqit::random> iterator;
   GraphBoost();
   ~GraphBoost();
+  void OutputToVesta(std::vector<std::string> *ResultFile);
   /// Проверить, существует ли ребро.
   bool EdgeExists(int in_v_id, int out_v_id);
+  /// Количество рёбер в графе.
+  int NumberOfEdges();
+  /// Количество вершин в графе.
+  int NumberOfVertices();
   /// Получить ссылку на ребро графа по id вх-й и исх-й вершины.
   /// Могут быть параллельные рёбра!
   /// GraphBoostEdge& GetEdge(int in_v_id, int out_v_id);
