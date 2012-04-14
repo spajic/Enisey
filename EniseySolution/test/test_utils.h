@@ -66,3 +66,13 @@ Gas MakeTestGasIn();
 
 void FillTestGasOut(Gas* gas);
 Gas MakeTestGasOut();
+
+std::vector<std::string> FileAsVectorOfStrings(std::string filename);
+
+const std::string path_to_vesta_files = "C:\\Enisey\\data\\saratov_gorkiy\\";
+static const std::string etalon_saratov_gorkiy_balance = 
+  "C:\\Enisey\\out\\SaratovGorkiy\\etalon_balance_find.txt";
+
+void CompareGTSDisbalancesFactToEtalon(
+    const std::vector<double> &abs_disbalances,
+    const std::vector<int> &int_disbalances);
