@@ -14,6 +14,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ice_server", "ice_server\ic
 		{B956ABF9-79C1-4341-BFB8-848F8ABCAA4E} = {B956ABF9-79C1-4341-BFB8-848F8ABCAA4E}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "enisey_vesta", "enisey_vesta\enisey_vesta.vcxproj", "{C6C3CB54-4638-4ED5-A5CC-D4327C3367CA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EC4845AA-5187-4353-AFA8-F651F6BEE48F} = {EC4845AA-5187-4353-AFA8-F651F6BEE48F}
+		{B956ABF9-79C1-4341-BFB8-848F8ABCAA4E} = {B956ABF9-79C1-4341-BFB8-848F8ABCAA4E}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -32,6 +38,10 @@ Global
 		{EC4845AA-5187-4353-AFA8-F651F6BEE48F}.Debug|Win32.Build.0 = Debug|Win32
 		{EC4845AA-5187-4353-AFA8-F651F6BEE48F}.Release|Win32.ActiveCfg = Release|Win32
 		{EC4845AA-5187-4353-AFA8-F651F6BEE48F}.Release|Win32.Build.0 = Release|Win32
+		{C6C3CB54-4638-4ED5-A5CC-D4327C3367CA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C6C3CB54-4638-4ED5-A5CC-D4327C3367CA}.Debug|Win32.Build.0 = Debug|Win32
+		{C6C3CB54-4638-4ED5-A5CC-D4327C3367CA}.Release|Win32.ActiveCfg = Release|Win32
+		{C6C3CB54-4638-4ED5-A5CC-D4327C3367CA}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
