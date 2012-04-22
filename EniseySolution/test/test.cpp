@@ -21,6 +21,7 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 #include "edge.h"
 #include "manager_edge_model_pipe_sequential.h"
 #include "loader_vesta.h"
+#include "conio.h"
 
 // Тесты функций расчёта свойств газа.
 #include "test_functions_gas.cpp"
@@ -452,7 +453,9 @@ TEST(DISABLED_ManagerEdgeModelPipeSequential, LoadTest)
 
  int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  int result = RUN_ALL_TESTS();
+  _getch();
+  return result;
 }
 
 
