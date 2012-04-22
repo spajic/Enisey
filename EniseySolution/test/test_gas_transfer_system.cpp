@@ -94,7 +94,7 @@ TEST_F(GasTransferSystemFromVestaTest, FindsBalanceForSaratovGorkiy) {
 //#define NEW_ETALON
 #ifdef NEW_ETALON
   std::ofstream etalon_f(etalon_saratov_gorkiy_balance); 
-  etalon_f << std::setprecision(18) << std::fixed;
+  etalon_f << std::setprecision(30) << std::fixed;
   auto i_d = int_disbs.begin();
   auto a_d = abs_disbs.begin();
   for(unsigned int iter_num = 0; iter_num < abs_disbs.size(); ++iter_num) {
