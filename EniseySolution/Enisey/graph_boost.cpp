@@ -145,6 +145,14 @@ void GraphBoost::OutputToVesta(std::vector<std::string> *ResultFile) {
     /// \todo Уточнить у МСК, может ли быть в узла несколько входов/выходов?
     for(auto i = v->in_out_id_list().begin(); i != v->in_out_id_list().end();
         ++i) {
+      // Расход в входе - это сумма расхода по исходящим рёбрам, в выходе - 
+      // сумма расхода по входящим рёбрам.
+      double q(0.0);
+      if( v->IsGraphInput() == true ) {
+        q = v->OutcomingAmount();
+      } else if ( v->IsGraphOutput() == true ){
+        q = -v->IncomingAmount(); // Для выходов q < 0.
+      }
       p << *i << " ";// ID поставщика/потрбителя ГРС.
       p << v->id_vesta() << " "; // Номер узла
       Gas v_gas = v->gas();
@@ -153,7 +161,7 @@ void GraphBoost::OutputToVesta(std::vector<std::string> *ResultFile) {
       p << v_gas.composition.density_std_cond << " "; // [кг/м3]
       // Низшая теплотоворная способность газа на входе объекта [кДж/м3]
       p << "0.0" << " ";
-      p << v_gas.work_parameters.q * 0.0864 << " "; //Расход газа [млн м3/сут].
+      p << q * 0.0864 << " "; //Расход [млн м3/сут].
       p << v_gas.composition.co2 << " "; // %CO2.
       p << v_gas.composition.n2 << " "; // %N2.
       p << "0.0" << " "; //Содержание конденсата (влаги) в газе [г/м3]

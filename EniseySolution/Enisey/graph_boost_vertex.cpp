@@ -403,6 +403,21 @@ void GraphBoostVertex::AddOutputWithSetQ(int id_in_out, double q)
   }
 }
 
+double GraphBoostVertex::IncomingAmount() {
+  double res(0);
+  for(auto e = InEdgesBegin(); e != InEdgesEnd(); ++e) {
+    res += e->edge()->q();
+  }
+  return res;
+}
+double GraphBoostVertex::OutcomingAmount() {
+  double res(0);
+  for(auto e = OutEdgesBegin(); e != OutEdgesEnd(); ++e) {
+    res += e->edge()->q();
+  }
+  return res;
+}
+
 bool GraphBoostVertex::PIsReady()
 {
   return p_is_ready_;

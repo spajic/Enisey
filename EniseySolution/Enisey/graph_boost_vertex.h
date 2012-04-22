@@ -78,6 +78,10 @@ class GraphBoostVertex {
   bool IsGraphOutput();
 
   double InOutAmount();
+  /// Сумма входов по рёбрам, без учёта InOutGRS.
+  double IncomingAmount();
+  /// Сумма выходов по рёбрам, без учёта InOutGRS.
+  double OutcomingAmount();
 
   void set_engine(GraphBoostEngine* engine);
   GraphBoostEngine* engine();
