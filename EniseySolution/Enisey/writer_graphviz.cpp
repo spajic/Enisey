@@ -110,6 +110,8 @@ public:
     if(edge.edge_type() == -1) {
       out << "[label = \"q=" +
         boost::lexical_cast<std::string>( edge.edge()->q() ) + 
+        "\\n id = " +
+        boost::lexical_cast<std::string> (edge.edge_id_vesta()) +
         "\", color = blue, style=\"dashed\"]";
     }
     if(edge.pipe_type() == 3) {
@@ -117,11 +119,15 @@ public:
         boost::lexical_cast<std::string>( edge.edge()->q() ) + 
         "\\n L = " +
         boost::lexical_cast<std::string> (edge.pipe_length) +
+        "\\n id = " +
+        boost::lexical_cast<std::string> (edge.edge_id_vesta()) +
         "\", color = green]";
     }
     else {
       out << "[label = \"q =" + 
           boost::lexical_cast<std::string>( edge.edge()->q() ) + 
+          "\\n id = " +
+          boost::lexical_cast<std::string> (edge.edge_id_vesta()) +
           "\\n dq_dp_in = " +
           boost::lexical_cast<std::string>( edge.edge()->dq_dp_in() ) + 
           "\\n dq_dp_out = " +
