@@ -145,29 +145,38 @@ Pвх - давление на входе пути - должно быть изв
 x - длина ребра на входе пути
 l - общая длина пути (включая x);
 Pвых - давление в вершине, явл-ся концом пути.*/
-double CountPressureApproxByPath(
+void CountPressureApproxByPath(
     GraphBoost *g,
-    std::vector<GraphBoostEdge> *path) {
+    std::list<GraphBoostEdge> *path,
+    double length_of_path) {
   // Входящее ребро и его свойства.
   GraphBoostEdge in_e = path->front();
   double x = in_e.pipe_length;
-  GraphBoostVertex first_v = g->engine()->graph_[in_e.in_vertex_id()];
+  GraphBoostVertex &first_v = g->engine()->graph_[in_e.in_vertex_id()];
   double p_in = first_v.p();
+  // Вершина, в которой хотим задать приближение давления - выходящая
+  // вершина 1го ребра пути.
+  GraphBoostVertex &cur_v = g->engine()->graph_[in_e.out_vertex_id()];
   // Давление на выходе.
   GraphBoostEdge out_e = path->back();
-  GraphBoostVertex last_v = g->engine()->graph_[out_e.out_vertex_id()];
+  GraphBoostVertex &last_v = g->engine()->graph_[out_e.out_vertex_id()];
   double p_out = last_v.p();
-  // Рассчитываем общую длину пути.
-  double l = 0.0;
-  for(auto e = path->begin(); e != path->end(); ++e) {
-    l += e->pipe_length;
-  }
   double p_res = 
       sqrt( 
           (p_in*p_in) - 
-          (x/l) * ( (p_in*p_in) - (p_out*p_out) ) 
+          (x/length_of_path) * ( (p_in*p_in) - (p_out*p_out) ) 
       );
-  return p_res;
+  /* Задаваемое значение должно соответствовать ограничениям.
+    Если выходит за рамки [pmin, pmax], то задаём по ближнему краю.*/
+  p_res = std::min( p_res, cur_v.p_max() );
+  p_res = std::max( p_res, cur_v.p_min() );
+  cur_v.set_p(p_res);
+  /* Теперь выкидываем из пути первое ребро и рекурсивно вызываем эту функцию
+  для хвоста.*/
+  path->pop_front();
+  if(path->size() > 0) {
+    CountPressureApproxByPath(g, path, length_of_path - x);
+  }
 }
 
 void SetInitialApproxPressures(
@@ -184,6 +193,9 @@ void SetInitialApproxPressures(
     if(v->IsGraphInput() == true || v->IsGraphOutput() == true) {
       continue;
     }
+    if(v->p() > 0) { // Давление уже задано.
+      continue;
+    }
     // Находим min p вх узлов.
     double min_p_v_in = 1000.0;
     for(auto in_v = v->InVerticesBegin(); in_v != v->inVerticesEnd(); ++in_v) {
@@ -195,7 +207,7 @@ void SetInitialApproxPressures(
     /* б) Ищем путь до ближайшей вершины с заданным давлением и задаём
     давление в соответствии с p входа, p выхода, длиной пути, длиной трубы.
     Ищем просто в глубину.*/
-    std::vector<GraphBoostEdge> path; // Путь до вершины с PIsReady.
+    std::list<GraphBoostEdge> path; // Путь до вершины с PIsReady.
     // Помещаем в путь ребро от вершины с известным P до текущей v.
     auto v_cur = v->InVerticesBegin(); // Начало ребра при формировании пути.
     GraphBoostVertex::iter_node v_next = v; // Конец ребра при формир-ии пути.
@@ -211,16 +223,19 @@ void SetInitialApproxPressures(
       v_cur = v_next;
       v_next = v_next->OutVerticesBegin(); // Первый попавшийся выход.
     } // Путь сформирован.
-
-    double p_count = CountPressureApproxByPath(
+    
+    // Рассчитываем общую длину пути.
+    double l = 0.0;
+    for(auto e = path.begin(); e != path.end(); ++e) {
+      l += e->pipe_length;
+    }
+    /* Проставляем приближения давлений во всём сформированном пути
+    с учётом ограничений.*/
+    CountPressureApproxByPath(
         g, // Указатель на текущий граф.
-        &(path) // Путь от текущей вершины до вершины с известным p.
+        &(path), // Путь от текущей вершины до вершины с известным p.
+        l // Общая длина пути.
     );
-    /* Задаваемое значение должно соответствовать ограничениям.
-    Если выходит за рамки [pmin, pmax], то задаём по ближнему краю.*/
-    double p_res = std::min( p_count, v->p_max() );
-    p_res = std::max( p_res, v->p_min() );
-    v->set_p(p_res);
   } // Конец обхода всех вершин в топологическом порядке.
 }
 
