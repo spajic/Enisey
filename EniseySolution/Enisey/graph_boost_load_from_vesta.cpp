@@ -6,6 +6,8 @@
 #include "graph_boost_vertex.h"
 #include "graph_boost_edge.h"
 #include "manager_edge_model_pipe_sequential.h"
+#include "opqit/opaque_iterator.hpp"
+
 // Функция, заполняющаяя граф по структуре matrix_connections
 void GraphBoostLoadFromVesta(GraphBoost* graph, VestaFilesData *vfd) {
   // 1. Создаём все вершины графа (из vfd->vertices_hash).
@@ -80,5 +82,13 @@ void GraphBoostLoadFromVesta(GraphBoost* graph, VestaFilesData *vfd) {
     edge.pipe_length = edge_data.passport.length_;
     // Добавляем ребро в граф.
     graph->AddEdge(&edge);
+  }
+}
+
+// Функция сортировки графа.
+void SortGraph(GraphBoost &g, GraphBoost *sorted_graph) {
+  // Заполняем граф вершинами в нужном порядке.
+  for(auto v = g.VertexBeginTopological(); v != g.VertexEndTopological(); ++v){
+    sorted_graph->AddVertex( &(*v) );
   }
 }

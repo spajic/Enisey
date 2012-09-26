@@ -10,3 +10,7 @@ struct VestaFilesData;
 \param vfd Указатель на структуру VestaFilesData, содержащую информацию,
 считанную из файлов Весты.*/
 void GraphBoostLoadFromVesta(GraphBoost *graph, VestaFilesData *vfd);
+/** Записать по указателю soted_graph граф эквивалентный тому, что передан в g,
+только у которого вершины и рёбры отсортированы в топологическом порядке.
+Так, что родные итераторы совпадают с топологическими.*/
+void SortGraph(GraphBoost &g, GraphBoost *sorted_graph);
