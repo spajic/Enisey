@@ -1,14 +1,14 @@
-/*Есть два типа предположений: ASSERT(expected, actual) и EXPECT.
-Невыполнение ASSERT - фатально, прекращает выполнение теста.
-Невыполнение EXPECT - не фатально, выполнение продолжается.
+/*Р•СЃС‚СЊ РґРІР° С‚РёРїР° РїСЂРµРґРїРѕР»РѕР¶РµРЅРёР№: ASSERT(expected, actual) Рё EXPECT.
+РќРµРІС‹РїРѕР»РЅРµРЅРёРµ ASSERT - С„Р°С‚Р°Р»СЊРЅРѕ, РїСЂРµРєСЂР°С‰Р°РµС‚ РІС‹РїРѕР»РЅРµРЅРёРµ С‚РµСЃС‚Р°.
+РќРµРІС‹РїРѕР»РЅРµРЅРёРµ EXPECT - РЅРµ С„Р°С‚Р°Р»СЊРЅРѕ, РІС‹РїРѕР»РЅРµРЅРёРµ РїСЂРѕРґРѕР»Р¶Р°РµС‚СЃСЏ.
 
-Интересные EXPECT'ы:
-double_EQ, DOUBLE_EQ; — неточное сравнение double, double.
-NEAR(val1, val2, abs_error) - c погрешностью abs_error.
+РРЅС‚РµСЂРµСЃРЅС‹Рµ EXPECT'С‹:
+double_EQ, DOUBLE_EQ; вЂ” РЅРµС‚РѕС‡РЅРѕРµ СЃСЂР°РІРЅРµРЅРёРµ double, double.
+NEAR(val1, val2, abs_error) - c РїРѕРіСЂРµС€РЅРѕСЃС‚СЊСЋ abs_error.
 
-Тесты можно группировать по файлам и включить (#include) их в test.cpp.
-Сами файлы test_concrete.cpp нужно сделать excluded from build.
-Это можно сделать из контекстного меню файла в Solution Explorer.
+РўРµСЃС‚С‹ РјРѕР¶РЅРѕ РіСЂСѓРїРїРёСЂРѕРІР°С‚СЊ РїРѕ С„Р°Р№Р»Р°Рј Рё РІРєР»СЋС‡РёС‚СЊ (#include) РёС… РІ test.cpp.
+РЎР°РјРё С„Р°Р№Р»С‹ test_concrete.cpp РЅСѓР¶РЅРѕ СЃРґРµР»Р°С‚СЊ excluded from build.
+Р­С‚Рѕ РјРѕР¶РЅРѕ СЃРґРµР»Р°С‚СЊ РёР· РєРѕРЅС‚РµРєСЃС‚РЅРѕРіРѕ РјРµРЅСЋ С„Р°Р№Р»Р° РІ Solution Explorer.
 */
 
 #include "gtest/gtest.h"
@@ -23,63 +23,63 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 #include "loader_vesta.h"
 #include "conio.h"
 
-// Тесты функций расчёта свойств газа.
+// РўРµСЃС‚С‹ С„СѓРЅРєС†РёР№ СЂР°СЃС‡С‘С‚Р° СЃРІРѕР№СЃС‚РІ РіР°Р·Р°.
 #include "test_functions_gas.cpp"
-// Тесты класса ModelPipeSequential.
+// РўРµСЃС‚С‹ РєР»Р°СЃСЃР° ModelPipeSequential.
 #include "test_model_pipe_sequential.cpp"
-// Тесты класса GasTransferSystem.
+// РўРµСЃС‚С‹ РєР»Р°СЃСЃР° GasTransferSystem.
 #include "test_gas_transfer_system.cpp"
-// Тесты класса GasTransferSystemI.
+// РўРµСЃС‚С‹ РєР»Р°СЃСЃР° GasTransferSystemI.
 #include "test_gas_transfer_system_i.cpp"
-// Тесты класса GraphBoost.
+// РўРµСЃС‚С‹ РєР»Р°СЃСЃР° GraphBoost.
 #include "test_graph_boost.cpp"
-// Тесты класса SlaeSolverI.
+// РўРµСЃС‚С‹ РєР»Р°СЃСЃР° SlaeSolverI.
 #include "test_slae_solver_i.cpp"
 
-/* Тест расчёта трубы методом последовательного счёта.
-Тестировать будем так - зададим входные данные, получим расчётные рез-ты
-и сравним их с рез-ми Весты для таких же входных данных.
-Если результаты окажутся похожими, сохраним их и в дальнейшем будем
-использовать в качестве эталона.*/
+/* РўРµСЃС‚ СЂР°СЃС‡С‘С‚Р° С‚СЂСѓР±С‹ РјРµС‚РѕРґРѕРј РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕРіРѕ СЃС‡С‘С‚Р°.
+РўРµСЃС‚РёСЂРѕРІР°С‚СЊ Р±СѓРґРµРј С‚Р°Рє - Р·Р°РґР°РґРёРј РІС…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ, РїРѕР»СѓС‡РёРј СЂР°СЃС‡С‘С‚РЅС‹Рµ СЂРµР·-С‚С‹
+Рё СЃСЂР°РІРЅРёРј РёС… СЃ СЂРµР·-РјРё Р’РµСЃС‚С‹ РґР»СЏ С‚Р°РєРёС… Р¶Рµ РІС…РѕРґРЅС‹С… РґР°РЅРЅС‹С….
+Р•СЃР»Рё СЂРµР·СѓР»СЊС‚Р°С‚С‹ РѕРєР°Р¶СѓС‚СЃСЏ РїРѕС…РѕР¶РёРјРё, СЃРѕС…СЂР°РЅРёРј РёС… Рё РІ РґР°Р»СЊРЅРµР№С€РµРј Р±СѓРґРµРј
+РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ РІ РєР°С‡РµСЃС‚РІРµ СЌС‚Р°Р»РѕРЅР°.*/
 TEST(PipeSequential, CountSequentialOut) {
-  // Задаём пасспортные свойства трубы.
+  // Р—Р°РґР°С‘Рј РїР°СЃСЃРїРѕСЂС‚РЅС‹Рµ СЃРІРѕР№СЃС‚РІР° С‚СЂСѓР±С‹.
   PassportPipe passport;
   FillTestPassportPipe(&passport);
   
-  // Задаём свойства газа на входе.
+  // Р—Р°РґР°С‘Рј СЃРІРѕР№СЃС‚РІР° РіР°Р·Р° РЅР° РІС…РѕРґРµ.
   GasCompositionReduced composition;
   GasWorkParameters params_in;
-  composition.density_std_cond = 0.6865365; // [кг/м3]
+  composition.density_std_cond = 0.6865365; // [РєРі/Рј3]
   composition.co2 = 0;
   composition.n2 = 0;
-  params_in.p = 5; // [МПа]
-  params_in.t = 293.15; // [К]
-  params_in.q = 387.843655734; // [м3/сек]
+  params_in.p = 5; // [РњРџР°]
+  params_in.t = 293.15; // [Рљ]
+  params_in.q = 387.843655734; // [Рј3/СЃРµРє]
 
-  // Производим расчёт параметров газа на выходе.
+  // РџСЂРѕРёР·РІРѕРґРёРј СЂР°СЃС‡С‘С‚ РїР°СЂР°РјРµС‚СЂРѕРІ РіР°Р·Р° РЅР° РІС‹С…РѕРґРµ.
   double p_out(-999.0);
   double t_out(-999.0);
   int number_of_segments = 10;
   double length_of_segment = passport.length_ / number_of_segments;
-  /* Получены результаты:
+  /* РџРѕР»СѓС‡РµРЅС‹ СЂРµР·СѓР»СЊС‚Р°С‚С‹:
   p_out = 2.9721224, t_out = 280.14999 
-  (В Весте - p_out = 2.9769, t_out = 279.78)
-  Результаты очень похожи на Весту, принимаем их за эталон.
-  Видна особенность - у меня температура выходит на Тос, а в Весте - продолжает падать.
-  \todo: разобраться точно с этой особенностью.*/
+  (Р’ Р’РµСЃС‚Рµ - p_out = 2.9769, t_out = 279.78)
+  Р РµР·СѓР»СЊС‚Р°С‚С‹ РѕС‡РµРЅСЊ РїРѕС…РѕР¶Рё РЅР° Р’РµСЃС‚Сѓ, РїСЂРёРЅРёРјР°РµРј РёС… Р·Р° СЌС‚Р°Р»РѕРЅ.
+  Р’РёРґРЅР° РѕСЃРѕР±РµРЅРЅРѕСЃС‚СЊ - Сѓ РјРµРЅСЏ С‚РµРјРїРµСЂР°С‚СѓСЂР° РІС‹С…РѕРґРёС‚ РЅР° РўРѕСЃ, Р° РІ Р’РµСЃС‚Рµ - РїСЂРѕРґРѕР»Р¶Р°РµС‚ РїР°РґР°С‚СЊ.
+  \todo: СЂР°Р·РѕР±СЂР°С‚СЊСЃСЏ С‚РѕС‡РЅРѕ СЃ СЌС‚РѕР№ РѕСЃРѕР±РµРЅРЅРѕСЃС‚СЊСЋ.*/
   FindSequentialOut(
-      // Рабочие параметры газового потока на входе.
+      // Р Р°Р±РѕС‡РёРµ РїР°СЂР°РјРµС‚СЂС‹ РіР°Р·РѕРІРѕРіРѕ РїРѕС‚РѕРєР° РЅР° РІС…РѕРґРµ.
       params_in.p, params_in.t, params_in.q,  
-      // Состав газа.
+      // РЎРѕСЃС‚Р°РІ РіР°Р·Р°.
       composition.density_std_cond, composition.co2, composition.n2, 
-      // Паспортные свойства трубы.
+      // РџР°СЃРїРѕСЂС‚РЅС‹Рµ СЃРІРѕР№СЃС‚РІР° С‚СЂСѓР±С‹.
       passport.d_inner_, passport.d_outer_, passport.roughness_coeff_, 
       passport.hydraulic_efficiency_coeff_, passport.t_env_, 
-      // Свойства внешней среды (тоже входят в пасспорт трубы).
+      // РЎРІРѕР№СЃС‚РІР° РІРЅРµС€РЅРµР№ СЃСЂРµРґС‹ (С‚РѕР¶Рµ РІС…РѕРґСЏС‚ РІ РїР°СЃСЃРїРѕСЂС‚ С‚СЂСѓР±С‹).
       passport.heat_exchange_coeff_, 
-      // Длина сегмента и кол-во сегментов.
+      // Р”Р»РёРЅР° СЃРµРіРјРµРЅС‚Р° Рё РєРѕР»-РІРѕ СЃРµРіРјРµРЅС‚РѕРІ.
       length_of_segment, number_of_segments, 
-      // Результаты: out-параметры.
+      // Р РµР·СѓР»СЊС‚Р°С‚С‹: out-РїР°СЂР°РјРµС‚СЂС‹.
       &t_out, &p_out); 
 
   double eps = 1.0e-4;
@@ -131,7 +131,7 @@ TEST(GraphBoostTest, GraphBoostTest) {
   graph.AddEdge(&edge_8);
   graph.AddEdge(&edge_9);
 
-  // Тестируем итераторы
+  // РўРµСЃС‚РёСЂСѓРµРј РёС‚РµСЂР°С‚РѕСЂС‹
   GraphBoost::iterator iter = graph.VertexBeginNative();
 
   GraphBoostVertex& ref_vertex = *iter;
@@ -158,7 +158,7 @@ TEST(GraphBoostTest, GraphBoostTest) {
   } );
   std::cout << std::endl;
 
-  // Тестируем построение дерева доминаторов
+  // РўРµСЃС‚РёСЂСѓРµРј РїРѕСЃС‚СЂРѕРµРЅРёРµ РґРµСЂРµРІР° РґРѕРјРёРЅР°С‚РѕСЂРѕРІ
   // Lengauer-Tarjan dominator tree algorithm
   typedef boost::graph_traits<GraphBoostEngine::graph_type>::vertex_descriptor Vertex;
   typedef boost::property_map<GraphBoostEngine::graph_type, boost::vertex_index_t>::type IndexMap;
@@ -195,7 +195,7 @@ TEST(GraphBoostTest, GraphBoostTest) {
   copy(idom.begin(), idom.end(), std::ostream_iterator<int>(std::cout, " "));
   std::cout << std::endl;
 
-  // Пробуем итератор обхода дочерних вершин
+  // РџСЂРѕР±СѓРµРј РёС‚РµСЂР°С‚РѕСЂ РѕР±С…РѕРґР° РґРѕС‡РµСЂРЅРёС… РІРµСЂС€РёРЅ
   GraphBoostVertex v = *(graph.VertexBeginTopological());
   for(GraphBoostVertex::iter_node it = v.OutVerticesBegin(); it != v.OutVerticesEnd(); ++it)
   {
@@ -238,7 +238,7 @@ TEST(GraphBoost, OutEdgeIteratorTest) {
   graph.AddEdge(&edge_8);
   graph.AddEdge(&edge_9);
 
-  // Тестирование OutEdges
+  // РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ OutEdges
   for(auto v_it = graph.VertexBeginTopological(); v_it != graph.VertexEndTopological();
       ++v_it) {
     for(auto e_it = v_it->OutEdgesBegin(); e_it != v_it->OutEdgesEnd(); ++e_it) {
@@ -246,7 +246,7 @@ TEST(GraphBoost, OutEdgeIteratorTest) {
         ")" << std::endl;
     }
   }
-  // Тестирование InEdges
+  // РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ InEdges
   for(auto v_it = graph.VertexBeginTopological()+1; v_it != graph.VertexEndTopological();
     ++v_it) {
       for(auto e_it = v_it->InEdgesBegin(); e_it != v_it->InEdgesEnd(); ++e_it) {
@@ -255,7 +255,7 @@ TEST(GraphBoost, OutEdgeIteratorTest) {
       }
   }
 
-  // Тестируем vertex::InVerticesBegin(), InVerticesEnd();
+  // РўРµСЃС‚РёСЂСѓРµРј vertex::InVerticesBegin(), InVerticesEnd();
   std::cout << "Testing vertex::InVerticesBegin/End\n";
   for(auto v_it = graph.VertexBeginTopological(); v_it != graph.VertexEndTopological();
     ++v_it) {
@@ -324,9 +324,9 @@ TEST(DISABLED_WriterGraphvizTest, WriterGraphvizTest)
 }
 
 #include "graph_boost_initial_approx.h"
-// Тестируем корректность задания поля ограничений в вершинах.
+// РўРµСЃС‚РёСЂСѓРµРј РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ Р·Р°РґР°РЅРёСЏ РїРѕР»СЏ РѕРіСЂР°РЅРёС‡РµРЅРёР№ РІ РІРµСЂС€РёРЅР°С….
 //TEST(DISABLED_InitialApprox, CorrectnessOfInitialConstraintsForVertices) {
-//  // 1. Загружаем схему Саратов-Горький из Весты.
+//  // 1. Р—Р°РіСЂСѓР¶Р°РµРј СЃС…РµРјСѓ РЎР°СЂР°С‚РѕРІ-Р“РѕСЂСЊРєРёР№ РёР· Р’РµСЃС‚С‹.
 //  VestaFilesData vfd;
 //  LoadMatrixConnections(
 //    "C:\\Enisey\\data\\saratov_gorkiy\\MatrixConnections.dat", &vfd);
@@ -336,33 +336,33 @@ TEST(DISABLED_WriterGraphvizTest, WriterGraphvizTest)
 //    "C:\\Enisey\\data\\saratov_gorkiy\\InOutGRS.dat", &vfd);
 //  GraphBoost graph;
 //  GraphBoostLoadFromVesta(&graph, &vfd);
-//  // 2. Рассчитываем overall ограничения по всему графу.
+//  // 2. Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј overall РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РїРѕ РІСЃРµРјСѓ РіСЂР°С„Сѓ.
 //  double overall_p_min(999.0);
 //  double overall_p_max(-999.0);
 //  FindOverallMinAndMaxPressureConstraints(
 //      &graph, 
 //      &overall_p_max,
 //      &overall_p_min);
-//  // 2. Рассчитываем ограничения.
+//  // 2. Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РѕРіСЂР°РЅРёС‡РµРЅРёСЏ.
 //  SetPressureConstraintsForVertices(
 //      &graph,
 //      overall_p_min,
 //      overall_p_max );
-//  // 3. Проверяем корректность.
+//  // 3. РџСЂРѕРІРµСЂСЏРµРј РєРѕСЂСЂРµРєС‚РЅРѕСЃС‚СЊ.
 //  bool ok = ChechPressureConstraintsForVertices(
 //      &graph,
 //      overall_p_min,
 //      overall_p_max);
 //  EXPECT_EQ(ok, true);
-//  // 4. Выводим граф в GraphViz - посмотреть.
+//  // 4. Р’С‹РІРѕРґРёРј РіСЂР°С„ РІ GraphViz - РїРѕСЃРјРѕС‚СЂРµС‚СЊ.
 //  WriterGraphviz writer;
 //  writer.WriteGraphToFile(graph, 
 //      "C:\\Enisey\\out\\test_pressure_constraints.dot");
 //}
 
-//// Тестируем начальное приближение.
+//// РўРµСЃС‚РёСЂСѓРµРј РЅР°С‡Р°Р»СЊРЅРѕРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ.
 //TEST(DISABLED_InitialApprox, InitialApprox) {
-//  // 1. Загружаем схему Саратов-Горький из Весты.
+//  // 1. Р—Р°РіСЂСѓР¶Р°РµРј СЃС…РµРјСѓ РЎР°СЂР°С‚РѕРІ-Р“РѕСЂСЊРєРёР№ РёР· Р’РµСЃС‚С‹.
 //  VestaFilesData vfd;
 //  LoadMatrixConnections(
 //    "C:\\Enisey\\data\\saratov_gorkiy\\MatrixConnections.dat", &vfd);
@@ -372,23 +372,23 @@ TEST(DISABLED_WriterGraphvizTest, WriterGraphvizTest)
 //    "C:\\Enisey\\data\\saratov_gorkiy\\InOutGRS.dat", &vfd);
 //  GraphBoost graph;
 //  GraphBoostLoadFromVesta(&graph, &vfd);
-//  // 2. Рассчитываем overall ограничения по всему графу.
+//  // 2. Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј overall РѕРіСЂР°РЅРёС‡РµРЅРёСЏ РїРѕ РІСЃРµРјСѓ РіСЂР°С„Сѓ.
 //  double overall_p_min(999.0);
 //  double overall_p_max(-999.0);
 //  FindOverallMinAndMaxPressureConstraints(
 //    &graph, 
 //    &overall_p_max,
 //    &overall_p_min);
-//  // 3. Рассчитываем ограничения.
+//  // 3. Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РѕРіСЂР°РЅРёС‡РµРЅРёСЏ.
 //  SetPressureConstraintsForVertices(
 //    &graph,
 //    overall_p_min,
 //    overall_p_max );
-//  // 4. Задаём начальное приближение давлений.
+//  // 4. Р—Р°РґР°С‘Рј РЅР°С‡Р°Р»СЊРЅРѕРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ РґР°РІР»РµРЅРёР№.
 //  SetInitialApproxPressures(&graph, overall_p_max, overall_p_min);
-//  // 5. Задаём начальное приближение температур.
+//  // 5. Р—Р°РґР°С‘Рј РЅР°С‡Р°Р»СЊРЅРѕРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ С‚РµРјРїРµСЂР°С‚СѓСЂ.
 //  SetInitialApproxTemperatures(&graph, 278.0);
-//  // 6. Выводим граф в GraphViz - посмотреть.
+//  // 6. Р’С‹РІРѕРґРёРј РіСЂР°С„ РІ GraphViz - РїРѕСЃРјРѕС‚СЂРµС‚СЊ.
 //  WriterGraphviz writer;
 //  writer.WriteGraphToFile(graph, 
 //    "C:\\Enisey\\out\\test_initial_approx.dot");
@@ -397,25 +397,25 @@ TEST(DISABLED_WriterGraphvizTest, WriterGraphvizTest)
 
 TEST(DISABLED_ManagerEdgeModelPipeSequential, LoadTest)
 {
-  // Создадим в менеджере 50 000 труб, и рассчитаем их 100 раз
-  // Подготовим трубу для расчёта
+  // РЎРѕР·РґР°РґРёРј РІ РјРµРЅРµРґР¶РµСЂРµ 50 000 С‚СЂСѓР±, Рё СЂР°СЃСЃС‡РёС‚Р°РµРј РёС… 100 СЂР°Р·
+  // РџРѕРґРіРѕС‚РѕРІРёРј С‚СЂСѓР±Сѓ РґР»СЏ СЂР°СЃС‡С‘С‚Р°
   PassportPipe passport;
   FillTestPassportPipe(&passport);
 
-  // Задаём свойства газа на входе.
+  // Р—Р°РґР°С‘Рј СЃРІРѕР№СЃС‚РІР° РіР°Р·Р° РЅР° РІС…РѕРґРµ.
   GasCompositionReduced composition;
-  composition.density_std_cond = 0.6865365; // [кг/м3]
+  composition.density_std_cond = 0.6865365; // [РєРі/Рј3]
   composition.co2 = 0;
   composition.n2 = 0;
   GasWorkParameters params_in;
-  params_in.p = 5; // [МПа]
-  params_in.t = 293.15; // [К]
-  params_in.q = 387.843655734; // [м3/сек]
+  params_in.p = 5; // [РњРџР°]
+  params_in.t = 293.15; // [Рљ]
+  params_in.q = 387.843655734; // [Рј3/СЃРµРє]
   Gas gas_in;
   gas_in.composition = composition;
   gas_in.work_parameters = params_in;
 
-  // задаём параметры газа на выходе
+  // Р·Р°РґР°С‘Рј РїР°СЂР°РјРµС‚СЂС‹ РіР°Р·Р° РЅР° РІС‹С…РѕРґРµ
   Gas gas_out = gas_in;
   gas_out.work_parameters.p = 3;
   gas_out.work_parameters.t = 0;
@@ -424,7 +424,7 @@ TEST(DISABLED_ManagerEdgeModelPipeSequential, LoadTest)
   Edge *edge;
   ManagerEdgeModelPipeSequential manager;
 
-  // Заполняем менеджер объектами
+  // Р—Р°РїРѕР»РЅСЏРµРј РјРµРЅРµРґР¶РµСЂ РѕР±СЉРµРєС‚Р°РјРё
   for(int i = 50; i > 0; --i)
   {
     edge = manager.CreateEdge(&passport);
@@ -432,7 +432,7 @@ TEST(DISABLED_ManagerEdgeModelPipeSequential, LoadTest)
     edge->set_gas_out(&gas_out);
   }
 
-  // Имитируем расчёт 10 итераций
+  // РРјРёС‚РёСЂСѓРµРј СЂР°СЃС‡С‘С‚ 10 РёС‚РµСЂР°С†РёР№
   //std::cout << "Performing 10 iterations..." << std::endl;
   for(int i = 1; i <= 1; ++i)
   {
@@ -459,7 +459,7 @@ TEST(DISABLED_ManagerEdgeModelPipeSequential, LoadTest)
 }
 
 
-// От London
+// РћС‚ London
 /*
 // Testing and mocking
 #include "gmock/gmock.h"
@@ -468,7 +468,7 @@ TEST(DISABLED_ManagerEdgeModelPipeSequential, LoadTest)
 #include <functional>
 #include <list>
 
-// для getch()
+// РґР»СЏ getch()
 #include "conio.h"
 
 // London
@@ -509,7 +509,7 @@ TEST(Cuda, Cuda)
 		edge->set_gas_out(&gas_out);
 	});
 
-	// Отлаживаемый вариант. Можно ли отлаживать лямбды, интересно?
+	// РћС‚Р»Р°Р¶РёРІР°РµРјС‹Р№ РІР°СЂРёР°РЅС‚. РњРѕР¶РЅРѕ Р»Рё РѕС‚Р»Р°Р¶РёРІР°С‚СЊ Р»СЏРјР±РґС‹, РёРЅС‚РµСЂРµСЃРЅРѕ?
 	//edges[0]->set_gas_in(&gas_in);
 	//edges[0]->set_gas_out(&gas_out);
 
@@ -532,11 +532,11 @@ int main(int argc, char** argv) {
   
   int result = RUN_ALL_TESTS();
 
-  // Ожидаем нажатия клавиши и возвращаем результат, с которым 
-  // выполнились тесты
+  // РћР¶РёРґР°РµРј РЅР°Р¶Р°С‚РёСЏ РєР»Р°РІРёС€Рё Рё РІРѕР·РІСЂР°С‰Р°РµРј СЂРµР·СѓР»СЊС‚Р°С‚, СЃ РєРѕС‚РѕСЂС‹Рј 
+  // РІС‹РїРѕР»РЅРёР»РёСЃСЊ С‚РµСЃС‚С‹
   std::cout << "Press any key..." << std::endl;
   _getch();
   return result;
 }
-Конец London
+РљРѕРЅРµС† London
 */ 

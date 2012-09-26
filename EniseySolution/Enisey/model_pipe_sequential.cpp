@@ -131,33 +131,32 @@ void ModelPipeSequential::Count() {
   // Рассчитываем производные.
   // Следим, чтобы шаг дифференцирования был не меньше (Pвых - Pвх) / 2.
   double eps = std::min(
-      //0.000005, // Значение по умолчанию - 5 Па.
-      0.00001, 
+      0.000005, // Значение по умолчанию - 5 Па.
       (real_in.work_parameters.p - real_out.work_parameters.p)/2 // dP/2.
   ); 
 
   // Расчитываем производную q по p_вх, p_вых с четвёртым порядоком точности.
   double q_p_in_plus_eps =  FindQWithDeltaPIn( eps, segments); 
-  double q_p_in_plus_2eps = FindQWithDeltaPIn( 2*eps, segments);
+  //double q_p_in_plus_2eps = FindQWithDeltaPIn( 2*eps, segments);
   double q_p_in_minus_eps = FindQWithDeltaPIn( -eps, segments);
-  double q_p_in_minus_2eps = FindQWithDeltaPIn(-2*eps, segments);
-  dq_dp_in_ = (
+  //double q_p_in_minus_2eps = FindQWithDeltaPIn(-2*eps, segments);
+  /*dq_dp_in_ = (
      q_p_in_minus_2eps  
     -q_p_in_minus_eps*27
     +q_p_in_plus_eps*27 
-    -q_p_in_plus_2eps) / (24*eps);
-  //dq_dp_in_ = (q_p_in_plus_eps - q_p_in_minus_eps) / (2*eps);
+    -q_p_in_plus_2eps) / (24*eps);*/
+  dq_dp_in_ = (q_p_in_plus_eps - q_p_in_minus_eps) / (2*eps);
 
   double q_p_out_plus_eps =  FindQWithDeltaPOut( eps, segments); 
-  double q_p_out_plus_2eps = FindQWithDeltaPOut( 2*eps, segments);
+  //double q_p_out_plus_2eps = FindQWithDeltaPOut( 2*eps, segments);
   double q_p_out_minus_eps = FindQWithDeltaPOut( -eps, segments);
-  double q_p_out_minus_2eps = FindQWithDeltaPOut(-2*eps, segments);
-  dq_dp_out_ = (
+  //double q_p_out_minus_2eps = FindQWithDeltaPOut(-2*eps, segments);
+  /*dq_dp_out_ = (
      q_p_out_minus_2eps  
     -q_p_out_minus_eps*27 
     +q_p_out_plus_eps*27 
-    -q_p_out_plus_2eps) / (24*eps);
-  //dq_dp_out_ = (q_p_out_plus_eps - q_p_out_minus_eps) / (2*eps);
+    -q_p_out_plus_2eps) / (24*eps);*/
+  dq_dp_out_ = (q_p_out_plus_eps - q_p_out_minus_eps) / (2*eps);
    
   // Если труба реверсивна - расход отрицательный, 
   // производные - меняются местами и знаком, температура выхода идёт во вход.
