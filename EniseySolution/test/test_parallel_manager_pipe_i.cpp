@@ -10,6 +10,8 @@ ParallelManagerPipeI.
 
 #include "parallel_manager_pipe_i.h"
 #include "parallel_manager_pipe_singlecore.h"
+#include "parallel_manager_pipe_openmp.h"
+
 #include <boost/serialization/vector.hpp>
 
 //#include <string>
@@ -108,7 +110,8 @@ protected:
 
 // Список типов, для которых будут выполняться тесты.
 typedef ::testing::Types<
-  ParallelManagerPipeSingleCore
+    ParallelManagerPipeSingleCore,
+    ParallelManagerPipeOpenMP
 > ParallelManagerPipeTypes;
 
 TYPED_TEST_CASE(ParallelManagerPipeTypedTest, ParallelManagerPipeTypes);

@@ -1,5 +1,5 @@
 /** \file parallel_manager_pipe_singlecore.cpp
-Реализация менеджер параллельного моделирования труб, 
+Реализация менеджера параллельного моделирования труб, 
 использующего одно ядро ЦП.*/
 #include "parallel_manager_pipe_singlecore.h"
 #include "model_pipe_sequential.h"
