@@ -1,0 +1,15 @@
+{
+	"Testing": {
+		"ParallelManagers": {
+			"Etalon": {
+				"RegenerateEtalon": true,
+				"Paths": {
+					"RootDir": "C:\\Enisey\\out\\Testing\\ParallelManagers\\Etalon\\",
+					"Passports": "Passports.xml",
+					"WorkParams": "WorkParams.xml",
+					"CalculatedParams": "CalculatedParams.xml"
+				}				
+			}
+		}
+	}
+}

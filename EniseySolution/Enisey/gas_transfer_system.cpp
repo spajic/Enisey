@@ -53,6 +53,7 @@ void GasTransferSystem::PeroformBalancing(
       PipeLinesFile);
 
   MakeInitialApprox();
+  CopyGasStateFromVerticesToEdges();
   CountAllEdges();
   MixVertices();
 
@@ -196,6 +197,7 @@ void GasTransferSystem::CountNewIteration(double g) {
     }
     v->set_p( v->p() + DeltaP_[ v->slae_row() ] * g);
   }
+  CopyGasStateFromVerticesToEdges();
   CountAllEdges();
   MixVertices();
 }
@@ -293,21 +295,29 @@ void GasTransferSystem::MakeInitialApprox() {
   // 5. Протягиваем состав газа от входов к выходам.
   MakeInitialMix();
 }
-void GasTransferSystem::CountAllEdges() {
-  /// \todo Нужен итератор рёбер в топологическом порядке.
+
+void GasTransferSystem::CopyGasStateFromVerticesToEdges() {
+  /// \todo Нужен итератор рёбер в топологическом порядке.  
   for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological();
-      ++v) {
-    for( auto v_out = v->OutVerticesBegin(); v_out != v->OutVerticesEnd();
+    ++v) {
+      for( auto v_out = v->OutVerticesBegin(); v_out != v->OutVerticesEnd();
         ++v_out) {
-      for(auto e = // Перебор параллельных рёбер (v_in, v_out).
-              g_->ParallelEdgesBegin( v->id_in_graph(), v_out->id_in_graph() );
-          e != g_->ParallelEdgesEnd( v->id_in_graph(), v_out->id_in_graph() );
+          for(auto e = // Перебор параллельных рёбер (v_in, v_out).
+            g_->ParallelEdgesBegin( v->id_in_graph(), v_out->id_in_graph() );
+            e != g_->ParallelEdgesEnd( v->id_in_graph(), v_out->id_in_graph() );
           ++e ) {
-        e->edge()->set_gas_in( &( v->gas() ) );
-        e->edge()->set_gas_out( &( v_out->gas() ) );
-      } // Конец перебора параллельных рёбер.
-    }
+            e->edge()->set_gas_in( &( v->gas() ) );
+            e->edge()->set_gas_out( &( v_out->gas() ) );
+          } // Конец перебора параллельных рёбер.
+      }
   }
+}
+
+// Внимание! Перед вызовом этого метода необходимо вызывать 
+// метод GasTransferSystem::CopyGasStateFromVerticesToEdges().
+// Расцепил их, чтобы была возможность сформировать эталонные работчи параметры
+// После передачи параметров газового потока в рёбра, но до их моделирования.
+void GasTransferSystem::CountAllEdges() {  
   g_->manager()->CountAll();
 }
 void GasTransferSystem::MakeInitialMix() {
@@ -321,4 +331,9 @@ void GasTransferSystem::MixVertices() {
       ++v) {
     v->MixGasFlowsFromAdjacentEdges();
   }
+}
+
+ManagerEdgeModelPipeSequential* GasTransferSystem::
+    manager_model_pipe_sequential() {
+  return static_cast<ManagerEdgeModelPipeSequential*>( g_->manager() );
 }

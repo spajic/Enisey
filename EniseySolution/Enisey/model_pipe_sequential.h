@@ -36,6 +36,7 @@ class ModelPipeSequential {
   double dq_dp_in(); ///< Получить производную по Pвх.
   double dq_dp_out(); ///< Получить производную по Pвых.
   bool IsReverse(); ///< Направление потока обратное? (м.б. прямым и обратным)
+  PassportPipe* passport(); ///< Получить паспорт трубы.
  private:
   double FindQWithDeltaPIn(double delta_p_in, int segments);
   double FindQWithDeltaPOut(double delta_p_out, int segments);

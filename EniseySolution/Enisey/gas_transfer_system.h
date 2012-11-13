@@ -9,6 +9,7 @@
 class GraphBoost;
 class SlaeSolverI;
 class ManagerEdge;
+class ManagerEdgeModelPipeSequential;
 
 /** Класс представляет объект ГТС.*/
 class GasTransferSystem : public GasTransferSystemI {
@@ -57,6 +58,8 @@ class GasTransferSystem : public GasTransferSystemI {
   /** Выполнить расчёт начального приближения ограничений, давлений 
   и температур.*/
   void MakeInitialApprox();
+  /** Скопировать состояние газовых потоков, хранимое в узлах, в рёбра.*/
+  void CopyGasStateFromVerticesToEdges();
   /** Произвести расчёт всех рёбер графа. Т.е. во всех рёбрах должны быть
   доступны расход и производные расхода.*/
   void CountAllEdges();
@@ -68,6 +71,10 @@ class GasTransferSystem : public GasTransferSystemI {
   void set_slae_solver(SlaeSolverI *slae_slover);
   /** Установить ManagetEdge.*/
   void set_manager_edge(ManagerEdge* manager_edge);
+
+  /** Для доступа к методам менеджера выгрузки его состояния в файл
+  для формирования эталонного решения. */
+  ManagerEdgeModelPipeSequential* manager_model_pipe_sequential();  
  private:
    /// Количество строк в СЛАУ.
   int slae_size_;

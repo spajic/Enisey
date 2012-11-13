@@ -7,6 +7,7 @@
 // forward-declaration
 class ModelPipeSequential;
 struct Gas;
+struct Passport;
 
 class EdgeModelPipeSequential: public Edge
 {
@@ -20,5 +21,6 @@ public:
   double dq_dp_in();
   double dq_dp_out();
   bool IsReverse();
+  Passport *passport();
   ModelPipeSequential* pointer_to_model_;
 };

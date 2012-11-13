@@ -14,6 +14,10 @@
 #include "slae_solver_ice_client.h"
 #include "manager_edge_model_pipe_sequential.h"
 
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
+
 class GasTransferSystemFromVestaTest : public ::testing::Test {
  protected:
   virtual void SetUp() {
@@ -53,8 +57,34 @@ TEST_F(GasTransferSystemFromVestaTest, MakesInitialApprox) {
   gts.WriteToGraphviz(graphviz_filename);
 }
 TEST_F(GasTransferSystemFromVestaTest, FindsBalanceForSaratovGorkiy) {
+  // Create an empty property tree object
+  using boost::property_tree::ptree;
+  ptree pt;
+  read_json("C:\\Enisey\\src\\config\\config.json", pt);
+  std::string path = 
+      pt.get<std::string>("Testing.ParallelManagers.Etalon.Paths.RootDir");   
+  bool regenerate_etalon = 
+      pt.get<bool>("Testing.ParallelManagers.Etalon.RegenerateEtalon");   
   gts.MakeInitialApprox();
+  ManagerEdgeModelPipeSequential *manager = 
+      gts.manager_model_pipe_sequential();
+  if(regenerate_etalon) {
+    manager->SavePassportsToFile(
+        path +  
+        pt.get<std::string>("Testing.ParallelManagers.Etalon.Paths.Passports") );
+  }
+  gts.CopyGasStateFromVerticesToEdges();
+  if(regenerate_etalon) {
+    manager->SaveWorkParamsToFile(
+        path+  
+        pt.get<std::string>("Testing.ParallelManagers.Etalon.Paths.WorkParams") );
+  }
   gts.CountAllEdges();
+  if(regenerate_etalon) {
+    manager->SaveCalculatedParamsToFile(
+        path +
+        pt.get<std::string>("Testing.ParallelManagers.Etalon.Paths.CalculatedParams"));
+  }
   gts.MixVertices();
   const std::string graphviz_filename = 
      "C:\\Enisey\\out\\GTSCountsAllEdges.dot";

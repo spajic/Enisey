@@ -4,6 +4,7 @@
 
 // forward declarations
 struct Gas;
+struct Passport;
 
 class Edge {
 public:
@@ -16,4 +17,5 @@ public:
   virtual double dq_dp_in() = 0;
   virtual double dq_dp_out() = 0;
   virtual bool IsReverse() = 0;
+  virtual Passport* passport() = 0;
 };

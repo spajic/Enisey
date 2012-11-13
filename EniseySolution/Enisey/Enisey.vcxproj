@@ -71,6 +71,9 @@
     <CudaCompile>
       <Include>C:\ProgramData\NVIDIA Corporation\NVIDIA GPU Computing SDK 4.0\C\common\inc</Include>
     </CudaCompile>
+    <Lib>
+      <AdditionalLibraryDirectories>C:\Enisey\instruments\boost\boost_1_49_0\stage\lib</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -92,6 +95,9 @@
       <AdditionalLibraryDirectories>C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;C:\ProgramData\NVIDIA Corporation\NVIDIA GPU Computing SDK 4.0\C\common\lib\Win32;%(AdditionalLibraryDirectories);$(CudaToolkitLibDir)</AdditionalLibraryDirectories>
       <AdditionalDependencies>cvm_ia32.lib;cudart.lib;cutil32d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>C:\Enisey\instruments\boost\boost_1_49_0\stage\lib</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <CudaCompile Include="edge_model_pipe_sequential_cuda.cu">
@@ -106,6 +112,7 @@
     <None Include="..\ice_server\common_types.ice" />
     <None Include="..\ice_server\gas_transfer_system_ice.ice" />
     <None Include="..\ice_server\slae_solver_ice.ice" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="edge_model_pipe_sequential_cuda.cuh">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -129,6 +136,7 @@
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="calculated_params.cpp" />
     <ClCompile Include="common_types.cpp" />
     <ClCompile Include="functions_gas.cpp" />
     <ClCompile Include="functions_pipe.cpp" />
@@ -147,13 +155,16 @@
     <ClCompile Include="loader_vesta.cpp" />
     <ClCompile Include="manager_edge_model_pipe_sequential.cpp" />
     <ClCompile Include="model_pipe_sequential.cpp" />
+    <ClCompile Include="parallel_manager_pipe_singlecore.cpp" />
     <ClCompile Include="passport_pipe.cpp" />
     <ClCompile Include="slae_solver_cvm.cpp" />
     <ClCompile Include="slae_solver_ice.cpp" />
     <ClCompile Include="slae_solver_ice_client.cpp" />
+    <ClCompile Include="work_params.cpp" />
     <ClCompile Include="writer_graphviz.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="calculated_params.h" />
     <ClInclude Include="common_types.h" />
     <ClInclude Include="gas_transfer_system.h" />
     <ClInclude Include="gas_transfer_system_i.h" />
@@ -181,12 +192,15 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="model_pipe_sequential.h" />
+    <ClInclude Include="parallel_manager_pipe_i.h" />
+    <ClInclude Include="parallel_manager_pipe_singlecore.h" />
     <ClInclude Include="passport_pipe.h" />
     <ClInclude Include="passport.h" />
     <ClInclude Include="slae_solver_i.h" />
     <ClInclude Include="slae_solver_cvm.h" />
     <ClInclude Include="slae_solver_ice.h" />
     <ClInclude Include="slae_solver_ice_client.h" />
+    <ClInclude Include="work_params.h" />
     <ClInclude Include="writer_graphviz.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

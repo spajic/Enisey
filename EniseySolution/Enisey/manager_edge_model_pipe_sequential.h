@@ -19,6 +19,11 @@ public:
 
   Edge* CreateEdge(const Passport* passport);
   void FinishAddingEdges();
+
+  /** Для выгрузки эталонного примера вектора труб и рез-в расчёта*/
+  void SavePassportsToFile(std::string file_name);
+  void SaveWorkParamsToFile(std::string file_name);
+  void SaveCalculatedParamsToFile(std::string file_name);   
 private:
   int max_index_;
   std::vector<ModelPipeSequential> models_;

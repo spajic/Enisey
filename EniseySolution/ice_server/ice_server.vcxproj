@@ -62,7 +62,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;C:\Enisey\bin\EniseySolution\Enisey\Debug;$(IceHome)\lib\vc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;C:\Enisey\bin\EniseySolution\Enisey\Debug;$(IceHome)\lib\vc100;%(AdditionalLibraryDirectories);C:\Enisey\instruments\boost\boost_1_49_0\stage\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>cvm_ia32.lib;enisey.lib;Iced.lib;IceUtild.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -82,7 +82,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;C:\Enisey\bin\EniseySolution\Enisey\Release;$(IceHome)\lib\vc100;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;C:\Enisey\bin\EniseySolution\Enisey\Release;$(IceHome)\lib\vc100;%(AdditionalLibraryDirectories);C:\Enisey\instruments\boost\boost_1_49_0\stage\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>cvm_ia32.lib;enisey.lib;Ice.lib;IceUtil.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

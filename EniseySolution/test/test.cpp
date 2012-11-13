@@ -27,6 +27,8 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 #include "test_functions_gas.cpp"
 // Тесты класса ModelPipeSequential.
 #include "test_model_pipe_sequential.cpp"
+// Тесты классов-реализаций интерфейса ParallelManagerPipeI.
+#include "test_parallel_manager_pipe_i.cpp"
 // Тесты класса GasTransferSystem.
 #include "test_gas_transfer_system.cpp"
 // Тесты класса GasTransferSystemI.
@@ -35,6 +37,7 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 #include "test_graph_boost.cpp"
 // Тесты класса SlaeSolverI.
 #include "test_slae_solver_i.cpp"
+
 
 /* Тест расчёта трубы методом последовательного счёта.
 Тестировать будем так - зададим входные данные, получим расчётные рез-ты

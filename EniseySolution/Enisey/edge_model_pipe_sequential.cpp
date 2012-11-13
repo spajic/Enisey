@@ -1,5 +1,6 @@
 #include "edge_model_pipe_sequential.h"
 #include "model_pipe_sequential.h"
+#include "passport_pipe.h"
 
 std::string EdgeModelPipeSequential::GetName() {
   return "EdgeModelPipeSequential";
@@ -27,4 +28,7 @@ const Gas& EdgeModelPipeSequential::gas_in() {
 }
 const Gas& EdgeModelPipeSequential::gas_out() {
   return pointer_to_model_->gas_out();
+}
+Passport* EdgeModelPipeSequential::passport() {
+  return pointer_to_model_->passport();
 }

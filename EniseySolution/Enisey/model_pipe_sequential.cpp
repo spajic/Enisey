@@ -22,6 +22,9 @@ void ModelPipeSequential::set_gas_out(const Gas* gas) {
 const Gas& ModelPipeSequential::gas_out() {
   return gas_out_;
 }
+PassportPipe* ModelPipeSequential::passport() {
+  return &passport_;
+}
 
 inline
 bool ModelPipeSequential::IsReverse() {
