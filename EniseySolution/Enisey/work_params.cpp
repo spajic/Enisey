@@ -27,9 +27,9 @@ void WorkParams::set_n2_in    (double n2_in)      { n2_in_ = n2_in; }
 void WorkParams::set_p_in     (double p_in)       { p_in_ = p_in; }
 void WorkParams::set_t_in     (double t_in)       { t_in_ = t_in; }
 void WorkParams::set_p_out    (double p_out)      { p_out_ = p_out; }
-double WorkParams::den_sc_in(){ return den_sc_in_; }
-double WorkParams::co2_in()   { return co2_in_; }
-double WorkParams::n2_in()    { return n2_in_; }
-double WorkParams::p_in()     { return p_in_; }
-double WorkParams::t_in()     { return t_in_; }
-double WorkParams::p_out()    { return p_out_; }
+double WorkParams::den_sc_in()  const { return den_sc_in_; }
+double WorkParams::co2_in()     const { return co2_in_; }
+double WorkParams::n2_in()      const { return n2_in_; }
+double WorkParams::p_in()       const { return p_in_; }
+double WorkParams::t_in()       const { return t_in_; }
+double WorkParams::p_out()      const { return p_out_; }

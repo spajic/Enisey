@@ -2,7 +2,7 @@
 	"Testing": {
 		"ParallelManagers": {
 			"Etalon": {
-				"RegenerateEtalon": true,
+				"RegenerateEtalon": false,
 				"Paths": {
 					"RootDir": "C:\\Enisey\\out\\Testing\\ParallelManagers\\Etalon\\",
 					"Passports": "Passports.xml",
