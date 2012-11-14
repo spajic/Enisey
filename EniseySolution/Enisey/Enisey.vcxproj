@@ -14,6 +14,7 @@
     <ProjectGuid>{B956ABF9-79C1-4341-BFB8-848F8ABCAA4E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Enisey</RootNamespace>
+    <CudaToolkitCustomDir>$(CUDA_PATH)</CudaToolkitCustomDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -70,10 +71,11 @@
       <AdditionalDependencies>cvm_ia32.lib;cudart.lib;cutil32D.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CudaCompile>
-      <Include>C:\ProgramData\NVIDIA Corporation\NVIDIA GPU Computing SDK 4.0\C\common\inc</Include>
+      <Include>C:\ProgramData\NVIDIA Corporation\NVIDIA GPU Computing SDK 4.0\C\common\inc;C:\Enisey\src\EniseySolution\ice_server;C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir);$(IceHome)\include;.</Include>
     </CudaCompile>
     <Lib>
-      <AdditionalLibraryDirectories>C:\Enisey\instruments\boost\boost_1_49_0\stage\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Enisey\instruments\boost\boost_1_49_0\stage\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.1\lib\Win32;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cudart.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -98,8 +100,12 @@
       <AdditionalDependencies>cvm_ia32.lib;cudart.lib;cutil32d.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>C:\Enisey\instruments\boost\boost_1_49_0\stage\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Enisey\instruments\boost\boost_1_49_0\stage\lib;$(CudaToolkitLibDir);../../common/lib/$(PlatformName);../../../shared/lib/$(PlatformName)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cudart.lib;</AdditionalDependencies>
     </Lib>
+    <CudaCompile>
+      <Include>C:\Enisey\src\EniseySolution\ice_server;C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir);$(IceHome)\include;.</Include>
+    </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <CudaCompile Include="edge_model_pipe_sequential_cuda.cu">
@@ -157,7 +163,9 @@
     <ClCompile Include="loader_vesta.cpp" />
     <ClCompile Include="manager_edge_model_pipe_sequential.cpp" />
     <ClCompile Include="model_pipe_sequential.cpp" />
-    <ClCompile Include="parallel_manager_pipe_cuda.cpp" />
+    <CudaCompile Include="parallel_manager_pipe_cuda.cu">
+      <FileType>CppCode</FileType>
+    </CudaCompile>
     <ClCompile Include="parallel_manager_pipe_openmp.cpp" />
     <ClCompile Include="parallel_manager_pipe_singlecore.cpp" />
     <ClCompile Include="passport_pipe.cpp" />
@@ -196,7 +204,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="model_pipe_sequential.h" />
-    <ClInclude Include="parallel_manager_pipe_cuda.h" />
+    <ClCompile Include="parallel_manager_pipe_cuda.cuh">
+      <FileType>CppHeader</FileType>
+    </ClCompile>
     <ClInclude Include="parallel_manager_pipe_i.h" />
     <ClInclude Include="parallel_manager_pipe_openmp.h" />
     <ClInclude Include="parallel_manager_pipe_singlecore.h" />

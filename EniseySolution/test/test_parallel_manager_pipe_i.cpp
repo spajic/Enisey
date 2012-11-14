@@ -11,7 +11,7 @@ ParallelManagerPipeI.
 #include "parallel_manager_pipe_i.h"
 #include "parallel_manager_pipe_singlecore.h"
 #include "parallel_manager_pipe_openmp.h"
-#include "parallel_manager_pipe_cuda.h"
+#include "parallel_manager_pipe_cuda.cuh"
 
 #include <boost/serialization/vector.hpp>
 

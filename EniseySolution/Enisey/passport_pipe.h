@@ -2,8 +2,10 @@
 #include "passport.h"
 
 #include <string>
-#include <boost/archive/xml_oarchive.hpp>
-#include <boost/archive/xml_iarchive.hpp>
+//#include <boost/archive/xml_oarchive.hpp>
+//#include <boost/archive/xml_iarchive.hpp>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/nvp.hpp>
 
 // Наследуем структуру PassportPipe от пустого интерфейсного класса Passport
 // для единообразия. Все паспортные параметры, необходимые для создания объктов
