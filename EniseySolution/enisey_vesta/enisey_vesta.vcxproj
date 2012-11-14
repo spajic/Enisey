@@ -74,7 +74,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Enisey\src\EniseySolution\Enisey;$(IceHome)\include;.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CUDA_INC_PATH);C:\Enisey\src\EniseySolution\Enisey;$(IceHome)\include;.</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
     </ClCompile>

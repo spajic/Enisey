@@ -7,6 +7,8 @@
 
 //Forward-declarations:
 class ModelPipeSequential;
+class double2;
+class double4;
 
 class ParallelManagerPipeCUDA : public ParallelManagerPipeI {
 public:
@@ -21,9 +23,9 @@ private:
   int number_of_pipes;
 
   double* length_dev_;
- // double2* d_in_out_dev_;
-  //double4* hydr_rough_env_exch_dev_;
-  //double2* p_in_and_t_in_dev_;
+  double2* d_in_out_dev_;
+  double4* hydr_rough_env_exch_dev_;
+  double2* p_in_and_t_in_dev_;
   double* p_target_dev_;
   double* q_result_dev_;
   double* den_sc_dev_;
@@ -32,8 +34,8 @@ private:
 
   // Пасспортные параметры трубы
   double* length_;
-  //double2* d_in_out_;
-  //double4* hydr_rough_env_exch_;
+  double2* d_in_out_;
+  double4* hydr_rough_env_exch_;
 
   // Рабочие параметры
   double* den_sc_;
