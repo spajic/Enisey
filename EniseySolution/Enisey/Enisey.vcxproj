@@ -122,7 +122,6 @@
     <None Include="..\ice_server\slae_solver_ice.ice" />
     <None Include="ClassDiagram1.cd" />
     <None Include="edge_model_pipe_sequential_cuda.cuh">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
     <None Include="functions_pipe_cuda.cuh">
@@ -133,14 +132,15 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
-    <None Include="gas_count_functions_cuda.cuh">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    <ClInclude Include="gas_count_functions_cuda.cuh">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </None>
+      <FileType>Document</FileType>
+    </ClInclude>
     <None Include="model_pipe_sequential_functions.cuh">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
+    <None Include="model_pipe_sequential_functions_cuda.cuh" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -200,7 +200,6 @@
     <ClInclude Include="manager_edge.h" />
     <ClInclude Include="manager_edge_model_pipe_sequential.h" />
     <ClInclude Include="manager_edge_model_pipe_sequential_cuda.cuh">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="model_pipe_sequential.h" />
