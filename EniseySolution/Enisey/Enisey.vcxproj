@@ -157,6 +157,7 @@
     <ClCompile Include="loader_vesta.cpp" />
     <ClCompile Include="manager_edge_model_pipe_sequential.cpp" />
     <ClCompile Include="model_pipe_sequential.cpp" />
+    <ClCompile Include="parallel_manager_pipe_cuda.cpp" />
     <ClCompile Include="parallel_manager_pipe_openmp.cpp" />
     <ClCompile Include="parallel_manager_pipe_singlecore.cpp" />
     <ClCompile Include="passport_pipe.cpp" />
@@ -195,6 +196,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="model_pipe_sequential.h" />
+    <ClInclude Include="parallel_manager_pipe_cuda.h" />
     <ClInclude Include="parallel_manager_pipe_i.h" />
     <ClInclude Include="parallel_manager_pipe_openmp.h" />
     <ClInclude Include="parallel_manager_pipe_singlecore.h" />
