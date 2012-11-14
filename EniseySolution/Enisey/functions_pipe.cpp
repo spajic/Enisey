@@ -133,7 +133,7 @@ void FindSequentialOut(
   // запиисываем рассчитанные значения в out-параметры	
   *p_out = p_next;
   *t_out = t_next;
-};
+}
 
 // Чтобы найти q, нужно решить уравнение Pвых(Pвх, Tвх, q) = p_target относительно q.
 // Функция Pвых у нас есть - FindSequentialOut.

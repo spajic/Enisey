@@ -72,6 +72,7 @@
     </Link>
     <CudaCompile>
       <Include>C:\ProgramData\NVIDIA Corporation\NVIDIA GPU Computing SDK 4.0\C\common\inc;C:\Enisey\src\EniseySolution\ice_server;C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir);$(IceHome)\include;.</Include>
+      <CodeGeneration>compute_20,sm_20</CodeGeneration>
     </CudaCompile>
     <Lib>
       <AdditionalLibraryDirectories>C:\Enisey\instruments\boost\boost_1_49_0\stage\lib;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v4.1\lib\Win32;</AdditionalLibraryDirectories>

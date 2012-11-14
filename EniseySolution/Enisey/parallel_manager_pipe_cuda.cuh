@@ -46,6 +46,17 @@ private:
   // Рассчитанные параметры.
   device_vector<double>   q_result_dev_vec;
 
+  // Указатели на память device.
+  double *den_sc_dev_;
+  double *co2_dev_;
+  double *n2_dev_;
+  double2*p_in_and_t_in_dev_;
+  double *p_target_dev_;
+  double *length_dev_;
+  double2*d_in_out_dev_;
+  double4*hydr_rough_env_exch_dev_;
+  double *q_result_dev_;
+
   // На Host:
   // Пасспортные параметры трубы
   host_vector<double>   length_host;
