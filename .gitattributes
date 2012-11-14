@@ -1,8 +1,11 @@
 # Auto detect text files and perform LF normalization
-* text=auto
-
+# text=auto - закомментировал
 # These files are text and should be normalized (convert crlf => lf)
-*.cu      text
+# файлы, которые помечены -text git не трогает (не делает clrf => lf)
+*.cu      -text
+*.h       -text
+*.cpp     -text
+*.cuh     -text
 
 # Custom for Visual Studio
 *.cs     diff=csharp
