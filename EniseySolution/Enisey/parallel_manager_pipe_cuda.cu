@@ -193,16 +193,14 @@ void ParallelManagerPipeCUDA::
 void ParallelManagerPipeCUDA::
     SaveWorkParamsToStructureOfArrays(
         std::vector<WorkParams> const &work_params){
-  int index_in_vector = 0;
   for(auto wp = work_params.begin(); wp != work_params.end(); ++wp) {
-    den_sc_host       [index_in_vector] = wp->den_sc_in();
-    co2_host          [index_in_vector] = wp->co2_in();
-    n2_host           [index_in_vector] = wp->n2_in();
-    p_in_and_t_in_host[index_in_vector] = 
-                            make_double2( wp->p_in(), 
-                                          wp->t_in() );
-    p_target_host     [index_in_vector] = wp->p_out();
-    ++index_in_vector;
+    den_sc_host       .push_back( wp->den_sc_in() );
+    co2_host          .push_back( wp->co2_in()    );
+    n2_host           .push_back( wp->n2_in()     );
+    p_in_and_t_in_host.push_back( 
+                    make_double2( wp->p_in(), 
+                                  wp->t_in() )     );
+    p_target_host      .push_back( wp->p_out()    );
   }
 }
 
