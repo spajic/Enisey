@@ -141,6 +141,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="test_pipe_count_cuda.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="test_slae_solver_i.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -153,6 +157,7 @@
     <ClInclude Include="test_utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <CudaCompile Include="impl_pipe_count_cuda.cu" />
     <None Include="..\ice_server\common_types.ice" />
     <None Include="..\ice_server\slae_solver_ice.ice" />
     <CudaCompile Include="impl_gas_count_functions_cuda.cu">
