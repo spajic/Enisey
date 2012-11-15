@@ -5,6 +5,8 @@
 #include "test_utils.h"
 
 #include "passport_pipe.h"
+#include "work_params.h"
+#include "calculated_params.h"
 #include "gas.h"
 
 extern "C"
@@ -71,4 +73,47 @@ TEST_F( PipeCountCUDATest, CountsDerivativesForReverseFlow ) {
   // Производные должны быть обменены местами и знаками.
   //EXPECT_DOUBLE_EQ(reverse_pipe.dq_dp_in(), -pipe.dq_dp_out() );
   //EXPECT_DOUBLE_EQ(reverse_pipe.dq_dp_out(), -pipe.dq_dp_in() ); 
+}
+
+/* Проверка, что расчёт первой трубы эталона, построенной по схеме Саратова
+даёт такой же результат, как эталонный расчёт на CPU. */
+TEST( PipeCountCUDATestSaratov, CountsFirstPipeOfSaratov ) {
+  PassportPipe pass;
+  pass.d_inner_                     = 515;
+  pass.d_outer_                     = 530;
+  pass.heat_exchange_coeff_         = 1.3;
+  pass.hydraulic_efficiency_coeff_  = 0.7007;
+  pass.length_                      = 4;
+  pass.p_max_                       = 5.3936;
+  pass.p_min_                       = 1.96133;
+  pass.roughness_coeff_             = 0.03;
+  pass.t_env_                       = 275.65;
+
+  WorkParams wp;
+  wp.set_p_in     (2.2880811667883729);
+  wp.set_p_out    (2.2596797626698923);
+  wp.set_t_in     (278.25498874278276);
+  wp.set_den_sc_in(0.68991000000000002);
+  wp.set_n2_in    (0);
+  wp.set_co2_in   (0);
+  int segments = std::max( 1, static_cast<int>(pass.length_)/10 );
+  double length_of_segment = pass.length_ / segments;
+  double q_out;
+  double t_out;
+  CountQOnDevice(
+    wp.p_out()            ,
+    wp.p_in()             , wp.t_in()                       ,
+    wp.den_sc_in()        , 
+    wp.co2_in()           , wp.n2_in()                      ,
+    pass.d_inner_         , pass.d_outer_                   , 
+    pass.roughness_coeff_ , pass.hydraulic_efficiency_coeff_, 
+    pass.t_env_           , pass.heat_exchange_coeff_       , 
+    length_of_segment     , segments                        , 
+    &t_out                , &q_out
+    );
+  CalculatedParams etalon;
+  etalon.set_q(22.12012700520966);
+  etalon.set_t_out(277.4648998599593);
+  EXPECT_NEAR(etalon.q()    , q_out, kTestPipeQuantityPrecision);
+  EXPECT_NEAR(etalon.t_out(), t_out, kTestPipeQuantityPrecision);
 }

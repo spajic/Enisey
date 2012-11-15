@@ -28,7 +28,7 @@ void FindQResultCudaKernel(
 	double* q_result
 )
 {
-  cuPrintfRestrict(0, 0);
+    cuPrintfRestrict(0, 0);
     cuPrintf("FindQResultCudaKernel------------------------------------\n");
 	int index = threadIdx.x + blockIdx.x * blockDim.x;
   while(index < size)
@@ -50,10 +50,10 @@ void FindQResultCudaKernel(
     cuPrintf("length = %f\n", length_);
     cuPrintf("d_in   = %f\n", d_in_out_.x);
     cuPrintf("d_out  = %f\n", d_in_out_.y);
-    cuPrintf("hydr   = %f\n", hydr_rough_env_exch_.w);
-    cuPrintf("rough  = %f\n", hydr_rough_env_exch_.x);
-    cuPrintf("env    = %f\n", hydr_rough_env_exch_.y);
-    cuPrintf("exch   = %f\n", hydr_rough_env_exch_.z);    
+    cuPrintf("hydr   = %f\n", hydr_rough_env_exch_.x);
+    cuPrintf("rough  = %f\n", hydr_rough_env_exch_.y);
+    cuPrintf("env    = %f\n", hydr_rough_env_exch_.z);
+    cuPrintf("exch   = %f\n", hydr_rough_env_exch_.w);    
     cuPrintf("\nWork parameters:---------------------------------------\n");
     cuPrintf("p      = %f\n", p_and_t_.x);
     cuPrintf("p_out  = %f\n", p_target_);
@@ -84,10 +84,10 @@ void FindQResultCudaKernel(
         p_and_t_.x, p_and_t_.y,  // рабочие параметры газового потока на входе
         den_sc_, co2_, n2_, // состав газа
         d_in_out_.x, d_in_out_.y, 
-        hydr_rough_env_exch_.x, //rough
-        hydr_rough_env_exch_.w, //hydr
-        hydr_rough_env_exch_.y, //env
-        hydr_rough_env_exch_.z, //heat_exch
+        hydr_rough_env_exch_.y, //rough
+        hydr_rough_env_exch_.x, //hydr
+        hydr_rough_env_exch_.z, //env
+        hydr_rough_env_exch_.w, //heat_exch
         length_/segments, segments, // длина сегмента и кол-во сегментов
         &t_out, &q_out); // out - параметры, значения на выходе )
 
