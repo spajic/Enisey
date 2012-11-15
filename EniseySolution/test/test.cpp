@@ -25,6 +25,8 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 
 // Тесты функций расчёта свойств газа.
 #include "test_functions_gas.cpp"
+// Тесты функций расчёта свойств газа на CUDA.
+#include "test_gas_count_functions_cuda.cpp"
 // Тесты класса ModelPipeSequential.
 #include "test_model_pipe_sequential.cpp"
 // Тесты классов-реализаций интерфейса ParallelManagerPipeI.

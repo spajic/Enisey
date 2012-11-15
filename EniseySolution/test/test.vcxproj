@@ -14,6 +14,8 @@
     <ProjectGuid>{EF078C9A-A826-4F62-95B2-E986F9B0BF11}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>test</RootNamespace>
+    <CudaToolkitCustomDir>
+    </CudaToolkitCustomDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -29,6 +31,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 4.1.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -67,6 +70,10 @@
       <AdditionalLibraryDirectories>C:\Enisey\bin\EniseySolution\Enisey\Debug;C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;C:\Enisey\instruments\google test framework\gtest-1.6.0\msvc\gtest\Debug;$(IceHome)\lib\vc100;%(AdditionalLibraryDirectories);C:\Enisey\instruments\boost\boost_1_49_0\stage\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>enisey.lib;cvm_ia32.lib;gtestd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Iced.lib;IceUtild.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CudaCompile>
+      <CodeGeneration>compute_20,sm_20</CodeGeneration>
+      <Include>$(CUDA_INC_PATH);C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;C:\Enisey\instruments\google test framework\gtest-1.6.0\include;C:\Enisey\src\EniseySolution\Enisey;$(IceHome)\include;.</Include>
+    </CudaCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -87,12 +94,30 @@
       <AdditionalDependencies>enisey.lib;cvm_ia32.lib;gtest.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Ice.lib;IceUtil.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Enisey\bin\EniseySolution\Enisey\Release;C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;C:\Enisey\instruments\google test framework\gtest-1.6.0\msvc\gtest\Release;$(IceHome)\lib\vc100;C:\Enisey\instruments\boost\boost_1_49_0\stage\lib</AdditionalLibraryDirectories>
     </Link>
+    <CudaCompile>
+      <Include>$(CUDA_INC_PATH);C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;C:\Enisey\instruments\google test framework\gtest-1.6.0\include;C:\Enisey\src\EniseySolution\Enisey;$(IceHome)\include;.</Include>
+      <CodeGeneration>compute_20,sm_20</CodeGeneration>
+    </CudaCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <CudaCompile>
+      <Include>$(CUDA_INC_PATH);C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;C:\Enisey\instruments\google test framework\gtest-1.6.0\include;C:\Enisey\src\EniseySolution\Enisey;$(IceHome)\include;.</Include>
+    </CudaCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <CudaCompile>
+      <Include>$(CUDA_INC_PATH);C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;C:\Enisey\instruments\google test framework\gtest-1.6.0\include;C:\Enisey\src\EniseySolution\Enisey;$(IceHome)\include;.</Include>
+    </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="common_types.cpp" />
     <ClCompile Include="slae_solver_ice.cpp" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="test_functions_gas.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="test_gas_count_functions_cuda.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
@@ -130,9 +155,13 @@
   <ItemGroup>
     <None Include="..\ice_server\common_types.ice" />
     <None Include="..\ice_server\slae_solver_ice.ice" />
+    <CudaCompile Include="impl_gas_count_functions_cuda.cu">
+      <FileType>Document</FileType>
+    </CudaCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 4.1.targets" />
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
