@@ -45,6 +45,9 @@ private:
   device_vector<double>   n2_dev_vec;
   // Рассчитанные параметры.
   device_vector<double>   q_result_dev_vec;
+  device_vector<double>   t_result_dev_vec;
+  device_vector<double>   dq_dp_in_result_dev_vec;
+  device_vector<double>   dq_dp_out_result_dev_vec;
 
   // Указатели на память device.
   double *den_sc_dev_;
@@ -56,6 +59,9 @@ private:
   double2*d_in_out_dev_;
   double4*hydr_rough_env_exch_dev_;
   double *q_result_dev_;
+  double *t_result_dev_;
+  double *dq_dp_in_result_dev_;
+  double *dq_dp_out_result_dev_;
 
   // На Host:
   // Пасспортные параметры трубы
@@ -70,4 +76,7 @@ private:
   host_vector<double>   p_target_host;
   // Рассчитанные параметры
   host_vector<double>   q_result_host;
+  host_vector<double>   t_result_host;
+  host_vector<double>   dq_dp_in_result_host;
+  host_vector<double>   dq_dp_out_result_host;
 };

@@ -54,12 +54,32 @@ TEST_F( PipeCountCUDATest, CountsDirectFlow ) {
   EXPECT_NEAR(kTestPipeQuantity, q_out, kTestPipeQuantityPrecision);
 }
 /* ReverseFlow - Pвх < Pвых, q < 0.*/
+// Пока до конца не решил, что должно в этом случае происходить.
+// Новый подход: модели работают только с обычными трубами, 
+// Отслеживать и управлять случаями реверсивных труб дело того, кто
+// формирует данные - суперменеджера, например.
+// Это позволит упростить логику всех моделей и сосредоточить управление
+// этим нюансом в одном месте - в суперменеджере.
+// А моделям, по идее, следует выбрасывать каким-то образом сообщение об
+// ошибке - недопустимые входные данные.
 TEST_F( PipeCountCUDATest, CountsReverseFlow ) {
   // Меняем вход и выход местами, получаем реверсивную трубу.
-  //pipe.set_gas_in(&gas_out); 
-  //pipe.set_gas_out(&gas_in);
-  //pipe.Count();
-  //EXPECT_NEAR(-kTestPipeQuantity, pipe.q(), kTestPipeQuantityPrecision);
+  /*int segments = std::max( 1, static_cast<int>(passport.length_)/10 );
+  double length_of_segment = passport.length_ / segments;
+  double q_out;
+  double t_out;
+  CountQOnDevice(
+    gas_in.work_parameters.p            ,
+    gas_out.work_parameters.p           , gas_out.work_parameters.t     ,
+    gas_out.composition.density_std_cond, 
+    gas_out.composition.co2             , gas_out.composition.n2        ,
+    passport.d_inner_                   , passport.d_outer_             , 
+    passport.roughness_coeff_ , passport.hydraulic_efficiency_coeff_    , 
+    passport.t_env_                     , passport.heat_exchange_coeff_ , 
+    length_of_segment                   , segments                      , 
+    &t_out                              , &q_out
+    );
+  EXPECT_NEAR(-kTestPipeQuantity, q_out, kTestPipeQuantityPrecision);*/
 } 
 TEST_F( PipeCountCUDATest, CountsDerivativesOfProperSigns ) {
   //EXPECT_GE( pipe.dq_dp_in(), 0 ); // Растёт давление на входе - растёт расход.

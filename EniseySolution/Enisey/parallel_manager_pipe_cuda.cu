@@ -15,27 +15,32 @@
 #include "model_pipe_sequential_functions_cuda.cuh"
 #include "gas_count_functions_cuda.cuh"
 
-#include "cuprintf.cu"
-
+#ifdef CUPRINTF
+  #include "cuprintf.cu"
+#endif
 __global__ 
 void FindQResultCudaKernel(
-	int size,
-	double* den_sc, double* co2, double* n2, 
-	double2* p_and_t, double* p_target,
-	double* length,
-	double2* d_in_out,
-	double4* hydr_rough_env_exch,
-	double* q_result
-)
-{
+	  int size,
+	  double* den_sc, double* co2, double* n2, 
+	  double2* p_and_t, double* p_target,
+	  double* length,
+	  double2* d_in_out,
+	  double4* hydr_rough_env_exch,
+	  double* q_result,
+    double* t_result,
+    double* dq_dp_in_result,
+    double* dq_dp_out_result) {
+  #ifdef CUPRINTF
     cuPrintfRestrict(0, 0);
     cuPrintf("FindQResultCudaKernel------------------------------------\n");
+  #endif
 	int index = threadIdx.x + blockIdx.x * blockDim.x;
-  while(index < size)
-	{
+  while(index < size)	{
 		// Загружаем данные
 		// Состав газа
-    cuPrintf("Loading data from memory---------------------------------\n");
+    #ifdef CUPRINTF
+      cuPrintf("Loading data from memory---------------------------------\n");
+    #endif
 		double den_sc_ = den_sc[index];
 		double co2_ = co2[index];
 		double n2_ = n2[index];
@@ -46,29 +51,33 @@ void FindQResultCudaKernel(
 		double2 d_in_out_ = d_in_out[index];
 		double4 hydr_rough_env_exch_ = hydr_rough_env_exch[index];
 		double p_target_ = p_target[index];
-    cuPrintf("Pipe Passport parameters:--------------------------------\n");
-    cuPrintf("length = %f\n", length_);
-    cuPrintf("d_in   = %f\n", d_in_out_.x);
-    cuPrintf("d_out  = %f\n", d_in_out_.y);
-    cuPrintf("hydr   = %f\n", hydr_rough_env_exch_.x);
-    cuPrintf("rough  = %f\n", hydr_rough_env_exch_.y);
-    cuPrintf("env    = %f\n", hydr_rough_env_exch_.z);
-    cuPrintf("exch   = %f\n", hydr_rough_env_exch_.w);    
-    cuPrintf("\nWork parameters:---------------------------------------\n");
-    cuPrintf("p      = %f\n", p_and_t_.x);
-    cuPrintf("p_out  = %f\n", p_target_);
-    cuPrintf("t      = %f\n", p_and_t_.y);
-    cuPrintf("den_sc = %f\n", den_sc_);
-    cuPrintf("co2    = %f\n", co2_);
-    cuPrintf("n2     = %f\n", n2_);        
+    #ifdef CUPRINTF
+      cuPrintf("Pipe Passport parameters:--------------------------------\n");
+      cuPrintf("length = %f\n", length_);
+      cuPrintf("d_in   = %f\n", d_in_out_.x);
+      cuPrintf("d_out  = %f\n", d_in_out_.y);
+      cuPrintf("hydr   = %f\n", hydr_rough_env_exch_.x);
+      cuPrintf("rough  = %f\n", hydr_rough_env_exch_.y);
+      cuPrintf("env    = %f\n", hydr_rough_env_exch_.z);
+      cuPrintf("exch   = %f\n", hydr_rough_env_exch_.w);    
+      cuPrintf("\nWork parameters:---------------------------------------\n");
+      cuPrintf("p      = %f\n", p_and_t_.x);
+      cuPrintf("p_out  = %f\n", p_target_);
+      cuPrintf("t      = %f\n", p_and_t_.y);
+      cuPrintf("den_sc = %f\n", den_sc_);
+      cuPrintf("co2    = %f\n", co2_);
+      cuPrintf("n2     = %f\n", n2_);        
+    #endif
 		// Вычисляем базовые свойства газового потока    
 		double r_sc_ = FindRStandartConditionsCuda(den_sc_); // Совпадает c CPU.
 		double t_pc_ = FindTPseudoCriticalCuda(den_sc_, co2_, n2_); // Совпадает.
 		double p_pc_ = FindPPseudoCriticalCuda(den_sc_, co2_, n2_); // Совпадает.
-    cuPrintf("\nCalculating base gas props:----------------------------\n");
-    cuPrintf("r_sc = %f\n", r_sc_);
-    cuPrintf("t_pc = %f\n", t_pc_);
-    cuPrintf("p_pc = %f\n", p_pc_);
+    #ifdef CUPRINTF
+      cuPrintf("\nCalculating base gas props:----------------------------\n");
+      cuPrintf("r_sc = %f\n", r_sc_);
+      cuPrintf("t_pc = %f\n", t_pc_);
+      cuPrintf("p_pc = %f\n", p_pc_);
+    #endif
 
 		double q_out = 0;
 		double p_out = 0;
@@ -76,8 +85,10 @@ void FindQResultCudaKernel(
 		
     int segments = static_cast<int>(length_)/10;
     if(segments < 1) { segments = 1; }
-    cuPrintf("\nCalculating # of segments:-----------------------------\n");
-    cuPrintf("segments = %d\n", segments);
+    #ifdef CUPRINTF
+      cuPrintf("\nCalculating # of segments:-----------------------------\n");
+      cuPrintf("segments = %d\n", segments);
+    #endif
 
 		FindSequentialQCuda(
         p_target_, // давление, которое должно получиться в конце
@@ -92,8 +103,76 @@ void FindQResultCudaKernel(
         &t_out, &q_out); // out - параметры, значения на выходе )
 
 		q_result[index] = q_out;
-    cuPrintf("\nCalculating results:-----------------------------------\n");
-    cuPrintf("q = %f\n", q_out);
+    t_result[index] = t_out;
+    // Рассчитываем производные--------------------------------------------
+    // Следим, чтобы шаг дифференцирования был не больше (Pвых - Pвх) / 2.
+    double eps = (p_and_t_.x - p_target_)/2; // dP/2.
+    if(eps > 0.000005) { eps = 0.000005; } // Значение по умолчанию - 5 Па.  
+    double t_dummy; // t, возвращаемое при расчёте производных не нужно.
+    double q_p_in_plus_eps; 
+    FindSequentialQCuda(
+      p_target_ , // давление, которое должно получиться в конце
+      p_and_t_.x + eps, p_and_t_.y,  // рабочие параметры газового потока на входе
+      den_sc_, co2_, n2_, // состав газа
+      d_in_out_.x, d_in_out_.y, 
+      hydr_rough_env_exch_.y, //rough
+      hydr_rough_env_exch_.x, //hydr
+      hydr_rough_env_exch_.z, //env
+      hydr_rough_env_exch_.w, //heat_exch
+      length_/segments, segments, // длина сегмента и кол-во сегментов
+      &t_dummy, &q_p_in_plus_eps); // out - параметры, значения на выходе )
+    double q_p_in_minus_eps; 
+    FindSequentialQCuda(
+      p_target_, // давление, которое должно получиться в конце
+      p_and_t_.x - eps, p_and_t_.y,  // рабочие параметры газового потока на входе
+      den_sc_, co2_, n2_, // состав газа
+      d_in_out_.x, d_in_out_.y, 
+      hydr_rough_env_exch_.y, //rough
+      hydr_rough_env_exch_.x, //hydr
+      hydr_rough_env_exch_.z, //env
+      hydr_rough_env_exch_.w, //heat_exch
+      length_/segments, segments, // длина сегмента и кол-во сегментов
+      &t_dummy, &q_p_in_minus_eps); // out - параметры, значения на выходе )
+    dq_dp_in_result[index] = (q_p_in_plus_eps - q_p_in_minus_eps) / (2*eps);
+
+    double q_p_out_plus_eps;
+    FindSequentialQCuda(
+      p_target_ + eps, // давление, которое должно получиться в конце
+      p_and_t_.x, p_and_t_.y,  // рабочие параметры газового потока на входе
+      den_sc_, co2_, n2_, // состав газа
+      d_in_out_.x, d_in_out_.y, 
+      hydr_rough_env_exch_.y, //rough
+      hydr_rough_env_exch_.x, //hydr
+      hydr_rough_env_exch_.z, //env
+      hydr_rough_env_exch_.w, //heat_exch
+      length_/segments, segments, // длина сегмента и кол-во сегментов
+      &t_dummy, &q_p_out_plus_eps); // out - параметры, значения на выходе )
+    double q_p_out_minus_eps;       
+    FindSequentialQCuda(
+      p_target_ - eps, // давление, которое должно получиться в конце
+      p_and_t_.x, p_and_t_.y,  // рабочие параметры газового потока на входе
+      den_sc_, co2_, n2_, // состав газа
+      d_in_out_.x, d_in_out_.y, 
+      hydr_rough_env_exch_.y, //rough
+      hydr_rough_env_exch_.x, //hydr
+      hydr_rough_env_exch_.z, //env
+      hydr_rough_env_exch_.w, //heat_exch
+      length_/segments, segments, // длина сегмента и кол-во сегментов
+      &t_dummy, &q_p_out_minus_eps); // out - параметры, значения на выходе )
+    dq_dp_out_result[index] = (q_p_out_plus_eps - q_p_out_minus_eps) / (2*eps);
+    
+    #ifdef CUPRINTF
+      cuPrintf("\nCalculating results:-----------------------------------\n");
+      cuPrintf("q                   = %f\n", q_result[index]);
+      cuPrintf("t_out               = %f\n", t_result[index]);
+      cuPrintf("dq_dp_in            = %f\n", dq_dp_in_result[index]);
+      cuPrintf("--q_p_in_plus_eps     = %f\n", q_p_in_plus_eps);
+      cuPrintf("--q_p_in_minus_eps    = %f\n", q_p_in_minus_eps);
+      cuPrintf("dq_dp_out           = %f\n", dq_dp_out_result[index]);
+      cuPrintf("--q_p_out_plus_eps    = %f\n", q_p_out_plus_eps);
+      cuPrintf("--q_p_out_minus_eps   = %f\n", q_p_out_minus_eps);
+      cuPrintf("eps                 = %f\n", eps);
+    #endif
 		
 		index += gridDim.x * blockDim.x;
 	} // end while (index < size)
@@ -116,7 +195,9 @@ void ParallelManagerPipeCUDA::
   SendWorkParamsToDevice();
 }
 void ParallelManagerPipeCUDA::CalculateAll() {  
-  cudaPrintfInit();
+  #ifdef CUPRINTF
+    cudaPrintfInit();
+  #endif
   FindQResultCudaKernel<<<512, 64, 0>>>(
 			number_of_pipes,
 			den_sc_dev_, co2_dev_, n2_dev_,
@@ -124,9 +205,14 @@ void ParallelManagerPipeCUDA::CalculateAll() {
 			length_dev_,
 			d_in_out_dev_,
 			hydr_rough_env_exch_dev_,
-			q_result_dev_);
-  cudaPrintfDisplay(stdout, true);
-  cudaPrintfEnd();
+			q_result_dev_,
+      t_result_dev_,
+      dq_dp_in_result_dev_,
+      dq_dp_out_result_dev_);
+  #ifdef CUPRINTF
+    cudaPrintfDisplay(stdout, true);
+    cudaPrintfEnd();
+  #endif
   SendCalculatedParamsToHost();
 }
 void ParallelManagerPipeCUDA::
@@ -134,10 +220,20 @@ void ParallelManagerPipeCUDA::
   calculated_params->erase(
       calculated_params->begin(), calculated_params->end() );
   calculated_params->reserve(number_of_pipes);
+
+  auto t = t_result_host.begin();
+  auto dq_dp_in = dq_dp_in_result_host.begin();
+  auto dq_dp_out = dq_dp_out_result_host.begin();
   for(auto q = q_result_host.begin(); q != q_result_host.end(); ++q) {
     CalculatedParams cp;
     cp.set_q(*q);
-    calculated_params->push_back(cp);
+    cp.set_dq_dp_in(*dq_dp_in);
+    cp.set_dq_dp_out(*dq_dp_out);
+    cp.set_t_out(*t);
+    calculated_params->push_back(cp);    
+    ++dq_dp_in;
+    ++dq_dp_out;
+    ++t;
   }
 }
 
@@ -154,6 +250,9 @@ void ParallelManagerPipeCUDA::AllocateMemoryOnHost() {
   p_target_host             .reserve(number_of_pipes);
   // Рассчитанные параметры.
   q_result_host             .reserve(number_of_pipes);
+  t_result_host             .reserve(number_of_pipes);
+  dq_dp_in_result_host      .reserve(number_of_pipes);
+  dq_dp_out_result_host     .reserve(number_of_pipes);
 }
 void ParallelManagerPipeCUDA::AllocateMemoryOnDevice() {
   // Пасспортные параметры. 
@@ -168,6 +267,9 @@ void ParallelManagerPipeCUDA::AllocateMemoryOnDevice() {
   n2_dev_vec                  .resize(number_of_pipes);
   // Рассчитанные параметры.
   q_result_dev_vec            .resize(number_of_pipes);
+  t_result_dev_vec            .resize(number_of_pipes);
+  dq_dp_in_result_dev_vec     .resize(number_of_pipes);
+  dq_dp_out_result_dev_vec    .resize(number_of_pipes);
 
   // Формируем указатели на память device.
   using thrust::raw_pointer_cast;
@@ -180,6 +282,9 @@ void ParallelManagerPipeCUDA::AllocateMemoryOnDevice() {
   d_in_out_dev_           = raw_pointer_cast(&d_in_out_dev_vec            [0]);
   hydr_rough_env_exch_dev_= raw_pointer_cast(&hydr_rough_env_exch_dev_vec [0]);
   q_result_dev_           = raw_pointer_cast(&q_result_dev_vec            [0]);
+  t_result_dev_           = raw_pointer_cast(&t_result_dev_vec            [0]);
+  dq_dp_in_result_dev_    = raw_pointer_cast(&dq_dp_in_result_dev_vec     [0]);
+  dq_dp_out_result_dev_   = raw_pointer_cast(&dq_dp_out_result_dev_vec    [0]);
 }
 void ParallelManagerPipeCUDA::
     SavePassportsAsStructureOfArrays(
@@ -226,5 +331,8 @@ void ParallelManagerPipeCUDA::SendWorkParamsToDevice() {
   p_target_dev_vec      = p_target_host;
 }
 void ParallelManagerPipeCUDA::SendCalculatedParamsToHost() {
-  q_result_host = q_result_dev_vec;
+  q_result_host         = q_result_dev_vec;
+  t_result_host         = t_result_dev_vec;
+  dq_dp_in_result_host  = dq_dp_in_result_dev_vec;
+  dq_dp_out_result_host = dq_dp_out_result_dev_vec;
 }
