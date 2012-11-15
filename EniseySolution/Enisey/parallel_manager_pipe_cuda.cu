@@ -29,13 +29,13 @@ void FindQResultCudaKernel(
 )
 {
   cuPrintfRestrict(0, 0);
-    cuPrintf("FindQResultCudaKernel-----------------------------------\n");
+    cuPrintf("FindQResultCudaKernel------------------------------------\n");
 	int index = threadIdx.x + blockIdx.x * blockDim.x;
   while(index < size)
 	{
 		// Загружаем данные
 		// Состав газа
-    cuPrintf("Loading data from memory--------------------------------\n");
+    cuPrintf("Loading data from memory---------------------------------\n");
 		double den_sc_ = den_sc[index];
 		double co2_ = co2[index];
 		double n2_ = n2[index];
@@ -46,32 +46,38 @@ void FindQResultCudaKernel(
 		double2 d_in_out_ = d_in_out[index];
 		double4 hydr_rough_env_exch_ = hydr_rough_env_exch[index];
 		double p_target_ = p_target[index];
-    cuPrintf("Pipe Passport parameters:-------------------------------\n");
+    cuPrintf("Pipe Passport parameters:--------------------------------\n");
     cuPrintf("length = %f\n", length_);
     cuPrintf("d_in   = %f\n", d_in_out_.x);
     cuPrintf("d_out  = %f\n", d_in_out_.y);
     cuPrintf("hydr   = %f\n", hydr_rough_env_exch_.w);
     cuPrintf("rough  = %f\n", hydr_rough_env_exch_.x);
     cuPrintf("env    = %f\n", hydr_rough_env_exch_.y);
-    cuPrintf("exch   = %f\n", hydr_rough_env_exch_.z);
-    cuPrintf("Work parameters:---------------------------------------\n");
+    cuPrintf("exch   = %f\n", hydr_rough_env_exch_.z);    
+    cuPrintf("\nWork parameters:---------------------------------------\n");
     cuPrintf("p      = %f\n", p_and_t_.x);
     cuPrintf("p_out  = %f\n", p_target_);
     cuPrintf("t      = %f\n", p_and_t_.y);
     cuPrintf("den_sc = %f\n", den_sc_);
     cuPrintf("co2    = %f\n", co2_);
     cuPrintf("n2     = %f\n", n2_);        
-		// Вычисляем базовые свойства газового потока
+		// Вычисляем базовые свойства газового потока    
 		double r_sc_ = FindRStandartConditionsCuda(den_sc_); // Совпадает c CPU.
 		double t_pc_ = FindTPseudoCriticalCuda(den_sc_, co2_, n2_); // Совпадает.
 		double p_pc_ = FindPPseudoCriticalCuda(den_sc_, co2_, n2_); // Совпадает.
+    cuPrintf("\nCalculating base gas props:----------------------------\n");
+    cuPrintf("r_sc = %f\n", r_sc_);
+    cuPrintf("t_pc = %f\n", t_pc_);
+    cuPrintf("p_pc = %f\n", p_pc_);
 
 		double q_out = 0;
 		double p_out = 0;
 		double t_out = 0;
 		
     int segments = static_cast<int>(length_)/10;
-    if(segments < 1) segments = 1;
+    if(segments < 1) { segments = 1; }
+    cuPrintf("\nCalculating # of segments:-----------------------------\n");
+    cuPrintf("segments = %d\n", segments);
 
 		FindSequentialQCuda(
         p_target_, // давление, которое должно получиться в конце
@@ -86,6 +92,8 @@ void FindQResultCudaKernel(
         &t_out, &q_out); // out - параметры, значения на выходе )
 
 		q_result[index] = q_out;
+    cuPrintf("\nCalculating results:-----------------------------------\n");
+    cuPrintf("q = %f\n", q_out);
 		
 		index += gridDim.x * blockDim.x;
 	} // end while (index < size)
