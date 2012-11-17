@@ -58,6 +58,8 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(CUDA_INC_PATH);C:\Enisey\src\EniseySolution\Enisey;$(IceHome)\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -76,6 +78,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(CUDA_INC_PATH);$(IceHome)\include;C:\Enisey\src\EniseySolution\Enisey;C:\Enisey\src\EniseySolution\ice_server;.</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -91,10 +94,13 @@
     <ClCompile Include="gas_transfer_system_ice.cpp" />
     <ClCompile Include="gas_transfer_system_ice_usual.cpp" />
     <ClCompile Include="ice_server.cpp" />
+    <ClCompile Include="ParallelManagerIceI.cpp" />
+    <ClCompile Include="parallel_manager_ice_servant.cpp" />
     <ClCompile Include="slae_solver_ice.cpp" />
     <ClCompile Include="slae_solver_ice_cvm.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Enisey\ParallelManagerIceI.ice" />
     <None Include="common_types.ice" />
     <None Include="gas_transfer_system_ice.ice" />
     <None Include="slae_solver_ice.ice" />
@@ -103,6 +109,8 @@
     <ClInclude Include="common_types.h" />
     <ClInclude Include="gas_transfer_system_ice.h" />
     <ClInclude Include="gas_transfer_system_ice_usual.h" />
+    <ClInclude Include="ParallelManagerIceI.h" />
+    <ClInclude Include="parallel_manager_ice_servant.h" />
     <ClInclude Include="slae_solver_ice.h" />
     <ClInclude Include="slae_solver_ice_cvm.h" />
   </ItemGroup>

@@ -91,6 +91,7 @@
       <AdditionalIncludeDirectories>$(CUDA_INC_PATH);C:\Enisey\src\EniseySolution\ice_server;C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir);$(IceHome)\include;.</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <OpenMPSupport>true</OpenMPSupport>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -170,6 +171,7 @@
       <FileType>CppCode</FileType>
     </CudaCompile>
     <ClCompile Include="ParallelManagerIceI.cpp" />
+    <ClCompile Include="parallel_manager_pipe_ice.cpp" />
     <ClCompile Include="parallel_manager_pipe_openmp.cpp" />
     <ClCompile Include="parallel_manager_pipe_singlecore.cpp" />
     <ClCompile Include="passport_pipe.cpp" />
@@ -208,6 +210,7 @@
     </ClInclude>
     <ClInclude Include="model_pipe_sequential.h" />
     <ClInclude Include="ParallelManagerIceI.h" />
+    <ClInclude Include="parallel_manager_pipe_ice.h" />
     <ClInclude Include="parallel_manager_pipe_cuda.cuh">
       <FileType>CppHeader</FileType>
     </ClInclude>

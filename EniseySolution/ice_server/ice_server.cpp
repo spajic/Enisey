@@ -1,33 +1,47 @@
 /** file ice_server.cpp
-Точка входа для запуска сервера ICE.*/
+РўРѕС‡РєР° РІС…РѕРґР° РґР»СЏ Р·Р°РїСѓСЃРєР° СЃРµСЂРІРµСЂР° ICE.*/
 #include "Ice/Ice.h"
 #include "slae_solver_ice.h"
 #include "slae_solver_ice_cvm.h"
 #include "gas_transfer_system_ice.h"
 #include "gas_transfer_system_ice_usual.h"
+#include "parallel_manager_ice_servant.h"
 
 class Server : public Ice::Application {
  public:
   virtual int run(int, char*[]);
 };
 
+void RunSlaeSolverCvmServant(Ice::ObjectAdapterPtr *adapter) {
+  // РЎРѕР·РґР°С‘Рј servant'Р°, СЂРµР°Р»РёР·СѓСЋС‰РµРіРѕ РёРЅС‚РµСЂС„РµР№СЃ SlaeSolverIce.
+  Enisey::SlaeSolverIceCVMPtr slae_solver_ice_cvm = 
+    new Enisey::SlaeSolverIceCVM;
+  slae_solver_ice_cvm->ActivateSelfInAdapter(*adapter);
+}
+void RunSlaeSolverGasTransferSystemServant(Ice::ObjectAdapterPtr *adapter) {
+  // РЎРѕР·РґР°С‘Рј servant'Р°, СЂРµР°Р»РёР·СѓСЋС‰РµРіРѕ РёРЅС‚РµСЂС„РµР№СЃ GasTransferSystemIce.
+  Enisey::GasTransferSystemIceUsualPtr gts_usual = 
+    new Enisey::GasTransferSystemIceUsual;
+  gts_usual->ActivateSelfInAdapter(*adapter);
+}
+void RunParallelManagerServant(Ice::ObjectAdapterPtr *adapter) {
+  Enisey::ParallelManagerIceServantPtr parallel_manager_servant = 
+    new Enisey::ParallelManagerIceServant;
+  parallel_manager_servant->ActivateSelfInAdapter(*adapter);
+}
+
 int	Server::run(int, char*[]) {
-  shutdownOnInterrupt(); // Установка реакции shutdown на сигнал Interrupt.
-  // Создаём адаптер - точку входа, к которой обращаются клиенты.
+  shutdownOnInterrupt(); // РЈСЃС‚Р°РЅРѕРІРєР° СЂРµР°РєС†РёРё shutdown РЅР° СЃРёРіРЅР°Р» Interrupt.
+  // РЎРѕР·РґР°С‘Рј Р°РґР°РїС‚РµСЂ - С‚РѕС‡РєСѓ РІС…РѕРґР°, Рє РєРѕС‚РѕСЂРѕР№ РѕР±СЂР°С‰Р°СЋС‚СЃСЏ РєР»РёРµРЅС‚С‹.
   Ice::ObjectAdapterPtr adapter =
       communicator()->createObjectAdapterWithEndpoints(
-      "EniseyServerAdapter", // Имя адаптера.
+      "EniseyServerAdapter", // РРјСЏ Р°РґР°РїС‚РµСЂР°.
       "default -p 10000");    // Endpoint.
-  // Создаём servant'а, реализующего интерфейс SlaeSolverIce.
-  Enisey::SlaeSolverIceCVMPtr slae_solver_ice_cvm = 
-      new Enisey::SlaeSolverIceCVM;
-  slae_solver_ice_cvm->ActivateSelfInAdapter(adapter);
-  // Создаём servant'а, реализующего интерфейс GasTransferSystemIce.
-  Enisey::GasTransferSystemIceUsualPtr gts_usual = 
-      new Enisey::GasTransferSystemIceUsual;
-  gts_usual->ActivateSelfInAdapter(adapter);
-  adapter->activate(); // Начинаем слушать соединения от клиентов асинхронно.
-  communicator()->waitForShutdown(); // Приостанавливаем данный поток.
+  RunSlaeSolverCvmServant(&adapter);
+  RunSlaeSolverGasTransferSystemServant(&adapter);  
+  RunParallelManagerServant(&adapter);
+  adapter->activate(); // РќР°С‡РёРЅР°РµРј СЃР»СѓС€Р°С‚СЊ СЃРѕРµРґРёРЅРµРЅРёСЏ РѕС‚ РєР»РёРµРЅС‚РѕРІ Р°СЃРёРЅС…СЂРѕРЅРЅРѕ.
+  communicator()->waitForShutdown(); // РџСЂРёРѕСЃС‚Р°РЅР°РІР»РёРІР°РµРј РґР°РЅРЅС‹Р№ РїРѕС‚РѕРє.
   if(interrupted()) {
     std::cerr << appName() << ": received signal, shutting down" << std::endl;
   }

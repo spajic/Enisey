@@ -14,4 +14,7 @@ ipch/
 # ICE-generated files #
 ParallelManagerIceI.h
 ParallelManagerIceI.cpp
-
+common_types.h
+common_types.cpp
+slae_solver_ice.h
+slae_solver_ice.cpp

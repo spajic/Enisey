@@ -12,19 +12,9 @@ ParallelManagerPipeI.
 #include "parallel_manager_pipe_singlecore.h"
 #include "parallel_manager_pipe_openmp.h"
 #include "parallel_manager_pipe_cuda.cuh"
+#include "parallel_manager_pipe_ice.h"
 
 #include <boost/serialization/vector.hpp>
-
-//#include <string>
-//#include <iostream>
-//#include <list>
-//#include <fstream>
-//#include <iomanip>
-//#include "slae_solver_cvm.h"
-//#include "slae_solver_ice_client.h"
-//#include "manager_edge_model_pipe_sequential.h"
-//#include "gas_transfer_system.h"
-//#include "gas_transfer_system_ice_client.h"
 
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
@@ -113,7 +103,8 @@ protected:
 typedef ::testing::Types<
     ParallelManagerPipeSingleCore,
     ParallelManagerPipeOpenMP,
-    ParallelManagerPipeCUDA
+    ParallelManagerPipeCUDA,
+    ParallelManagerPipeIce
 > ParallelManagerPipeTypes;
 
 TYPED_TEST_CASE(ParallelManagerPipeTypedTest, ParallelManagerPipeTypes);
