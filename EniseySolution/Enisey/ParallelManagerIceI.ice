@@ -32,7 +32,14 @@ module Enisey {
 	sequence<WorkParamsIce> WorkParamsSequence;
 	sequence<CalculatedParamsIce> CalculatedParamsSequence;
 
+	enum ParallelManagerType {
+		SingleCore,
+		OpenMP,
+		CUDA
+	};
+
 	interface ParallelManagerIceI {
+		void SetParallelManagerType(ParallelManagerType type);
 		void TakeUnderControl(PassportSequence passports);
 		void SetWorkParams(WorkParamsSequence workParams);
 		void CalculateAll();

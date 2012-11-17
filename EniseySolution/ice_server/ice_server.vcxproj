@@ -56,7 +56,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(CUDA_INC_PATH);C:\Enisey\src\EniseySolution\Enisey;$(IceHome)\include;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CUDA_INC_PATH);C:\Enisey\src\EniseySolution\Enisey;$(IceHome)\include;.;%(AdditionalIncludeDirectories);C:\Enisey\instruments\boost\boost_1_49_0;</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -77,16 +77,17 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(CUDA_INC_PATH);$(IceHome)\include;C:\Enisey\src\EniseySolution\Enisey;C:\Enisey\src\EniseySolution\ice_server;.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CUDA_INC_PATH);$(IceHome)\include;C:\Enisey\src\EniseySolution\Enisey;C:\Enisey\src\EniseySolution\ice_server;C:\Enisey\instruments\boost\boost_1_49_0;</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;C:\Enisey\bin\EniseySolution\Enisey\Release;$(IceHome)\lib\vc100;%(AdditionalLibraryDirectories);C:\Enisey\instruments\boost\boost_1_49_0\stage\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>cvm_ia32.lib;enisey.lib;Ice.lib;IceUtil.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Enisey\bin\EniseySolution\Enisey\Release;C:\Enisey\instruments\CVM\cvmlib.6.0.mkl.ia32;$(IceHome)\lib\vc100;%(AdditionalLibraryDirectories);C:\Enisey\instruments\boost\boost_1_49_0\stage\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>enisey.lib;cvm_ia32.lib;Ice.lib;IceUtil.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

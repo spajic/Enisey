@@ -14,7 +14,21 @@ public:
   virtual void CalculateAll();
   virtual void GetCalculatedParams(
       std::vector<CalculatedParams> *calculated_params);
+
 private:
   Ice::CommunicatorPtr ic;
   Enisey::ParallelManagerIceIPrx proxy;
+
+  void ConvertPassportVecToSequence( 
+      std::vector<PassportPipe> const &passports,
+      Enisey::PassportSequence *passport_seq
+  );
+  void ConvertWorkParamsVecToSequence( 
+      std::vector<WorkParams> const &work_params,
+      Enisey::WorkParamsSequence *wp_seq
+  );
+  void ConvertCalculatedParamsSeqToVector( 
+      Enisey::CalculatedParamsSequence &cp_seq, 
+      std::vector<CalculatedParams> * calculated_params      
+  );
 };

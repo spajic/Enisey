@@ -3,9 +3,10 @@
 #pragma once
 #include <vector>
 #include "parallel_manager_pipe_i.h"
+#include "model_pipe_sequential.h"
 
 //Forward-declarations:
-class ModelPipeSequential;
+//class ModelPipeSequential;
 
 class ParallelManagerPipeOpenMP : public ParallelManagerPipeI {
 public:
