@@ -50,6 +50,9 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 // Тесты класса SlaeSolverI.
 #include "test_slae_solver_i.cpp"
 
+// Исследование производительности классов ParallelManagerPipe.
+#include "performance_parallel_manager_pipe.cpp"
+
 
 /* Тест расчёта трубы методом последовательного счёта.
 Тестировать будем так - зададим входные данные, получим расчётные рез-ты

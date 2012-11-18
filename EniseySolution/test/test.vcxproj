@@ -112,6 +112,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="common_types.cpp" />
+    <ClCompile Include="performance_parallel_manager_pipe.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="slae_solver_ice.cpp" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="test_functions_gas.cpp">

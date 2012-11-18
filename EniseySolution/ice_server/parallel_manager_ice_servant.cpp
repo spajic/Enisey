@@ -12,7 +12,7 @@
 
 namespace Enisey {
 ParallelManagerIceServant::ParallelManagerIceServant() {
-  manager_ = new ParallelManagerPipeSingleCore;
+  manager_ = new ParallelManagerPipeCUDA;
 }
 
 ParallelManagerIceServant::~ParallelManagerIceServant() {
