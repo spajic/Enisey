@@ -14,7 +14,8 @@
 	},
 	"Performance": {
 		"ParallelManagers": {
-			"Multiplicity": 5
+			"Multiplicity": 100,
+			"Repeats" : 10
 		}
 	}	
 }

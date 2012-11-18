@@ -28,6 +28,7 @@ ToDo:
 #include "test_utils.h"
 
 #include <vector>
+#include <string>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -40,47 +41,130 @@ ToDo:
 
 #include <iomanip>
 
+#include <ctime>
+
 #include "util_saratov_etalon_loader.h"
 
+template <class ManagerClass>
+void TestManager (    
+    std::string manager_name,
+    ManagerClass *dummy_manager,
+    unsigned int multiplicity,
+    std::vector<PassportPipe> const &passports,
+    std::vector<WorkParams> const &work_params,
+    std::vector<CalculatedParams> *calculated_params,
+    unsigned int repeats,
+    log4cplus::Logger *log) {
+  clock_t begin       = 0;
+  clock_t end         = 0;
+  double elapsed_secs = 0;
+
+  double take_under_control_time    = 0;
+  double set_work_params_time       = 0;
+  double calculate_all_time         = 0;
+  double get_calculated_params_time = 0;
+  
+  LOG4CPLUS_INFO(*log, 
+    manager_name.c_str() << "; Multipilcity = " << multiplicity << 
+    "; Repeats = " << repeats);
+  for(int i = 0; i < repeats; ++i) {    
+    ManagerClass manager;
+    begin = clock();
+      manager.TakeUnderControl    (passports);
+    end = clock();    
+    elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    take_under_control_time += elapsed_secs;
+
+    begin = clock();
+      manager.SetWorkParams       (work_params);
+    end = clock();  
+    elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    set_work_params_time += elapsed_secs;
+
+    begin = clock();
+      manager.CalculateAll();  
+    end = clock();  
+    elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    calculate_all_time += elapsed_secs;
+
+    begin = clock();
+      manager.GetCalculatedParams (calculated_params);
+    end = clock();  
+    elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    get_calculated_params_time += elapsed_secs;    
+  }
+  LOG4CPLUS_INFO(*log, "TakeUnderControl    - " << 
+    take_under_control_time / repeats << "s");
+  LOG4CPLUS_INFO(*log, "SetWorkParams       - " << 
+    set_work_params_time / repeats << "s");
+  LOG4CPLUS_INFO(*log, "CalculateAll        - " << 
+    calculate_all_time / repeats << "s");
+  LOG4CPLUS_INFO(*log, "GetCalculatedParams - " << 
+    get_calculated_params_time / repeats << "s" << std::endl);  
+}
+
 TEST(ParallelManagerPerformance, Perf) {  
+  //log4cplus::BasicConfigurator config;
+  //config.configure();
+  log4cplus::SharedAppenderPtr myAppender(
+    new log4cplus::FileAppender(
+    LOG4CPLUS_TEXT("c:/Enisey/out/log/myLogFile.log")));
+  //myAppender->setName(LOG4CPLUS_TEXT("myAppenderName"));  
+  std::auto_ptr<log4cplus::Layout> myLayout = 
+    std::auto_ptr<log4cplus::Layout>(new log4cplus::TTCCLayout());
+  log4cplus::Logger log = log4cplus::Logger::getInstance(
+    LOG4CPLUS_TEXT("ParallelManagerPerformance"));
+  myAppender->setLayout(myLayout);
+  log.addAppender(myAppender);
+  log.setLogLevel(log4cplus::DEBUG_LOG_LEVEL);
+
   boost::property_tree::ptree pt;
   read_json("C:\\Enisey\\src\\config\\config.json", pt);
+  unsigned int multiplicity = pt.get<unsigned int> (
+      "Performance.ParallelManagers.Multiplicity");
+  unsigned int repeats = pt.get<unsigned int> (
+      "Performance.ParallelManagers.Repeats");
   
-  SaratovEtalonLoader loader;
   std::vector<PassportPipe>     passports;
   std::vector<WorkParams>       work_params;
   std::vector<CalculatedParams> calculated_params;
-
-  unsigned int multiplicity = pt.get<unsigned int>(
-    "Performance.ParallelManagers.Multiplicity");
+  SaratovEtalonLoader loader;
   loader.LoadSaratovMultipleEtalon(
       multiplicity,
       &passports,
       &work_params      
   );
-  //log4cplus::BasicConfigurator config;
-  //config.configure();
-  log4cplus::SharedAppenderPtr myAppender(
-      new log4cplus::FileAppender(
-          LOG4CPLUS_TEXT("c:/Enisey/out/log/myLogFile.log")));
-  //myAppender->setName(LOG4CPLUS_TEXT("myAppenderName"));  
-  std::auto_ptr<log4cplus::Layout> myLayout = 
-      std::auto_ptr<log4cplus::Layout>(new log4cplus::TTCCLayout());
-  log4cplus::Logger log = log4cplus::Logger::getInstance(
-      LOG4CPLUS_TEXT("ParallelManagerPerformance"));
-  myAppender->setLayout(myLayout);
-  log.addAppender(myAppender);
-  log.setLogLevel(log4cplus::DEBUG_LOG_LEVEL);
   
-  ParallelManagerPipeSingleCore manager;
-LOG4CPLUS_INFO(log, "Test ParallelManagerPipeSingleCore");
-LOG4CPLUS_INFO(log, "TakeUnderCntrol");
-  manager.TakeUnderControl    (passports);
-LOG4CPLUS_INFO(log, "SetWorkParams");
-  manager.SetWorkParams       (work_params);
-LOG4CPLUS_INFO(log, "CalculateAll");
-  manager.CalculateAll        ();
-LOG4CPLUS_INFO(log, "GetCalculatedParams");
-  manager.GetCalculatedParams (&calculated_params);
-LOG4CPLUS_INFO(log, "Get Result!" << std::endl);
+  ParallelManagerPipeSingleCore manager_single_core;
+  TestManager (
+      "ParallelManagerSingleCore",
+      &manager_single_core,
+      multiplicity,
+      passports,
+      work_params,
+      &calculated_params,
+      repeats,
+      &log);
+
+  ParallelManagerPipeOpenMP manager_openMP;
+  TestManager (
+    "ParallelManagerOpenMP",
+    &manager_openMP,
+    multiplicity,
+    passports,
+    work_params,
+    &calculated_params,
+    repeats,
+    &log);
+
+  ParallelManagerPipeCUDA manager_CUDA;
+  TestManager (
+    "ParallelManagerCUDA",
+    &manager_CUDA,
+    multiplicity,
+    passports,
+    work_params,
+    &calculated_params,
+    repeats,
+    &log);
 } 
