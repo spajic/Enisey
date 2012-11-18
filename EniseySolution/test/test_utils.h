@@ -8,6 +8,7 @@
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
 
+
 /// Константы для паспорта трубы.
 /// Внутренний диаметр трубы, [мм].
 const double kInnerPipeDiameter = 1000.0; 
@@ -60,8 +61,11 @@ const double kTestPipeQuantity = 385.8427; /// Расчитаннй мной р�
 const double kTestPipeQuantityPrecision = 0.0001; /// Точность расчёта.
 
 // Forward-declarations.
-struct PassportPipe;
-struct Gas;
+struct  Gas;
+struct  PassportPipe;
+
+class   WorkParams;
+class   CalculatedParams;
 
 template<class VectorElement>
 void LoadSerializableVectorFromFile( 
@@ -72,6 +76,7 @@ void LoadSerializableVectorFromFile(
   boost::archive::xml_iarchive ia(ifs);
   ia >> BOOST_SERIALIZATION_NVP(*vec);
 }
+
 
 void FillTestPassportPipe(PassportPipe* passport);
 PassportPipe MakeTestPassportPipe();

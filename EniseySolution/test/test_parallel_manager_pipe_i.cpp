@@ -13,56 +13,27 @@ ParallelManagerPipeI.
 #include "parallel_manager_pipe_openmp.h"
 #include "parallel_manager_pipe_cuda.cuh"
 #include "parallel_manager_pipe_ice.h"
-
-
-
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
+#include "util_saratov_etalon_loader.h"
 
 using std::vector;
-using boost::property_tree::ptree;
 
 // Test-fixture class.
 template <typename T>
 class ParallelManagerPipeTypedTest : public ::testing::Test {
 protected:
   virtual void SetUp() {
-    manager = new T;
-    read_json("C:\\Enisey\\src\\config\\config.json", pt);
-    etalons_path = pt.get<std::string>("Testing.ParallelManagers.Etalon.Paths.RootDir");
+    manager = new T;   
   }
   virtual void TearDown() {
     delete manager;
   }
   void LoadEtalon() {
-    LoadEtalonPassports();
-    LoadEtalonWorkParams();
-    LoadEtalonCalculatedParams();
+    saratov_loader.LoadSaratovEtalon(
+        &etalon_passports,
+        &etalon_work_params,
+        &etalon_calculated_params);
   }
-  void LoadEtalonPassports() {
-    LoadSerializableVectorFromFile(
-        etalons_path + 
-            pt.get<std::string>(
-                "Testing.ParallelManagers.Etalon.Paths.Passports"),
-        &etalon_passports
-    );
-  }
-  void LoadEtalonWorkParams() {
-    LoadSerializableVectorFromFile(
-        etalons_path + 
-            pt.get<std::string>(
-                "Testing.ParallelManagers.Etalon.Paths.WorkParams"),
-        &etalon_work_params
-      );
-  }
-  void LoadEtalonCalculatedParams() {
-    LoadSerializableVectorFromFile(
-        etalons_path + 
-            pt.get<std::string>(
-                "Testing.ParallelManagers.Etalon.Paths.CalculatedParams"),
-        &etalon_calculated_params
-      );
-  }
+  
   void CheckIfEtalonMatchesCalculatedResults() {
     ASSERT_EQ( etalon_calculated_params.size(), calculated_params.size() );
     auto calc = calculated_params.begin();
@@ -76,13 +47,15 @@ protected:
       ++calc;
     }    
   }
-  ptree pt;
-  std::string etalons_path;
-  ParallelManagerPipeI *manager;  
-  vector<PassportPipe> etalon_passports;
-  vector<WorkParams> etalon_work_params;
-  vector<CalculatedParams> etalon_calculated_params;
-  vector<CalculatedParams> calculated_params;
+  
+  SaratovEtalonLoader       saratov_loader;
+  ParallelManagerPipeI      *manager;  
+
+  vector<PassportPipe>      etalon_passports;
+  vector<WorkParams>        etalon_work_params;
+  vector<CalculatedParams>  etalon_calculated_params;
+
+  vector<CalculatedParams>  calculated_params;
 };
 
 // Список типов, для которых будут выполняться тесты.

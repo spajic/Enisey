@@ -155,11 +155,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="test_utils.cpp" />
+    <ClCompile Include="util_saratov_etalon_loader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common_types.h" />
     <ClInclude Include="slae_solver_ice.h" />
     <ClInclude Include="test_utils.h" />
+    <ClInclude Include="util_saratov_etalon_loader.h" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="impl_pipe_count_cuda.cu" />

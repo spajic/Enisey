@@ -9,6 +9,10 @@
 #include "gtest/gtest.h"
 #include <list>
 
+#include "passport_pipe.h"
+#include "work_params.h"
+#include "calculated_params.h"
+
 void FillTestPassportPipe(PassportPipe* passport) {
   passport->d_inner_ = kInnerPipeDiameter;
   passport->d_outer_ = kOuterPipeDiameter;
