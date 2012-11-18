@@ -28,6 +28,18 @@ ParallelManagerPipeIce::~ParallelManagerPipeIce() {
   }
 }
 
+void ParallelManagerPipeIce::SetParallelManagerType(std::string type) {
+  if(type == "CUDA") {
+    proxy->SetParallelManagerType(Enisey::CUDA);
+  }
+  else if(type == "OpenMP") {
+    proxy->SetParallelManagerType(Enisey::OpenMP);
+  }
+  else if(type == "SingleCore") {
+    proxy->SetParallelManagerType(Enisey::SingleCore);
+  }
+}
+
 void ParallelManagerPipeIce::
     TakeUnderControl(std::vector<PassportPipe> const &passports) {      
   Enisey::PassportSequence p_seq;

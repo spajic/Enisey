@@ -45,10 +45,38 @@ ToDo:
 
 #include "util_saratov_etalon_loader.h"
 
-template <class ManagerClass>
+#include "parallel_manager_pipe_i.h"
+#include "parallel_manager_pipe_singlecore.h"
+#include "parallel_manager_pipe_openmp.h"
+#include "parallel_manager_pipe_cuda.cuh"
+#include "parallel_manager_pipe_ice.h"
+
+std::auto_ptr<ParallelManagerPipeI> CreateManager(
+    std::string name, 
+    std::string ice_impl) {
+  if(name == "SingleCore") {
+    return std::auto_ptr<ParallelManagerPipeI>(
+        new ParallelManagerPipeSingleCore);
+  }
+  if(name == "OpenMP") {
+    return std::auto_ptr<ParallelManagerPipeI>(
+        new ParallelManagerPipeOpenMP);
+  }
+  if(name == "CUDA") {
+    return std::auto_ptr<ParallelManagerPipeI> (
+        new ParallelManagerPipeCUDA);
+  }
+  if(name == "ICE") {
+    std::auto_ptr<ParallelManagerPipeIce> manager_ice(
+        new ParallelManagerPipeIce);    
+    manager_ice->SetParallelManagerType(ice_impl);
+    return manager_ice;
+  }
+}
+
 void TestManager (    
     std::string manager_name,
-    ManagerClass *dummy_manager,
+    std::string ice_impl,
     unsigned int multiplicity,
     std::vector<PassportPipe> const &passports,
     std::vector<WorkParams> const &work_params,
@@ -65,30 +93,32 @@ void TestManager (
   double get_calculated_params_time = 0;
   
   LOG4CPLUS_INFO(*log, 
-    manager_name.c_str() << "; Multipilcity = " << multiplicity << 
-    "; Repeats = " << repeats);
+      manager_name.c_str() << "; ice_impl: " << ice_impl.c_str() << 
+      "; Multipilcity = " << multiplicity << 
+      "; Repeats = " << repeats);
   for(int i = 0; i < repeats; ++i) {    
-    ManagerClass manager;
+    std::auto_ptr<ParallelManagerPipeI> 
+        manager( CreateManager(manager_name, ice_impl) );
     begin = clock();
-      manager.TakeUnderControl    (passports);
+      manager->TakeUnderControl    (passports);
     end = clock();    
     elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     take_under_control_time += elapsed_secs;
 
     begin = clock();
-      manager.SetWorkParams       (work_params);
+      manager->SetWorkParams       (work_params);
     end = clock();  
     elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     set_work_params_time += elapsed_secs;
 
     begin = clock();
-      manager.CalculateAll();  
+      manager->CalculateAll();  
     end = clock();  
     elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     calculate_all_time += elapsed_secs;
 
     begin = clock();
-      manager.GetCalculatedParams (calculated_params);
+      manager->GetCalculatedParams (calculated_params);
     end = clock();  
     elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     get_calculated_params_time += elapsed_secs;    
@@ -100,7 +130,10 @@ void TestManager (
   LOG4CPLUS_INFO(*log, "CalculateAll        - " << 
     calculate_all_time / repeats << "s");
   LOG4CPLUS_INFO(*log, "GetCalculatedParams - " << 
-    get_calculated_params_time / repeats << "s" << std::endl);  
+    get_calculated_params_time / repeats);  
+  LOG4CPLUS_INFO(*log, "Total Time - " <<
+    (take_under_control_time + set_work_params_time + 
+    calculate_all_time + get_calculated_params_time) / repeats << "s" << std::endl);
 }
 
 TEST(ParallelManagerPerformance, Perf) {  
@@ -134,11 +167,37 @@ TEST(ParallelManagerPerformance, Perf) {
       &passports,
       &work_params      
   );
-  
-  ParallelManagerPipeSingleCore manager_single_core;
+
   TestManager (
-      "ParallelManagerSingleCore",
-      &manager_single_core,
+      "ICE", "SingleCore",
+      multiplicity,
+      passports,
+      work_params,
+      &calculated_params,
+      repeats,
+      &log);
+  
+  TestManager (
+      "SingleCore", "None",
+      multiplicity,
+      passports,
+      work_params,
+      &calculated_params,
+      repeats,
+      &log);
+  
+  TestManager (
+    "ICE", "OpenMP",
+    multiplicity,
+    passports,
+    work_params,
+    &calculated_params,
+    repeats,
+    &log);
+
+  TestManager (
+      "OpenMP",
+      "None",
       multiplicity,
       passports,
       work_params,
@@ -146,10 +205,8 @@ TEST(ParallelManagerPerformance, Perf) {
       repeats,
       &log);
 
-  ParallelManagerPipeOpenMP manager_openMP;
   TestManager (
-    "ParallelManagerOpenMP",
-    &manager_openMP,
+    "ICE", "CUDA",
     multiplicity,
     passports,
     work_params,
@@ -157,14 +214,13 @@ TEST(ParallelManagerPerformance, Perf) {
     repeats,
     &log);
 
-  ParallelManagerPipeCUDA manager_CUDA;
   TestManager (
-    "ParallelManagerCUDA",
-    &manager_CUDA,
-    multiplicity,
-    passports,
-    work_params,
-    &calculated_params,
-    repeats,
-    &log);
+      "CUDA",
+      "None",
+      multiplicity,
+      passports,
+      work_params,
+      &calculated_params,
+      repeats,
+      &log);
 } 
