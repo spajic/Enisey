@@ -14,24 +14,13 @@ ParallelManagerPipeI.
 #include "parallel_manager_pipe_cuda.cuh"
 #include "parallel_manager_pipe_ice.h"
 
-#include <boost/serialization/vector.hpp>
 
-#include <boost/archive/xml_oarchive.hpp>
-#include <boost/archive/xml_iarchive.hpp>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
 using std::vector;
 using boost::property_tree::ptree;
-
-template<class VectorElement>
-void LoadVectorFromFile( std::string file_name, vector<VectorElement> *vec) {
-  std::ifstream ifs(file_name);
-  assert(ifs.good());
-  boost::archive::xml_iarchive ia(ifs);
-  ia >> BOOST_SERIALIZATION_NVP(*vec);
-}
 
 // Test-fixture class.
 template <typename T>
@@ -51,30 +40,27 @@ protected:
     LoadEtalonCalculatedParams();
   }
   void LoadEtalonPassports() {
-    LoadVectorFromFile(
+    LoadSerializableVectorFromFile(
         etalons_path + 
             pt.get<std::string>(
-                "Testing.ParallelManagers.Etalon.Paths.Passports"
-            ),
+                "Testing.ParallelManagers.Etalon.Paths.Passports"),
         &etalon_passports
     );
   }
   void LoadEtalonWorkParams() {
-    LoadVectorFromFile(
-      etalons_path + 
-      pt.get<std::string>(
-      "Testing.ParallelManagers.Etalon.Paths.WorkParams"
-      ),
-      &etalon_work_params
+    LoadSerializableVectorFromFile(
+        etalons_path + 
+            pt.get<std::string>(
+                "Testing.ParallelManagers.Etalon.Paths.WorkParams"),
+        &etalon_work_params
       );
   }
   void LoadEtalonCalculatedParams() {
-    LoadVectorFromFile(
-      etalons_path + 
-      pt.get<std::string>(
-      "Testing.ParallelManagers.Etalon.Paths.CalculatedParams"
-      ),
-      &etalon_calculated_params
+    LoadSerializableVectorFromFile(
+        etalons_path + 
+            pt.get<std::string>(
+                "Testing.ParallelManagers.Etalon.Paths.CalculatedParams"),
+        &etalon_calculated_params
       );
   }
   void CheckIfEtalonMatchesCalculatedResults() {
