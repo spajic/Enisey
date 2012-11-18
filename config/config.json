@@ -11,5 +11,10 @@
 				}				
 			}
 		}
-	}
+	},
+	"Performance": {
+		"ParallelManagers": {
+			"Multiplicity": 5
+		}
+	}	
 }

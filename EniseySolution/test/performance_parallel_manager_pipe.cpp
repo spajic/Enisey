@@ -24,3 +24,35 @@ ToDo:
    тоже с различными реализациями.
 */
 
+#include "gtest/gtest.h"
+#include "test_utils.h"
+
+#include <vector>
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
+
+#include "util_saratov_etalon_loader.h"
+
+TEST(ParallelManagerPerformance, Perf) {  
+  boost::property_tree::ptree pt;
+  read_json("C:\\Enisey\\src\\config\\config.json", pt);
+  
+  SaratovEtalonLoader loader;
+  std::vector<PassportPipe>     passports;
+  std::vector<WorkParams>       work_params;
+  std::vector<CalculatedParams> calculated_params;
+
+  unsigned int multiplicity = pt.get<unsigned int>(
+    "Performance.ParallelManagers.Multiplicity");
+  loader.LoadSaratovMultipleEtalon(
+      multiplicity,
+      &passports,
+      &work_params      
+  );
+  ParallelManagerPipeSingleCore manager;
+  manager.TakeUnderControl    (passports);
+  manager.SetWorkParams       (work_params);
+  manager.CalculateAll        ();
+  manager.GetCalculatedParams (&calculated_params);
+} 
