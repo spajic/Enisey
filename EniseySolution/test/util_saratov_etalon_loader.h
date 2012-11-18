@@ -16,13 +16,27 @@ class SaratovEtalonLoader {
 public:
   SaratovEtalonLoader();
   void LoadSaratovEtalon(
-    std::vector<PassportPipe>     *passports,
-    std::vector<WorkParams>       *work_params,
-    std::vector<CalculatedParams> *calculated_params);
+      std::vector<PassportPipe>     *passports,
+      std::vector<WorkParams>       *work_params,
+      std::vector<CalculatedParams> *calculated_params);
+  void LoadSaratovMultipleEtalon(
+      unsigned int              multiplicity,    
+      std::vector<PassportPipe> *passports  ,
+      std::vector<WorkParams>   *work_params);
 private:
   boost::property_tree::ptree pt_;
   std::string etalons_path_;
+  std::string passports_path_;
+  std::string work_params_path_;
+  std::string calculated_params_path_;
 
+  std::vector<PassportPipe>     passports_;
+  std::vector<WorkParams>       work_params_;
+  std::vector<CalculatedParams> calculated_params_;
+
+  int saratov_size_;
+
+  void LoadEtalonToInternalStorage();
   void LoadEtalonPassports  (std::vector<PassportPipe> *passports);
   void LoadEtalonWorkParams (std::vector<WorkParams>   *work_params);
   void LoadEtalonCalculatedParams(
