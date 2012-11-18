@@ -32,6 +32,14 @@ ToDo:
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 
+#include <log4cplus/logger.h>
+#include <log4cplus/loggingmacros.h>
+#include <log4cplus/configurator.h>
+#include <log4cplus/fileappender.h> 
+#include <log4cplus/layout.h>
+
+#include <iomanip>
+
 #include "util_saratov_etalon_loader.h"
 
 TEST(ParallelManagerPerformance, Perf) {  
@@ -50,9 +58,29 @@ TEST(ParallelManagerPerformance, Perf) {
       &passports,
       &work_params      
   );
+  //log4cplus::BasicConfigurator config;
+  //config.configure();
+  log4cplus::SharedAppenderPtr myAppender(
+      new log4cplus::FileAppender(
+          LOG4CPLUS_TEXT("c:/Enisey/out/log/myLogFile.log")));
+  //myAppender->setName(LOG4CPLUS_TEXT("myAppenderName"));  
+  std::auto_ptr<log4cplus::Layout> myLayout = 
+      std::auto_ptr<log4cplus::Layout>(new log4cplus::TTCCLayout());
+  log4cplus::Logger log = log4cplus::Logger::getInstance(
+      LOG4CPLUS_TEXT("ParallelManagerPerformance"));
+  myAppender->setLayout(myLayout);
+  log.addAppender(myAppender);
+  log.setLogLevel(log4cplus::DEBUG_LOG_LEVEL);
+  
   ParallelManagerPipeSingleCore manager;
+LOG4CPLUS_INFO(log, "Test ParallelManagerPipeSingleCore");
+LOG4CPLUS_INFO(log, "TakeUnderCntrol");
   manager.TakeUnderControl    (passports);
+LOG4CPLUS_INFO(log, "SetWorkParams");
   manager.SetWorkParams       (work_params);
+LOG4CPLUS_INFO(log, "CalculateAll");
   manager.CalculateAll        ();
+LOG4CPLUS_INFO(log, "GetCalculatedParams");
   manager.GetCalculatedParams (&calculated_params);
+LOG4CPLUS_INFO(log, "Get Result!" << std::endl);
 } 
