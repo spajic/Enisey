@@ -23,6 +23,9 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 #include "loader_vesta.h"
 #include "conio.h"
 
+
+#include "test_sparse_indices_multiplicator.cpp"
+
 // Исследование производительности классов ParallelManagerPipe.
 #include "perf_slae.cpp"
 
@@ -55,7 +58,6 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 
 // Тесты класса SlaeSolverI.
 #include "test_slae_solver_i.cpp"
-
 
 /* Тест расчёта трубы методом последовательного счёта.
 Тестировать будем так - зададим входные данные, получим расчётные рез-ты

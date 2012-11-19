@@ -23,7 +23,7 @@ LOG4CPLUS_INFO(log, "End Solve");
 }
 void Enisey::SlaeSolverIceCVM::ActivateSelfInAdapter(
     const Ice::ObjectAdapterPtr &adapter) {
-  // Структура Identity требуется для идентификации Servanta в адаптере ASM.
+  // РЎС‚СЂСѓРєС‚СѓСЂР° Identity С‚СЂРµР±СѓРµС‚СЃСЏ РґР»СЏ РёРґРµРЅС‚РёС„РёРєР°С†РёРё Servanta РІ Р°РґР°РїС‚РµСЂРµ ASM.
   Ice::Identity id;
   id.name = "SlaeSolverIceCVM";
   try {
