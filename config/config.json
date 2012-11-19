@@ -23,6 +23,10 @@
 			"Multiplicity": 50,
 			"Repeats": 3,
 			"Endpoint": "SlaeSolverIceCVM:tcp -h 127.0.0.1 -p 10000"
+		},
+		"GTS": {
+			"NumberOfGtsToCount": 1,
+			"Endpoint" : "-"
 		}
 	}	
 }

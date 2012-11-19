@@ -27,7 +27,11 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 #include "test_sparse_indices_multiplicator.cpp"
 #include "test_saratov_etalon_loader.cpp"
 
-// Исследование производительности классов ParallelManagerPipe.
+
+// Исследование производительности классов GasTransferSystemI
+#include "perf_gts.cpp"
+
+// Исследование производительности классов SlaeSolver.
 #include "perf_slae.cpp"
 
 // Исследование производительности классов ParallelManagerPipe.
