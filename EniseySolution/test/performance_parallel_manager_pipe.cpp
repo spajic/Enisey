@@ -144,6 +144,11 @@ void TestManager (
 }
 
 TEST(ParallelManagerPerformance, Perf) {  
+  boost::property_tree::ptree pt;
+  read_json("C:\\Enisey\\src\\config\\config.json", pt);
+
+  bool run_performance_tests = pt.get<bool>("Performance.StartPerfTests");
+  if(!run_performance_tests) return;
   //log4cplus::BasicConfigurator config;
   //config.configure();
   log4cplus::SharedAppenderPtr myAppender(
@@ -164,8 +169,7 @@ TEST(ParallelManagerPerformance, Perf) {
   log.addAppender(cAppender);
   log.setLogLevel(log4cplus::DEBUG_LOG_LEVEL);
 
-  boost::property_tree::ptree pt;
-  read_json("C:\\Enisey\\src\\config\\config.json", pt);
+  
   unsigned int multiplicity = pt.get<unsigned int> (
       "Performance.ParallelManagers.Multiplicity");
   unsigned int repeats = pt.get<unsigned int> (

@@ -13,6 +13,7 @@
 		}
 	},
 	"Performance": {
+		"StartPerfTests": false,
 		"ParallelManagers": {
 			"Multiplicity": 1000,
 			"Repeats": 1,
