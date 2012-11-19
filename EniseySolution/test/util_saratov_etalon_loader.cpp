@@ -24,6 +24,7 @@ SaratovEtalonLoader::SaratovEtalonLoader() {
       "Testing.ParallelManagers.Etalon.Paths.WorkParams");
   calculated_params_path_ = etalons_path_ + pt_.get<std::string>(
       "Testing.ParallelManagers.Etalon.Paths.CalculatedParams");
+  slae_path_ = "C:/Enisey/out/Testing/SLAE/";
   LoadEtalonToInternalStorage();
   saratov_size_ = passports_.size();
 }
@@ -32,6 +33,7 @@ void SaratovEtalonLoader::LoadEtalonToInternalStorage() {
   LoadEtalonPassports       (&passports_        );
   LoadEtalonWorkParams      (&work_params_      );
   LoadEtalonCalculatedParams(&calculated_params_);
+  LoadSlaeToInternalStorage();
 }
 
 template <class VecType>
@@ -74,17 +76,39 @@ void SaratovEtalonLoader::LoadSaratovMultipleEtalon(
   FillVecByMultipleVec(multiplicity, work_params_ , work_params );
 }
 
+void SaratovEtalonLoader::LoadSaratovEtalonSlae(
+    std::vector<int>    *a_indices, 
+    std::vector<double> *a_values, 
+    std::vector<double> *b, 
+    std::vector<double> *x) {
+  FillVecByVec(a_indices_, a_indices);
+  FillVecByVec(a_values_, a_values);
+  FillVecByVec(b_, b);
+  FillVecByVec(x_, x);
+}
+
+void SaratovEtalonLoader::LoadSlaeToInternalStorage() {
+  LoadSerializableVectorFromTextFile(
+      slae_path_ + "Saratov_A_indices.txt", &a_indices_);
+  LoadSerializableVectorFromTextFile(
+      slae_path_ + "Saratov_A_vals.txt"   , &a_values_);
+  LoadSerializableVectorFromTextFile(
+      slae_path_ + "Saratov_b.txt"        , &b_);
+  LoadSerializableVectorFromTextFile(
+      slae_path_ + "Saratov_x.txt"        , &x_);
+}
+
 void SaratovEtalonLoader::LoadEtalonPassports(
     std::vector<PassportPipe> *passports) {
-  LoadSerializableVectorFromFile(passports_path_, passports);
+  LoadSerializableVectorFromXmlFile(passports_path_, passports);
 }
 
 void SaratovEtalonLoader::LoadEtalonWorkParams(
     std::vector<WorkParams> *work_params) {
-  LoadSerializableVectorFromFile(work_params_path_, work_params); 
+  LoadSerializableVectorFromXmlFile(work_params_path_, work_params); 
 }
 
 void SaratovEtalonLoader::LoadEtalonCalculatedParams(
     std::vector<CalculatedParams> *calculated_params) {
-  LoadSerializableVectorFromFile(calculated_params_path_, calculated_params);
+  LoadSerializableVectorFromXmlFile(calculated_params_path_, calculated_params);
 }

@@ -7,7 +7,8 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 #include <boost/archive/xml_iarchive.hpp>
-
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 /// Константы для паспорта трубы.
 /// Внутренний диаметр трубы, [мм].
@@ -68,13 +69,23 @@ class   WorkParams;
 class   CalculatedParams;
 
 template<class VectorElement>
-void LoadSerializableVectorFromFile( 
+void LoadSerializableVectorFromXmlFile( 
     std::string file_name, 
     std::vector<VectorElement> *vec) {
   std::ifstream ifs(file_name);
   assert(ifs.good());
   boost::archive::xml_iarchive ia(ifs);
   ia >> BOOST_SERIALIZATION_NVP(*vec);
+}
+
+template<class VectorElement>
+void LoadSerializableVectorFromTextFile( 
+  std::string file_name, 
+  std::vector<VectorElement> *vec) {
+    std::ifstream ifs(file_name);
+    assert(ifs.good());
+    boost::archive::text_iarchive ia(ifs);
+    ia >> BOOST_SERIALIZATION_NVP(*vec);
 }
 
 
