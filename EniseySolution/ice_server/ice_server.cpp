@@ -7,35 +7,68 @@
 #include "gas_transfer_system_ice_usual.h"
 #include "parallel_manager_ice_servant.h"
 
+#include <log4cplus/logger.h>
+#include <log4cplus/loggingmacros.h>
+#include <log4cplus/configurator.h>
+#include <log4cplus/fileappender.h> 
+#include <log4cplus/consoleappender.h>
+#include <log4cplus/layout.h>
+
+#include <iomanip>
+
+using namespace log4cplus;
+
 class Server : public Ice::Application {
- public:
+public:
   virtual int run(int, char*[]);
+private:
+   Logger log;
+   void RunSlaeSolverCvmServant(Ice::ObjectAdapterPtr *adapter);
+   void RunParallelManagerServant(Ice::ObjectAdapterPtr *adapter);
+   void RunSlaeSolverGasTransferSystemServant(Ice::ObjectAdapterPtr *adapter);
 };
 
-void RunSlaeSolverCvmServant(Ice::ObjectAdapterPtr *adapter) {
+void Server::
+    RunSlaeSolverCvmServant(Ice::ObjectAdapterPtr *adapter) {
   // Создаём servant'а, реализующего интерфейс SlaeSolverIce.
   Enisey::SlaeSolverIceCVMPtr slae_solver_ice_cvm = 
     new Enisey::SlaeSolverIceCVM;
   slae_solver_ice_cvm->ActivateSelfInAdapter(*adapter);
   // Создаём servant'а, реализующего интерфейс SlaeSolverIce.
-  std::cout << "RunSlaeSolverCvmServant\n";
+LOG4CPLUS_INFO(log, "Run SlaeSolverServant");
 }
-void RunSlaeSolverGasTransferSystemServant(Ice::ObjectAdapterPtr *adapter) {
+void Server::
+    RunSlaeSolverGasTransferSystemServant(Ice::ObjectAdapterPtr *adapter) {
   // Создаём servant'а, реализующего интерфейс GasTransferSystemIce.
   Enisey::GasTransferSystemIceUsualPtr gts_usual = 
     new Enisey::GasTransferSystemIceUsual;
   gts_usual->ActivateSelfInAdapter(*adapter);
-  std::cout << "RunSlaeSolverGasTransferSystemServant\n";
+LOG4CPLUS_INFO(log, "Run SlaeSolverGTSServant");
 }
-void RunParallelManagerServant(Ice::ObjectAdapterPtr *adapter) {
+void Server:: 
+    RunParallelManagerServant(Ice::ObjectAdapterPtr *adapter) {
   Enisey::ParallelManagerIceServantPtr parallel_manager_servant = 
     new Enisey::ParallelManagerIceServant;
   parallel_manager_servant->ActivateSelfInAdapter(*adapter);
-  std::cout << "RunParallelManagerServant\n";
+LOG4CPLUS_INFO(log, "Run ParallelManagerServant");
 }
 
 int	Server::run(int, char*[]) {
   shutdownOnInterrupt(); // Установка реакции shutdown на сигнал Interrupt.
+  // Настраиваем логгер.
+  std::auto_ptr<Layout> console_layout =  std::auto_ptr<Layout>(new TTCCLayout());
+  std::auto_ptr<Layout> file_layout    =  std::auto_ptr<Layout>(new TTCCLayout());
+  SharedAppenderPtr console_appender(new ConsoleAppender);
+  console_appender->setLayout(console_layout);
+  SharedAppenderPtr file_appender(
+      new FileAppender( LOG4CPLUS_TEXT("server.log")) );
+  file_appender->setLayout(file_layout);
+  log = Logger::getInstance( LOG4CPLUS_TEXT("IceServer") );
+  log.addAppender(console_appender);
+  log.addAppender(file_appender);
+  log.setLogLevel(DEBUG_LOG_LEVEL);
+  
+  LOG4CPLUS_INFO(log, "HELLO from Logger!");
   // Создаём адаптер - точку входа, к которой обращаются клиенты.
   Ice::ObjectAdapterPtr adapter =
       communicator()->createObjectAdapterWithEndpoints(

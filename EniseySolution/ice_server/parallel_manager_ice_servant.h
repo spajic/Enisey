@@ -8,6 +8,8 @@
 #include "work_params.h"
 #include "calculated_params.h"
 
+#include <log4cplus/logger.h>
+
 namespace Enisey {
 
 class ParallelManagerIceServant : public virtual ParallelManagerIceI {
@@ -35,6 +37,8 @@ public:
   );  
   void ActivateSelfInAdapter(const Ice::ObjectAdapterPtr &adapter);
 private:
+  log4cplus::Logger log;     
+
   ParallelManagerPipeI *manager_;
   std::vector<PassportPipe> passports_;
   std::vector<WorkParams> work_params_;

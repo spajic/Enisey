@@ -40,10 +40,10 @@ protected:
     double eps = 0.0000001;
     for(auto etalon = etalon_calculated_params.begin(); 
         etalon != etalon_calculated_params.end(); ++etalon) {
-      EXPECT_NEAR(etalon->q(),        calc->q(),        eps);
-      EXPECT_NEAR(etalon->dq_dp_in(), calc->dq_dp_in(), eps);
-      EXPECT_NEAR(etalon->dq_dp_out(),calc->dq_dp_out(),eps);
-      EXPECT_NEAR(etalon->t_out(),    calc->t_out(),    eps);
+      ASSERT_NEAR(etalon->q(),        calc->q(),        eps);
+      ASSERT_NEAR(etalon->dq_dp_in(), calc->dq_dp_in(), eps);
+      ASSERT_NEAR(etalon->dq_dp_out(),calc->dq_dp_out(),eps);
+      ASSERT_NEAR(etalon->t_out(),    calc->t_out(),    eps);
       ++calc;
     }    
   }

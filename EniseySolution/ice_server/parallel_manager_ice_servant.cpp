@@ -10,9 +10,15 @@
 #include "parallel_manager_pipe_openmp.h"
 #include "parallel_manager_pipe_cuda.cuh"
 
+#include <log4cplus/logger.h>
+#include <log4cplus/loggingmacros.h>
+
+using namespace log4cplus;
+
 namespace Enisey {
 ParallelManagerIceServant::ParallelManagerIceServant() {
   manager_ = new ParallelManagerPipeCUDA;
+  log = Logger::getInstance( LOG4CPLUS_TEXT("IceServer.PMServant") );
 }
 
 ParallelManagerIceServant::~ParallelManagerIceServant() {
@@ -20,50 +26,60 @@ ParallelManagerIceServant::~ParallelManagerIceServant() {
 }
 
 void ParallelManagerIceServant::
-    SetParallelManagerType(ParallelManagerType type, const ::Ice::Current&) {
+    SetParallelManagerType(ParallelManagerType type, const ::Ice::Current&) {  
+LOG4CPLUS_INFO(log, "Start SetParallelManagerType");
   // Удаляем предыдущий менеджер - он всегда есть, так как впервые задаётся
   // в конструкторе, а затем пересоздаётся здесь.
   delete manager_; 
   switch(type) {
   case ParallelManagerType::SingleCore :
+LOG4CPLUS_INFO(log, "--Set type = SingleCore");
     manager_ = new ParallelManagerPipeSingleCore;
     break;
   case ParallelManagerType::OpenMP :
+LOG4CPLUS_INFO(log, "--Set type = OpenMP");
     manager_ = new ParallelManagerPipeOpenMP;
     break;
   case ParallelManagerType::CUDA :
+LOG4CPLUS_INFO(log, "--Set type = CUDA");
     manager_ = new ParallelManagerPipeCUDA;
     break;
   }    
+LOG4CPLUS_INFO(log, "End SetParallelManagerType");
 }
 
 void ParallelManagerIceServant::TakeUnderControl( 
     const ::Enisey::PassportSequence& passport_seq, 
     const ::Ice::Current& ) {
-  std::cout << "ParallelManagerIce::TakeUnderControl" << std::endl;
+LOG4CPLUS_INFO(log, "Start TakeUnderControl");
+LOG4CPLUS_INFO(log, "--Size: " << passport_seq.size() );
   SavePassportSequenceToVector(passport_seq);
   manager_->TakeUnderControl(passports_);
+LOG4CPLUS_INFO(log, "End TakeUnderControl");
 }
 
 void ParallelManagerIceServant::SetWorkParams(
     const ::Enisey::WorkParamsSequence& wp_seq, 
-    const ::Ice::Current&) {
-  std::cout << "ParallelManagerIce::SetWorkParams" << std::endl;
+    const ::Ice::Current&) {  
+LOG4CPLUS_INFO(log, "Start SetWorkParams");
   SaveWorkParamsSequenceToVector(wp_seq);  
   manager_->SetWorkParams(work_params_);
+LOG4CPLUS_INFO(log, "End SetWorkParams");
 }
 
 void ParallelManagerIceServant::CalculateAll(const ::Ice::Current&) {
-  std::cout << "ParallelManagerIce::CalculateAll" << std::endl;
+LOG4CPLUS_INFO(log, "Start CalculateAll");
   manager_->CalculateAll();
+LOG4CPLUS_INFO(log, "End CalculateAll");
 }
 
 void ParallelManagerIceServant::GetCalculatedParams(
   ::Enisey::CalculatedParamsSequence& cp_seq, 
   const ::Ice::Current&) {
-  std::cout << "ParallalManagerIce::GetCalculatedParams" << std::endl;
+LOG4CPLUS_INFO(log, "Start GetCalculatedParams");  
   manager_->GetCalculatedParams(&calculated_params_);
   SaveCalculatedParamsVectorToSequence(cp_seq);
+LOG4CPLUS_INFO(log, "End GetCalculatedParams");  
 }
 
 void ParallelManagerIceServant::
