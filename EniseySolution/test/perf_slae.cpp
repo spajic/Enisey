@@ -32,24 +32,27 @@ std::auto_ptr<SlaeSolverI> slae_factory(std::string slae_type) {
 
 void test_slae(
     std::string slae_type,
-    unsigned int repeats) {  
+    unsigned int repeats,
+    unsigned int multiplicity) {  
   log4cplus::Logger log = log4cplus::Logger::getInstance(
-      LOG4CPLUS_TEXT("SlaePerf"));  
+      LOG4CPLUS_TEXT("SlaePerf") );  
   std::vector<int>    A_indices;
   std::vector<double> A_values;
   std::vector<double> b;
   std::vector<double> x_etalon;
   std::vector<double> x_calc;
   SaratovEtalonLoader loader;
-  loader.LoadSaratovEtalonSlae(
-    &A_indices,
-    &A_values,
-    &b,
-    &x_etalon);
+  loader.LoadSaratovEtalonSlaeMultiple( 
+      &A_indices,
+      &A_values,
+      &b,
+      &x_etalon,
+      multiplicity);
 
   std::auto_ptr<SlaeSolverI> slae = slae_factory(slae_type);
   LOG4CPLUS_INFO(log, 
       "SlaeType: " << slae_type.c_str() <<
+    "; Size: "     << b.size() <<
     "; Repeats: "  << repeats);
 
   clock_t begin               = 0;
@@ -70,9 +73,10 @@ void test_slae(
 TEST(SlaePerformance, Perf) {
   boost::property_tree::ptree pt;
   read_json("C:\\Enisey\\src\\config\\config.json", pt);
-
   bool run_performance_tests = pt.get<bool>("Performance.StartPerfTests");
   if(!run_performance_tests) return;
+  int repeats = pt.get<int>("Performance.SLAE.Repeats");
+  int multiplicity = pt.get<int>("Performance.SLAE.Multiplicity");
 
   log4cplus::SharedAppenderPtr myAppender(
       new log4cplus::FileAppender(
@@ -92,5 +96,5 @@ TEST(SlaePerformance, Perf) {
   log.addAppender(cAppender);
   log.setLogLevel(log4cplus::DEBUG_LOG_LEVEL);
   
-  test_slae("CVM", 10);
+  test_slae("CVM", repeats, multiplicity);
 }
