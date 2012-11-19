@@ -16,6 +16,7 @@
 using namespace log4cplus;
 
 namespace Enisey {
+
 ParallelManagerIceServant::ParallelManagerIceServant() {
   manager_ = new ParallelManagerPipeCUDA;
   log = Logger::getInstance( LOG4CPLUS_TEXT("IceServer.PMServant") );

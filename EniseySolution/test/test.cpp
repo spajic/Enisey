@@ -24,6 +24,9 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 #include "conio.h"
 
 // Исследование производительности классов ParallelManagerPipe.
+#include "perf_slae.cpp"
+
+// Исследование производительности классов ParallelManagerPipe.
 #include "performance_parallel_manager_pipe.cpp"
 
 // Тесты функций расчёта свойств газа.
