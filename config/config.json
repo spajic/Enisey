@@ -15,9 +15,14 @@
 	"Performance": {
 		"StartPerfTests": false,
 		"ParallelManagers": {
-			"Multiplicity": 1000,
+			"Multiplicity": 100,
 			"Repeats": 1,
-			"Endpoint": "ParallelManagerIce:tcp -h 50.19.146.202 -p 10000"
+			"Endpoint": "ParallelManagerIce:tcp -h 127.0.0.1 -p 10000"
+		},
+		"SLAE": {
+			"Multiplicity": 50,
+			"Repeats": 3,
+			"Endpoint": "SlaeSolverIceCVM:tcp -h 127.0.0.1 -p 10000"
 		}
 	}	
 }

@@ -23,15 +23,22 @@
 #include "util_saratov_etalon_loader.h"
 
 #include "slae_solver_cvm.h"
+#include "slae_solver_ice_client.h"
 
-std::auto_ptr<SlaeSolverI> slae_factory(std::string slae_type) {
+std::auto_ptr<SlaeSolverI> slae_factory(
+    std::string slae_type,
+    std::string endpoint) {
   if(slae_type == "CVM") {
     return std::auto_ptr<SlaeSolverI>(new SlaeSolverCVM);
+  }
+  if(slae_type == "ICE") {
+    return std::auto_ptr<SlaeSolverI>(new SlaeSolverIceClient(endpoint) );
   }
 }
 
 void test_slae(
     std::string slae_type,
+    std::string ice_endpoint,
     unsigned int repeats,
     unsigned int multiplicity) {  
   log4cplus::Logger log = log4cplus::Logger::getInstance(
@@ -49,7 +56,7 @@ void test_slae(
       &x_etalon,
       multiplicity);
 
-  std::auto_ptr<SlaeSolverI> slae = slae_factory(slae_type);
+  std::auto_ptr<SlaeSolverI> slae = slae_factory(slae_type, ice_endpoint);
   LOG4CPLUS_INFO(log, 
       "SlaeType: " << slae_type.c_str() <<
     "; Size: "     << b.size() <<
@@ -77,6 +84,8 @@ TEST(SlaePerformance, Perf) {
   if(!run_performance_tests) return;
   int repeats = pt.get<int>("Performance.SLAE.Repeats");
   int multiplicity = pt.get<int>("Performance.SLAE.Multiplicity");
+  std::string ice_endpoint = pt.get<std::string>(
+      "Performance.SLAE.Endpoint");
 
   log4cplus::SharedAppenderPtr myAppender(
       new log4cplus::FileAppender(
@@ -96,5 +105,6 @@ TEST(SlaePerformance, Perf) {
   log.addAppender(cAppender);
   log.setLogLevel(log4cplus::DEBUG_LOG_LEVEL);
   
-  test_slae("CVM", repeats, multiplicity);
+  test_slae("CVM", "None"       , repeats , multiplicity);
+  test_slae("ICE", ice_endpoint , repeats , multiplicity);
 }

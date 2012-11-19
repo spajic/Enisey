@@ -5,32 +5,45 @@
 #include "slae_solver_ice.h"
 #include <vector>
 
+SlaeSolverIceClient::SlaeSolverIceClient() {
+  Prepare("SlaeSolverIceCVM:default -p 10000");
+}
+
+SlaeSolverIceClient::SlaeSolverIceClient(std::string endpoint) {
+  Prepare(endpoint);
+}
+
+void SlaeSolverIceClient::Prepare(std::string endpoint) {
+  try {
+    ic_ = Ice::initialize();
+    Ice::ObjectPrx base = ic_->stringToProxy(endpoint);
+    solver_proxy_ = Enisey::SlaeSolverIcePrx::checkedCast(base);
+    if(!solver_proxy_) {
+      std::cout << "Invalid proxy";
+    };      
+  } catch(const Ice::Exception &ex) {  
+    std::cerr << ex << std::endl;
+  }
+}
+
+SlaeSolverIceClient::~SlaeSolverIceClient() {
+  if(ic_) {
+    try {
+      ic_->destroy();
+    } catch(const Ice::Exception &e) {
+      std::cerr << e << std::endl;
+    }
+  }
+}
+
 void SlaeSolverIceClient::Solve(
     std::vector<int> const &A_indexes, 
     std::vector<double> const &A_values, 
     std::vector<double> const &B, 
     std::vector<double> *X) {
-  Ice::CommunicatorPtr ic;
   try {
-    ic = Ice::initialize();
-    Ice::ObjectPrx base = ic->stringToProxy("SlaeSolverIceCVM:default -p 10000");
-    Enisey::SlaeSolverIcePrx solver_proxy = 
-        Enisey::SlaeSolverIcePrx::checkedCast(base);
-    if(!solver_proxy) {
-      std::cout << "Invalid proxy";
-    } else {
-      solver_proxy->Solve(A_indexes, A_values, B, *X);
-    }
-  } catch(const Ice::Exception &ex){  
-    std::cerr << ex << std::endl;
-  } catch(const char *msg) {
-    std::cerr << msg << std::endl;
-  }
-  if(ic) {
-    try {
-      ic->destroy();
-    } catch(const Ice::Exception &e) {
-      std::cerr << e << std::endl;
-    }
-  }
+    solver_proxy_->Solve(A_indexes, A_values, B, *X);  
+    } catch(const char *msg) {
+        std::cerr << msg << std::endl;
+      }       
 }

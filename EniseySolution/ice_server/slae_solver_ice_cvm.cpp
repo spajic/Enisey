@@ -9,6 +9,7 @@ Enisey::SlaeSolverIceCVM::SlaeSolverIceCVM() {
   log = log4cplus::Logger::getInstance( 
       LOG4CPLUS_TEXT("IceServer.SlaeServant") );
 }
+
 void Enisey::SlaeSolverIceCVM::Solve(
     const Enisey::IntSequence &AIndexes, 
     const Enisey::DoubleSequence &AValues, 
@@ -21,6 +22,7 @@ LOG4CPLUS_INFO(log,
   slae_solver_cvm.Solve(AIndexes, AValues, B, &X);
 LOG4CPLUS_INFO(log, "End Solve");
 }
+
 void Enisey::SlaeSolverIceCVM::ActivateSelfInAdapter(
     const Ice::ObjectAdapterPtr &adapter) {
   // Структура Identity требуется для идентификации Servanta в адаптере ASM.
