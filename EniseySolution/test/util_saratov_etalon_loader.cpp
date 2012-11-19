@@ -11,6 +11,7 @@
 #include "passport_pipe.h"
 #include "work_params.h"
 #include "calculated_params.h"
+#include "util_sparse_indices_multiplicator.h"
 
 #include "test_utils.h"
 
@@ -74,6 +75,29 @@ void SaratovEtalonLoader::LoadSaratovMultipleEtalon(
     std::vector<WorkParams>   *work_params) {  
   FillVecByMultipleVec(multiplicity, passports_   , passports   );
   FillVecByMultipleVec(multiplicity, work_params_ , work_params );
+}
+
+void SaratovEtalonLoader::LoadSaratovEtalonSlaeMultiple(
+    std::vector<int>    *a_indices, 
+    std::vector<double> *a_values, 
+    std::vector<double> *b, 
+    std::vector<double> *x, 
+    int                  multiplicity) {
+  a_indices->clear();
+  a_indices->reserve(a_indices_.size() * multiplicity);
+  MultipicateSparceIndices(b_.size(), a_indices_, a_indices, multiplicity);
+
+  a_values->clear();
+  a_values->reserve(a_values_.size() * multiplicity);
+  FillVecByMultipleVec(multiplicity, a_values_, a_values);
+
+  b->clear();
+  b->reserve(b_.size() * multiplicity);
+  FillVecByMultipleVec(multiplicity, b_, b);
+
+  x->clear();
+  x->reserve(x_.size() * multiplicity);
+  FillVecByMultipleVec(multiplicity, x_, x);
 }
 
 void SaratovEtalonLoader::LoadSaratovEtalonSlae(

@@ -5,6 +5,7 @@
 
 #include <vector>
 void MultipicateSparceIndices(
+    unsigned int length,
     std::vector<int> const &from,
     std::vector<int> *to,
     int multiplicity);

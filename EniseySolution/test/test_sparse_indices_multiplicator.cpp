@@ -25,7 +25,7 @@ TEST(SparseIndicesMultiplicator, DuplicateExample) {
   A_dub_etalon.push_back(15);
 
   std::vector<int> A_dub_res;
-  MultipicateSparceIndices(A, &A_dub_res, 2);
+  MultipicateSparceIndices(2, A, &A_dub_res, 2);
   
   ASSERT_EQ( A_dub_etalon.size(), A_dub_res.size() );
   EXPECT_TRUE(
@@ -58,7 +58,7 @@ TEST(SparseIndicesMultiplicator, TriplicateExample) {
   A_trip_etalon.push_back(35);
 
   std::vector<int> A_trip_res;
-  MultipicateSparceIndices(A, &A_trip_res, 3);
+  MultipicateSparceIndices(2, A, &A_trip_res, 3);
 
   ASSERT_EQ( A_trip_etalon.size(), A_trip_res.size() );
   EXPECT_TRUE(
@@ -67,4 +67,25 @@ TEST(SparseIndicesMultiplicator, TriplicateExample) {
           A_trip_res.begin() 
       )
   );
+}
+
+TEST(SparseIndicesMultiplicator, NotSquare) {
+  // A = [0 1]
+  //     [0 0] -> A_indices = [1]
+  // A2 = [0 1 0 0]
+  //      [0 0 0 0]
+  //      [0 0 0 1]
+  //      [0 0 0 0] ->A2_indices = [1, 11]
+  std::vector<int> A;
+  A.push_back(1);  
+
+  std::vector<int> etalon;
+  etalon.push_back(1);
+  etalon.push_back(11);
+ 
+  std::vector<int> res;
+  MultipicateSparceIndices(2, A, &res, 2);
+
+  ASSERT_EQ( etalon.size(), res.size() );
+  EXPECT_TRUE( std::equal( etalon.begin(), etalon.end(), res.begin() ) );
 }

@@ -33,10 +33,10 @@ RowCol IndexToRowCol(int index, int length) {
   return rc;
 }
 void MultipicateSparceIndices(
+    unsigned int length,
     std::vector<int> const &from,
     std::vector<int> *to,
     int multiplicity) {
-  int length = sqrt( static_cast<double>( from.size() ) );
   std::vector<RowCol> rc_vec_from;
   rc_vec_from.reserve(length);
   for(auto it = from.begin(); it != from.end(); ++it) {

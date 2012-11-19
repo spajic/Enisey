@@ -19,7 +19,7 @@ public:
       std::vector<PassportPipe>     *passports,
       std::vector<WorkParams>       *work_params,
       std::vector<CalculatedParams> *calculated_params);
-  void LoadSaratovMultipleEtalon(
+  void LoadSaratovMultipleEtalon(      
       unsigned int              multiplicity,    
       std::vector<PassportPipe> *passports  ,
       std::vector<WorkParams>   *work_params);
@@ -28,6 +28,12 @@ public:
       std::vector<double> *a_values,
       std::vector<double> *b,
       std::vector<double> *x);
+  void LoadSaratovEtalonSlaeMultiple( 
+      std::vector<int>    *a_indices,
+      std::vector<double> *a_values,
+      std::vector<double> *b,
+      std::vector<double> *x,
+      int                  multiplicity);
     
 private:
   boost::property_tree::ptree pt_;
