@@ -37,6 +37,7 @@ ToDo:
 #include <log4cplus/loggingmacros.h>
 #include <log4cplus/configurator.h>
 #include <log4cplus/fileappender.h> 
+#include <log4cplus/consoleappender.h>
 #include <log4cplus/layout.h>
 
 #include <iomanip>
@@ -53,7 +54,8 @@ ToDo:
 
 std::auto_ptr<ParallelManagerPipeI> CreateManager(
     std::string name, 
-    std::string ice_impl) {
+    std::string ice_impl,
+    std::string endpoint) {
   if(name == "SingleCore") {
     return std::auto_ptr<ParallelManagerPipeI>(
         new ParallelManagerPipeSingleCore);
@@ -68,7 +70,7 @@ std::auto_ptr<ParallelManagerPipeI> CreateManager(
   }
   if(name == "ICE") {
     std::auto_ptr<ParallelManagerPipeIce> manager_ice(
-        new ParallelManagerPipeIce);    
+        new ParallelManagerPipeIce(endpoint));    
     manager_ice->SetParallelManagerType(ice_impl);
     return manager_ice;
   }
@@ -77,12 +79,12 @@ std::auto_ptr<ParallelManagerPipeI> CreateManager(
 void TestManager (    
     std::string manager_name,
     std::string ice_impl,
+    std::string endpoint,
     unsigned int multiplicity,
     std::vector<PassportPipe> const &passports,
     std::vector<WorkParams> const &work_params,
     std::vector<CalculatedParams> *calculated_params,
-    unsigned int repeats,
-    log4cplus::Logger *log) {
+    unsigned int repeats) {
   clock_t begin       = 0;
   clock_t end         = 0;
   double elapsed_secs = 0;
@@ -92,13 +94,18 @@ void TestManager (
   double calculate_all_time         = 0;
   double get_calculated_params_time = 0;
   
-  LOG4CPLUS_INFO(*log, 
+  log4cplus::Logger log = log4cplus::Logger::getInstance(
+    LOG4CPLUS_TEXT("ParallelManagerPerformance"));
+
+  LOG4CPLUS_INFO(log, 
       manager_name.c_str() << "; ice_impl: " << ice_impl.c_str() << 
+      "; Endpoint: " << endpoint.c_str()  << 
       "; Multipilcity = " << multiplicity << 
       "; Repeats = " << repeats);
+
   for(int i = 0; i < repeats; ++i) {    
     std::auto_ptr<ParallelManagerPipeI> 
-        manager( CreateManager(manager_name, ice_impl) );
+        manager( CreateManager(manager_name, ice_impl, endpoint) );
     begin = clock();
       manager->TakeUnderControl    (passports);
     end = clock();    
@@ -123,15 +130,15 @@ void TestManager (
     elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     get_calculated_params_time += elapsed_secs;    
   }
-  LOG4CPLUS_INFO(*log, "TakeUnderControl    - " << 
+  LOG4CPLUS_INFO(log, "TakeUnderControl    - " << 
     take_under_control_time / repeats << "s");
-  LOG4CPLUS_INFO(*log, "SetWorkParams       - " << 
+  LOG4CPLUS_INFO(log, "SetWorkParams       - " << 
     set_work_params_time / repeats << "s");
-  LOG4CPLUS_INFO(*log, "CalculateAll        - " << 
+  LOG4CPLUS_INFO(log, "CalculateAll        - " << 
     calculate_all_time / repeats << "s");
-  LOG4CPLUS_INFO(*log, "GetCalculatedParams - " << 
+  LOG4CPLUS_INFO(log, "GetCalculatedParams - " << 
     get_calculated_params_time / repeats);  
-  LOG4CPLUS_INFO(*log, "Total Time - " <<
+  LOG4CPLUS_INFO(log, "Total Time - " <<
     (take_under_control_time + set_work_params_time + 
     calculate_all_time + get_calculated_params_time) / repeats << "s" << std::endl);
 }
@@ -142,13 +149,19 @@ TEST(ParallelManagerPerformance, Perf) {
   log4cplus::SharedAppenderPtr myAppender(
     new log4cplus::FileAppender(
     LOG4CPLUS_TEXT("c:/Enisey/out/log/myLogFile.log")));
-  //myAppender->setName(LOG4CPLUS_TEXT("myAppenderName"));  
+  myAppender->setName(LOG4CPLUS_TEXT("First"));
+  log4cplus::SharedAppenderPtr cAppender(new log4cplus::ConsoleAppender());
+  cAppender->setName(LOG4CPLUS_TEXT("Second"));
   std::auto_ptr<log4cplus::Layout> myLayout = 
     std::auto_ptr<log4cplus::Layout>(new log4cplus::TTCCLayout());
+  std::auto_ptr<log4cplus::Layout> myLayout2 = 
+    std::auto_ptr<log4cplus::Layout>(new log4cplus::TTCCLayout());
+  myAppender->setLayout(myLayout);
+  cAppender->setLayout(myLayout2);
   log4cplus::Logger log = log4cplus::Logger::getInstance(
     LOG4CPLUS_TEXT("ParallelManagerPerformance"));
-  myAppender->setLayout(myLayout);
   log.addAppender(myAppender);
+  log.addAppender(cAppender);
   log.setLogLevel(log4cplus::DEBUG_LOG_LEVEL);
 
   boost::property_tree::ptree pt;
@@ -168,8 +181,11 @@ TEST(ParallelManagerPerformance, Perf) {
       &work_params      
   );
 
-  TestManager (
-      "ICE", "SingleCore",
+  std::string endpoint = pt.get<std::string> (
+      "Performance.ParallelManagers.Endpoint");
+
+  /*TestManager (
+      "ICE", "SingleCore", endpoint,
       multiplicity,
       passports,
       work_params,
@@ -178,49 +194,40 @@ TEST(ParallelManagerPerformance, Perf) {
       &log);
   
   TestManager (
-      "SingleCore", "None",
+      "SingleCore", "None", "None",
       multiplicity,
       passports,
       work_params,
       &calculated_params,
       repeats,
-      &log);
+      &log);*/
   
   TestManager (
-    "ICE", "OpenMP",
-    multiplicity,
-    passports,
-    work_params,
-    &calculated_params,
-    repeats,
-    &log);
-
-  TestManager (
-      "OpenMP",
-      "None",
+      "OpenMP", "None", "None",
       multiplicity,
       passports,
       work_params,
       &calculated_params,
-      repeats,
-      &log);
-
+      repeats);
   TestManager (
-    "ICE", "CUDA",
-    multiplicity,
-    passports,
-    work_params,
-    &calculated_params,
-    repeats,
-    &log);
-
-  TestManager (
-      "CUDA",
-      "None",
+      "CUDA", "None", "None",
       multiplicity,
       passports,
       work_params,
       &calculated_params,
-      repeats,
-      &log);
+      repeats);
+  TestManager (
+      "ICE", "OpenMP", endpoint,
+      multiplicity,
+      passports,
+      work_params,
+      &calculated_params,
+      repeats);
+  TestManager (
+      "ICE", "CUDA", endpoint,
+      multiplicity,
+      passports,
+      work_params,
+      &calculated_params,
+      repeats);
 } 

@@ -17,17 +17,21 @@ void RunSlaeSolverCvmServant(Ice::ObjectAdapterPtr *adapter) {
   Enisey::SlaeSolverIceCVMPtr slae_solver_ice_cvm = 
     new Enisey::SlaeSolverIceCVM;
   slae_solver_ice_cvm->ActivateSelfInAdapter(*adapter);
+  // Создаём servant'а, реализующего интерфейс SlaeSolverIce.
+  std::cout << "RunSlaeSolverCvmServant\n";
 }
 void RunSlaeSolverGasTransferSystemServant(Ice::ObjectAdapterPtr *adapter) {
   // Создаём servant'а, реализующего интерфейс GasTransferSystemIce.
   Enisey::GasTransferSystemIceUsualPtr gts_usual = 
     new Enisey::GasTransferSystemIceUsual;
   gts_usual->ActivateSelfInAdapter(*adapter);
+  std::cout << "RunSlaeSolverGasTransferSystemServant\n";
 }
 void RunParallelManagerServant(Ice::ObjectAdapterPtr *adapter) {
   Enisey::ParallelManagerIceServantPtr parallel_manager_servant = 
     new Enisey::ParallelManagerIceServant;
   parallel_manager_servant->ActivateSelfInAdapter(*adapter);
+  std::cout << "RunParallelManagerServant\n";
 }
 
 int	Server::run(int, char*[]) {
@@ -36,7 +40,7 @@ int	Server::run(int, char*[]) {
   Ice::ObjectAdapterPtr adapter =
       communicator()->createObjectAdapterWithEndpoints(
       "EniseyServerAdapter", // Имя адаптера.
-      "default -p 10000");    // Endpoint.
+      "tcp -p 10000");    // Endpoint.
   RunSlaeSolverCvmServant(&adapter);
   RunSlaeSolverGasTransferSystemServant(&adapter);  
   RunParallelManagerServant(&adapter);

@@ -8,6 +8,7 @@
 class ParallelManagerPipeIce : public ParallelManagerPipeI {
 public:
   ParallelManagerPipeIce();
+  ParallelManagerPipeIce(std::string endpoint);
   ~ParallelManagerPipeIce();
   void SetParallelManagerType(std::string);
   virtual void TakeUnderControl(std::vector<PassportPipe> const &passports);

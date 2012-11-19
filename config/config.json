@@ -14,8 +14,9 @@
 	},
 	"Performance": {
 		"ParallelManagers": {
-			"Multiplicity": 100,
-			"Repeats" : 10
+			"Multiplicity": 1000,
+			"Repeats": 1,
+			"Endpoint": "ParallelManagerIce:tcp -h 50.19.146.202 -p 10000"
 		}
 	}	
 }

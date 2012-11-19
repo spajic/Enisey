@@ -6,9 +6,39 @@
 
 ParallelManagerPipeIce::ParallelManagerPipeIce() {
   try {
-    ic = Ice::initialize();
+    Ice::PropertiesPtr props = Ice::createProperties();
+    // Make sure that network and protocol tracing are off.
+    //
+    props->setProperty("Ice.MessageSizeMax", "10240");
+    // Initialize a communicator with these properties.
+    //
+    Ice::InitializationData id;
+    id.properties = props;
+    ic = Ice::initialize(id);    
     Ice::ObjectPrx base = 
-        ic->stringToProxy("ParallelManagerIce:default -p 10000");
+        ic->stringToProxy("ParallelManagerIce:tcp -h 127.0.0.1 -p 10000");
+    proxy = Enisey::ParallelManagerIceIPrx::checkedCast(base);
+    if(!proxy) {
+      std::cout << "Invalid proxy ParallelManagerPipeIce" << std::cout;
+    };
+  }
+  catch(const Ice::Exception &ex){  
+    std::cerr << ex << std::endl;
+  }
+}
+ParallelManagerPipeIce::ParallelManagerPipeIce(std::string endpoint) {
+  try {
+    Ice::PropertiesPtr props = Ice::createProperties();
+    // Make sure that network and protocol tracing are off.
+    //
+    props->setProperty("Ice.MessageSizeMax", "10240");
+    // Initialize a communicator with these properties.
+    //
+    Ice::InitializationData id;
+    id.properties = props;
+    ic = Ice::initialize(id); 
+    Ice::ObjectPrx base = 
+      ic->stringToProxy(endpoint);
     proxy = Enisey::ParallelManagerIceIPrx::checkedCast(base);
     if(!proxy) {
       std::cout << "Invalid proxy ParallelManagerPipeIce" << std::cout;
