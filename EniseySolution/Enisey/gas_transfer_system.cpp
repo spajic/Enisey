@@ -24,6 +24,11 @@
 // Для отладочной печати.
 #include <fstream>
 #include <vector>
+#include <fstream>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
 
 GasTransferSystem::GasTransferSystem() {
   g_ = new GraphBoost();
@@ -185,6 +190,29 @@ void GasTransferSystem::SolveSlae() {
       a_vals,
       B_,
       &DeltaP_);
+// Нужно было сгенерировать эталон разово и очень срочно.
+//#define GEN_SARATOV_ETALON
+#ifdef GEN_SARATOV_ETALON
+  std::ofstream ofs("C:/Enisey/out/Testing/SLAE/Saratov_A_indices.txt");
+  assert(ofs.good());
+  boost::archive::text_oarchive oa(ofs);
+  oa << a_indexes;
+
+  std::ofstream ofs2("C:/Enisey/out/Testing/SLAE/Saratov_A_vals.txt");
+  assert(ofs2.good());
+  boost::archive::text_oarchive oa2(ofs2);
+  oa2 << a_vals;
+
+  std::ofstream ofs3("C:/Enisey/out/Testing/SLAE/Saratov_b.txt");
+  assert(ofs3.good());
+  boost::archive::text_oarchive oa3(ofs3);
+  oa3 << B_;
+
+  std::ofstream ofs4("C:/Enisey/out/Testing/SLAE/Saratov_x.txt");
+  assert(ofs4.good());
+  boost::archive::text_oarchive oa4(ofs4);
+  oa4 << DeltaP_;
+#endif
 }
 void GasTransferSystem::CountNewIteration(double g) {
   FormSlae();
