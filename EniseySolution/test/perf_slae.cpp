@@ -58,9 +58,10 @@ void test_slae(
 
   std::auto_ptr<SlaeSolverI> slae = slae_factory(slae_type, ice_endpoint);
   LOG4CPLUS_INFO(log, 
-      "SlaeType: " << slae_type.c_str() <<
-    "; Size: "     << b.size() <<
-    "; Repeats: "  << repeats);
+      "SlaeType: "   << slae_type.c_str() <<
+      "; endpoint: " << ice_endpoint.c_str() <<
+      "; Size: "     << b.size() <<
+      "; Repeats: "  << repeats);
 
   clock_t begin               = 0;
   clock_t end                 = 0;

@@ -20,13 +20,14 @@
 			"Endpoint": "ParallelManagerIce:tcp -h 127.0.0.1 -p 10000"
 		},
 		"SLAE": {
-			"Multiplicity": 50,
+			"Multiplicity": 10,
 			"Repeats": 3,
 			"Endpoint": "SlaeSolverIceCVM:tcp -h 127.0.0.1 -p 10000"
 		},
 		"GTS": {
-			"NumberOfGtsToCount": 1,
-			"Endpoint" : "-"
+			"NumberOfGtsToCount": 10,
+			"Endpoint" : "GasTransferSystemIceUsual:tcp -h 127.0.0.1 -p 10000",
+			"Repeats" : 3 
 		}
 	}	
 }

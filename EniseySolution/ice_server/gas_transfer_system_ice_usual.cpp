@@ -2,7 +2,17 @@
 #include <Ice/Ice.h>
 #include "gas_transfer_system.h"
 
-void Enisey::GasTransferSystemIceUsual::PerformBalancing(
+#include <log4cplus/logger.h>
+#include <log4cplus/loggingmacros.h>
+using log4cplus::Logger;
+
+namespace Enisey {
+
+GasTransferSystemIceUsual::GasTransferSystemIceUsual() {
+  log_ = Logger::getInstance( LOG4CPLUS_TEXT("IceServer.GtsServant") );
+}
+
+void GasTransferSystemIceUsual::PerformBalancing(
     const ::Enisey::StringSequence &MatrixConnectionsFile, 
     const ::Enisey::StringSequence &InOutGRSFile, 
     const ::Enisey::StringSequence &PipeLinesFile, 
@@ -10,18 +20,28 @@ void Enisey::GasTransferSystemIceUsual::PerformBalancing(
     ::Enisey::DoubleSequence &AbsDisbalances,
     ::Enisey::IntSequence &IntDisbalances,
     const ::Ice::Current& /* = ::Ice::Current */ ) {
-  GasTransferSystem gts;
-  std::cout << "GasTransferSystemIceUsual::PerformBalancing called" << 
-      std::endl;
-  gts.PeroformBalancing(
-    MatrixConnectionsFile,
-    InOutGRSFile, 
-    PipeLinesFile, 
-    &ResultFile, 
-    &AbsDisbalances, 
-    &IntDisbalances);
+  
+LOG4CPLUS_INFO(log_, "PerformBalancing start");  
+LOG4CPLUS_INFO(log_, "--Going to Perform balancing 10 times (hard-wired)");
+  for(int i = 0; i < 10; ++i) {
+    GasTransferSystem gts;    
+    ResultFile.clear();
+    AbsDisbalances.clear();
+    IntDisbalances.clear();
+LOG4CPLUS_INFO(log_, "----Call gts.PeroformBalancing");
+    gts.PeroformBalancing(
+        MatrixConnectionsFile,
+        InOutGRSFile, 
+        PipeLinesFile, 
+        &ResultFile, 
+        &AbsDisbalances, 
+        &IntDisbalances);
+LOG4CPLUS_INFO(log_, "----Return from gts.PeroformBalancing");
+  }
+LOG4CPLUS_INFO(log_, "PerformBalancing finish");
 }
-void Enisey::GasTransferSystemIceUsual::ActivateSelfInAdapter(
+
+void GasTransferSystemIceUsual::ActivateSelfInAdapter(
   const Ice::ObjectAdapterPtr &adapter) {
     // Структура Identity требуется для идентификации Servanta в адаптере ASM.
     Ice::Identity id;
@@ -32,3 +52,5 @@ void Enisey::GasTransferSystemIceUsual::ActivateSelfInAdapter(
       std::cout << ex.what();
     }
 }
+
+} // Конец namespace Enisey.

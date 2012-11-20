@@ -16,7 +16,12 @@
 
 #include <iomanip>
 
+#include "gas_transfer_system.h"
+
 using namespace log4cplus;
+
+Logger GasTransferSystem::log_ = 
+  Logger::getInstance(LOG4CPLUS_TEXT("IceServer.Gts"));
 
 class Server : public Ice::Application {
 public:

@@ -64,6 +64,9 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 // Тесты класса SlaeSolverI.
 #include "test_slae_solver_i.cpp"
 
+Logger GasTransferSystem::log_ = 
+  Logger::getInstance(LOG4CPLUS_TEXT("IceServer.Gts"));
+
 /* Тест расчёта трубы методом последовательного счёта.
 Тестировать будем так - зададим входные данные, получим расчётные рез-ты
 и сравним их с рез-ми Весты для таких же входных данных.

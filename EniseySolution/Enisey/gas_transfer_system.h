@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <log4cplus/logger.h>
+using log4cplus::Logger;
 // Forward-declarations.
 class GraphBoost;
 class SlaeSolverI;
@@ -76,6 +78,7 @@ class GasTransferSystem : public GasTransferSystemI {
   для формирования эталонного решения. */
   ManagerEdgeModelPipeSequential* manager_model_pipe_sequential();  
  private:
+  static Logger log_;
    /// Количество строк в СЛАУ.
   int slae_size_;
   GraphBoost *g_; ///< Внутреннее представление графа - GraphBoost.
