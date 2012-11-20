@@ -5,6 +5,8 @@
 #include "gtest/gtest.h"
 #include "test_utils.h"
 
+#include "slae_solver_cusp.cuh"
+
 template <typename T>
 class SlaeSolverTypedTest : public ::testing::Test {
  public:
@@ -72,7 +74,8 @@ class SlaeSolverTypedTest : public ::testing::Test {
 // —писок типов, дл€ которых будут выполн€тьс€ тесты.
 typedef ::testing::Types<
     SlaeSolverCVM, 
-    SlaeSolverIceClient
+    SlaeSolverIceClient,
+    SlaeSolverCusp
 > SlaeSolverTypes;
 
 TYPED_TEST_CASE(SlaeSolverTypedTest, SlaeSolverTypes);

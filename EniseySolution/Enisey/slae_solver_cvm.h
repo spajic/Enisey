@@ -1,4 +1,4 @@
-/** \file test_slae_solver_cvm.cpp
+/** \file test_slae_solver_cvm.h
   Решатель СЛАУ на базе CVM.*/
 #pragma once
 #include "slae_solver_i.h"

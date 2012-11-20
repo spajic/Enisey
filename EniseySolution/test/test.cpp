@@ -37,6 +37,9 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 // Исследование производительности классов ParallelManagerPipe.
 #include "performance_parallel_manager_pipe.cpp"
 
+// Тесты класса SlaeSolverI.
+#include "test_slae_solver_i.cpp"
+
 // Тесты функций расчёта свойств газа.
 #include "test_functions_gas.cpp"
 
@@ -61,8 +64,7 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 // Тесты класса GraphBoost.
 #include "test_graph_boost.cpp"
 
-// Тесты класса SlaeSolverI.
-#include "test_slae_solver_i.cpp"
+
 
 Logger GasTransferSystem::log_ = 
   Logger::getInstance(LOG4CPLUS_TEXT("IceServer.Gts"));

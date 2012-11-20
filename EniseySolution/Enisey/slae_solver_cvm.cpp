@@ -1,4 +1,4 @@
-/** \file test_slae_solver_cvm.h
+/** \file test_slae_solver_cvm.cpp
   Реализация SlaeSolverCVM.*/
 #include "slae_solver_cvm.h"
 #include <vector>
