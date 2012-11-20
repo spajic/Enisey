@@ -33,6 +33,8 @@
 #include <log4cplus/logger.h>
 #include <log4cplus/loggingmacros.h>
 
+#include "shiny.h"
+
 GasTransferSystem::GasTransferSystem() {
 //LOG4CPLUS_INFO(log_, "Construcor");
   g_ = new GraphBoost();
@@ -52,6 +54,7 @@ void GasTransferSystem::PeroformBalancing(
     std::vector<std::string> *ResultFile,
     std::vector<double> *AbsDisbalances,
     std::vector<int> *IntDisbalances) {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "PerformBalancing");
   ManagerEdge* manager_edge_model_pipe_sequential = 
       new ManagerEdgeModelPipeSequential;
@@ -99,6 +102,7 @@ void GasTransferSystem::PeroformBalancing(
 }
 
 void GasTransferSystem::SetSlaeRowNumsForVertices() {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "SetSlaeRowNumForVertices");
   int n(0);
   for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological();
@@ -125,6 +129,7 @@ void GasTransferSystem::SetSlaeRowNumsForVertices() {
      Ann -= dq_dpn.
 5. Если в узле N PIsReady = true(), то dq_dpN = 0 для любого ребра.*/
 void GasTransferSystem::FormSlae() {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "FormSlae");
   A_.clear();
   B_.clear();
@@ -169,15 +174,18 @@ void GasTransferSystem::FormSlae() {
   //LOG4CPLUS_INFO(log_, "EndFormSlae");
 }
 void GasTransferSystem::set_slae_solver(SlaeSolverI *slae_solver) {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "SetSlaeSolver");
   slae_solver_ = slae_solver;
 }
 void GasTransferSystem::set_manager_edge(ManagerEdge* manager_edge) {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "SetManagerEdge");
   g_->set_manager(manager_edge);
 }
 // Решить сформированную СЛАУ и найти вектор DeltaP_.
 void GasTransferSystem::SolveSlae() {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "SolveSlae");
   // Переводим map A((row,col), val),  в список (row*col, val) для сортировки.
   int size = B_.size();
@@ -234,6 +242,7 @@ void GasTransferSystem::SolveSlae() {
 }
 
 void GasTransferSystem::CountNewIteration(double g) {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "CountNewIteration");
   FormSlae();
   SolveSlae();
@@ -251,6 +260,7 @@ void GasTransferSystem::CountNewIteration(double g) {
 //LOG4CPLUS_INFO(log_, "EndCountNewIteration");
 }
 double GasTransferSystem::CountDisbalance() {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "CountDisbalance");
   double d(0.0);
   for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological();
@@ -262,6 +272,7 @@ double GasTransferSystem::CountDisbalance() {
 }
 
 int GasTransferSystem::GetIntDisbalance() {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "GetIntDisbalace");
   int s = 0;
   for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological();
@@ -275,6 +286,7 @@ int GasTransferSystem::GetIntDisbalance() {
 }
 
 void GasTransferSystem::LoadFromVestaFiles(std::string const path) {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "LoadFromVestaFiles");
   VestaFilesData vfd;
   std::ifstream mcf(path + "MatrixConnections.dat");
@@ -289,7 +301,9 @@ void GasTransferSystem::LoadFromVestaFiles(std::string const path) {
   GraphBoostLoadFromVesta(g_, &vfd);
 //LOG4CPLUS_INFO(log_, "End_LoadFromVestaFiles");
 }
+
 void VectorOfStringToStream(const std::vector<std::string> &v, std::ofstream *o){
+PROFILE_FUNC();
   for(auto l = v.begin(); l!= v.end(); ++l) {
     *o << *l;
     if( (l + 1) != v.end() ) {
@@ -297,10 +311,12 @@ void VectorOfStringToStream(const std::vector<std::string> &v, std::ofstream *o)
     }
   }
 }
+
 void GasTransferSystem::LoadFromVestaFiles(
     const std::vector<std::string> &MatrixConnectionsFile,
     const std::vector<std::string> &InOutGRSFile,
     const std::vector<std::string> &PipeLineFile) {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "LoadFromVestaFiles");  
   VestaFilesData vsd;
 
@@ -330,14 +346,16 @@ void GasTransferSystem::LoadFromVestaFiles(
 }
 
 void const GasTransferSystem::WriteToGraphviz(std::string const filename) {
-//LOG4CPLUS_INFO(log_, "WriteToGraphviz");
+PROFILE_FUNC();
+  //LOG4CPLUS_INFO(log_, "WriteToGraphviz");
   WriterGraphviz writer;
   writer.WriteGraphToFile(*g_, filename);
 //LOG4CPLUS_INFO(log_, "End_WriteToGraphviz");
 }
 
 void GasTransferSystem::MakeInitialApprox() {
-//LOG4CPLUS_INFO(log_, "MakeInitialApprox");
+PROFILE_FUNC();
+  //LOG4CPLUS_INFO(log_, "MakeInitialApprox");
   double overall_p_min(999.0);
   double overall_p_max(-999.0);
   FindOverallMinAndMaxPressureConstraints(
@@ -359,6 +377,7 @@ void GasTransferSystem::MakeInitialApprox() {
 }
 
 void GasTransferSystem::CopyGasStateFromVerticesToEdges() {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "CopyGasStateFromVerticesToEdges");
   /// \todo Нужен итератор рёбер в топологическом порядке.  
   for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological();
@@ -382,12 +401,14 @@ void GasTransferSystem::CopyGasStateFromVerticesToEdges() {
 // Расцепил их, чтобы была возможность сформировать эталонные работчи параметры
 // После передачи параметров газового потока в рёбра, но до их моделирования.
 void GasTransferSystem::CountAllEdges() {  
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "CountAllEdges");
   g_->manager()->CountAll();
 //LOG4CPLUS_INFO(log_, "EndCountAllEdges");
 }
 
 void GasTransferSystem::MakeInitialMix() {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "MakeInitialMix");
   for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological();
     ++v) {
@@ -397,6 +418,7 @@ void GasTransferSystem::MakeInitialMix() {
 }
 
 void GasTransferSystem::MixVertices() {
+PROFILE_FUNC();
 //LOG4CPLUS_INFO(log_, "MixVertices");
   for(auto v = g_->VertexBeginTopological(); v != g_->VertexEndTopological();
       ++v) {

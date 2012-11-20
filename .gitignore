@@ -21,3 +21,6 @@ slae_solver_ice.cpp
 
 # LOG #
 *.log
+
+# VARIOUS #
+ice_server_profile.txt

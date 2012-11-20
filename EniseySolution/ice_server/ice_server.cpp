@@ -14,9 +14,13 @@
 #include <log4cplus/consoleappender.h>
 #include <log4cplus/layout.h>
 
+#include "conio.h"
+
 #include <iomanip>
 
 #include "gas_transfer_system.h"
+
+#include "shiny.h"
 
 using namespace log4cplus;
 
@@ -85,7 +89,11 @@ int	Server::run(int, char*[]) {
   adapter->activate(); // Начинаем слушать соединения от клиентов асинхронно.
   communicator()->waitForShutdown(); // Приостанавливаем данный поток.
   if(interrupted()) {
-    std::cerr << appName() << ": received signal, shutting down" << std::endl;
+    PROFILER_UPDATE(); // update all profiles
+    PROFILER_OUTPUT(); // print to cout
+    PROFILER_OUTPUT("ice_server_profile.txt"); // print to file
+    std::cerr << appName() << ": received signal, shutting down" << std::endl;    
+  _getch();
   }
   return 0;
 }
