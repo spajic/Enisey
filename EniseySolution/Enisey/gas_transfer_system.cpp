@@ -54,8 +54,9 @@ void GasTransferSystem::PeroformBalancing(
     std::vector<std::string> *ResultFile,
     std::vector<double> *AbsDisbalances,
     std::vector<int> *IntDisbalances) {
+LOG4CPLUS_INFO(log_, "PerformBalancing");
 PROFILE_FUNC();
-//LOG4CPLUS_INFO(log_, "PerformBalancing");
+//LOG4CPLUS_INFO(log_, "After PROFILE_FUNC");
   ManagerEdge* manager_edge_model_pipe_sequential = 
       new ManagerEdgeModelPipeSequential;
   set_manager_edge(manager_edge_model_pipe_sequential);
@@ -98,7 +99,7 @@ PROFILE_FUNC();
 
   delete manager_edge_model_pipe_sequential;
   delete slae_solver_cvm;
-//LOG4CPLUS_INFO(log_, "End_PerformBalancing");
+LOG4CPLUS_INFO(log_, "End_PerformBalancing");
 }
 
 void GasTransferSystem::SetSlaeRowNumsForVertices() {
@@ -321,24 +322,24 @@ PROFILE_FUNC();
   VestaFilesData vsd;
 
   std::ofstream mco;
-  mco.open("C:\\Enisey\\out\\MatrixConnectionsTemp.txt", std::ios_base::trunc);
+  mco.open("MatrixConnectionsTemp.txt", std::ios_base::trunc);
   VectorOfStringToStream(MatrixConnectionsFile, &mco);
   mco.close();
-  std::ifstream mci("C:\\Enisey\\out\\MatrixConnectionsTemp.txt");
+  std::ifstream mci("MatrixConnectionsTemp.txt");
   LoadMatrixConnections(mci, &vsd);
 
   std::ofstream plo;
-  plo.open("C:\\Enisey\\out\\PipeLineTemp.txt", std::ios_base::trunc);
+  plo.open("PipeLineTemp.txt", std::ios_base::trunc);
   VectorOfStringToStream(PipeLineFile, &plo);
   plo.close();
-  std::ifstream pli("C:\\Enisey\\out\\PipeLineTemp.txt");
+  std::ifstream pli("PipeLineTemp.txt");
   LoadPipeLines(pli, &vsd);
 
   std::ofstream ioo;
-  ioo.open("C:\\Enisey\\out\\InOutGRSTemp.txt", std::ios_base::trunc);
+  ioo.open("InOutGRSTemp.txt", std::ios_base::trunc);
   VectorOfStringToStream(InOutGRSFile, &ioo);
   ioo.close();
-  std::ifstream ioi("C:\\Enisey\\out\\InOutGRSTemp.txt");
+  std::ifstream ioi("InOutGRSTemp.txt");
   LoadInOutGRS(ioi, &vsd);
 
   GraphBoostLoadFromVesta(g_, &vsd);
@@ -358,20 +359,27 @@ PROFILE_FUNC();
   //LOG4CPLUS_INFO(log_, "MakeInitialApprox");
   double overall_p_min(999.0);
   double overall_p_max(-999.0);
+  //LOG4CPLUS_INFO(log_, "BeforeFindOverallMinAndMax");
   FindOverallMinAndMaxPressureConstraints(
       g_, 
       &overall_p_max,
       &overall_p_min);
   // 1. Рассчитываем overall ограничения по всему графу.
-  SetPressureConstraintsForVertices(
-    g_,
-    overall_p_min,
-    overall_p_max );
+  //LOG4CPLUS_INFO(log_, "BeforeSetPressureConstraints");
+  //try {
+    SetPressureConstraintsForVertices(
+        g_,
+        overall_p_min,
+        overall_p_max );
+  //} catch(std::exception ex) {LOG4CPLUS_INFO(log_, ex.what());}
   // 3. Задаём начальное приближение давлений.
+  //LOG4CPLUS_INFO(log_, "BeforeSetInitialApproxPressures");
   SetInitialApproxPressures(g_, overall_p_max, overall_p_min);
   // 4. Задаём начальное приближение температур.
+  //LOG4CPLUS_INFO(log_, "BeforeSetInitialApproxTemperatures");
   SetInitialApproxTemperatures(g_, 278.0);
   // 5. Протягиваем состав газа от входов к выходам.
+  //LOG4CPLUS_INFO(log_, "BeforeMakeInitialMix");
   MakeInitialMix();
 //LOG4CPLUS_INFO(log_, "End_MakeInitialApprox");
 }
