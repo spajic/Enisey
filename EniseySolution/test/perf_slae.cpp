@@ -24,12 +24,16 @@
 
 #include "slae_solver_cvm.h"
 #include "slae_solver_ice_client.h"
+#include "slae_solver_cusp.cuh"
 
 std::auto_ptr<SlaeSolverI> slae_factory(
     std::string slae_type,
     std::string endpoint) {
   if(slae_type == "CVM") {
     return std::auto_ptr<SlaeSolverI>(new SlaeSolverCVM);
+  }
+  if(slae_type == "CUSP") {
+    return std::auto_ptr<SlaeSolverI>(new SlaeSolverCusp);
   }
   if(slae_type == "ICE") {
     return std::auto_ptr<SlaeSolverI>(new SlaeSolverIceClient(endpoint) );
@@ -106,6 +110,7 @@ TEST(SlaePerformance, Perf) {
   log.addAppender(cAppender);
   log.setLogLevel(log4cplus::DEBUG_LOG_LEVEL);
   
-  test_slae("CVM", "None"       , repeats , multiplicity);
-  test_slae("ICE", ice_endpoint , repeats , multiplicity);
+  //test_slae("CVM", "None"       , repeats , multiplicity);
+  test_slae("CUSP","None"       , repeats , multiplicity);
+  //test_slae("ICE", ice_endpoint , repeats , multiplicity);
 }

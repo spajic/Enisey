@@ -24,3 +24,4 @@ slae_solver_ice.cpp
 
 # VARIOUS #
 ice_server_profile.txt
+*.mtx
