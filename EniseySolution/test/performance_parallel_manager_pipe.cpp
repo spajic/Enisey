@@ -27,11 +27,15 @@ ToDo:
 #include "gtest/gtest.h"
 #include "test_utils.h"
 
+#include <stdexcept>
+
 #include <vector>
 #include <string>
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+
+#include <boost/foreach.hpp>
 
 #include <log4cplus/logger.h>
 #include <log4cplus/loggingmacros.h>
@@ -52,39 +56,52 @@ ToDo:
 #include "parallel_manager_pipe_cuda.cuh"
 #include "parallel_manager_pipe_ice.h"
 
-std::auto_ptr<ParallelManagerPipeI> CreateManager(
-    std::string name, 
-    std::string ice_impl,
-    std::string endpoint) {
-  if(name == "SingleCore") {
-    return std::auto_ptr<ParallelManagerPipeI>(
-        new ParallelManagerPipeSingleCore);
+
+using std::shared_ptr;
+using std::make_shared;
+using std::string;
+using std::vector;
+
+using boost::property_tree::ptree;
+
+using namespace log4cplus;
+
+typedef shared_ptr<ParallelManagerPipeI>    ParallelManagerPipeIPtr;
+typedef shared_ptr<ParallelManagerPipeIce>  ParallelManagerPipeIcePtr;
+
+ParallelManagerPipeIPtr CreateManager(
+    string manager_name, 
+    string ice_endpoint) {
+  if(ice_endpoint == "NONE") { // Локальный расчёт
+    if(manager_name == "SingleCore") {
+      return make_shared<ParallelManagerPipeSingleCore>( );
+    }
+    if(manager_name == "OpenMP") {
+      return make_shared<ParallelManagerPipeOpenMP>( );
+    }
+    if(manager_name == "CUDA") {
+       return make_shared<ParallelManagerPipeCUDA>( );
+    }
   }
-  if(name == "OpenMP") {
-    return std::auto_ptr<ParallelManagerPipeI>(
-        new ParallelManagerPipeOpenMP);
-  }
-  if(name == "CUDA") {
-    return std::auto_ptr<ParallelManagerPipeI> (
-        new ParallelManagerPipeCUDA);
-  }
-  if(name == "ICE") {
-    std::auto_ptr<ParallelManagerPipeIce> manager_ice(
-        new ParallelManagerPipeIce(endpoint));    
-    manager_ice->SetParallelManagerType(ice_impl);
+  else {
+    ParallelManagerPipeIcePtr manager_ice = 
+        make_shared<ParallelManagerPipeIce>( ice_endpoint );    
+    manager_ice->SetParallelManagerType(manager_name);
     return manager_ice;
-  }
+  }     
+  throw std::invalid_argument(
+      "Can't create ParalelManager of type " + manager_name +
+      "on endpoint " + ice_endpoint);
 }
 
 void TestManager (    
-    std::string manager_name,
-    std::string ice_impl,
-    std::string endpoint,
-    unsigned int multiplicity,
-    std::vector<PassportPipe> const &passports,
-    std::vector<WorkParams> const &work_params,
-    std::vector<CalculatedParams> *calculated_params,
-    unsigned int repeats) {
+    string                      manager_name,
+    string                      ice_endpoint,    
+    unsigned int                multiplicity,
+    vector<PassportPipe>  const &passports,
+    vector<WorkParams>    const &work_params,
+    vector<CalculatedParams>    *calculated_params,
+    unsigned int                repeats) {
   clock_t begin       = 0;
   clock_t end         = 0;
   double elapsed_secs = 0;
@@ -98,14 +115,14 @@ void TestManager (
     LOG4CPLUS_TEXT("ParallelManagerPerformance"));
 
   LOG4CPLUS_INFO(log, 
-      manager_name.c_str() << "; ice_impl: " << ice_impl.c_str() << 
-      "; Endpoint: " << endpoint.c_str()  << 
-      "; Multipilcity = " << multiplicity << 
-      "; Repeats = " << repeats);
+      manager_name.c_str()  << "; ice_impl: "       << manager_name.c_str() << 
+      "; Endpoint: "        << ice_endpoint.c_str() << 
+      "; Multipilcity = "   << multiplicity         << 
+      "; Repeats = "        << repeats);
 
   for(int i = 0; i < repeats; ++i) {    
-    std::auto_ptr<ParallelManagerPipeI> 
-        manager( CreateManager(manager_name, ice_impl, endpoint) );
+    ParallelManagerPipeIPtr manager(CreateManager(manager_name, ice_endpoint));
+    
     begin = clock();
       manager->TakeUnderControl    (passports);
     end = clock();    
@@ -147,13 +164,13 @@ TEST(ParallelManagerPerformance, Perf) {
   boost::property_tree::ptree pt;
   read_json("C:\\Enisey\\src\\config\\config.json", pt);
 
-  bool run_performance_tests = pt.get<bool>("Performance.StartPerfTests");
+  bool run_performance_tests = 
+      pt.get<bool>("Performance.ParallelManagers.StartPerfTests");
   if(!run_performance_tests) return;
-  //log4cplus::BasicConfigurator config;
-  //config.configure();
-  log4cplus::SharedAppenderPtr myAppender(
-    new log4cplus::FileAppender(
-    LOG4CPLUS_TEXT("c:/Enisey/out/log/myLogFile.log")));
+
+  string  log_file    = pt.get<string>("Performance.ParallelManagers.LogFile");
+  tstring log_file_t  = tstring( log_file.begin(), log_file.end() );
+  SharedAppenderPtr myAppender( new FileAppender(log_file_t) );
   myAppender->setName(LOG4CPLUS_TEXT("First"));
   log4cplus::SharedAppenderPtr cAppender(new log4cplus::ConsoleAppender());
   cAppender->setName(LOG4CPLUS_TEXT("Second"));
@@ -169,69 +186,36 @@ TEST(ParallelManagerPerformance, Perf) {
   log.addAppender(cAppender);
   log.setLogLevel(log4cplus::DEBUG_LOG_LEVEL);
 
-  
-  unsigned int multiplicity = pt.get<unsigned int> (
-      "Performance.ParallelManagers.Multiplicity");
-  unsigned int repeats = pt.get<unsigned int> (
-      "Performance.ParallelManagers.Repeats");
-  
-  std::vector<PassportPipe>     passports;
-  std::vector<WorkParams>       work_params;
-  std::vector<CalculatedParams> calculated_params;
-  SaratovEtalonLoader loader;
-  loader.LoadSaratovMultipleEtalon(
-      multiplicity,
-      &passports,
-      &work_params      
-  );
+  auto test_configs = pt.get_child("Performance.ParallelManagers.Tests");
 
-  std::string endpoint = pt.get<std::string> (
-      "Performance.ParallelManagers.Endpoint");
+  BOOST_FOREACH(
+  ptree::value_type &test, test_configs) {
+    std::string ice_endpoint = test.second.get<string>("IceEndpoint");
 
-  /*TestManager (
-      "ICE", "SingleCore", endpoint,
-      multiplicity,
-      passports,
-      work_params,
-      &calculated_params,
-      repeats,
-      &log);
-  
-  TestManager (
-      "SingleCore", "None", "None",
-      multiplicity,
-      passports,
-      work_params,
-      &calculated_params,
-      repeats,
-      &log);*/
-  
-  TestManager (
-      "OpenMP", "None", "None",
-      multiplicity,
-      passports,
-      work_params,
-      &calculated_params,
-      repeats);
-  TestManager (
-      "CUDA", "None", "None",
-      multiplicity,
-      passports,
-      work_params,
-      &calculated_params,
-      repeats);
-  TestManager (
-      "ICE", "OpenMP", endpoint,
-      multiplicity,
-      passports,
-      work_params,
-      &calculated_params,
-      repeats);
-  TestManager (
-      "ICE", "CUDA", endpoint,
-      multiplicity,
-      passports,
-      work_params,
-      &calculated_params,
-      repeats);
+    BOOST_FOREACH(
+    ptree::value_type &type, test.second.get_child("TypesAndRepeats") ) {
+      std::string manager_name = type.second.get<string>("Type");
+
+      BOOST_FOREACH(
+      ptree::value_type &repeat, type.second.get_child("Repeats") ) {
+        int multiplicity  = repeat.second.get<int>("Multiplicity");
+        int repeats       = repeat.second.get<int>("Repeats");
+
+        std::vector<PassportPipe>     passports;
+        std::vector<WorkParams>       work_params;
+        std::vector<CalculatedParams> calculated_params;
+        SaratovEtalonLoader loader;
+        loader.LoadSaratovMultipleEtalon(multiplicity,&passports,&work_params);
+
+        TestManager (
+            manager_name, 
+            ice_endpoint,
+            multiplicity,
+            passports,
+            work_params,
+            &calculated_params,
+            repeats);
+      }
+    }
+  }
 } 

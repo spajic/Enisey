@@ -12,22 +12,76 @@
 			}
 		}
 	},
-	"Performance": {
-		"StartPerfTests": false,
+	"Performance": {		
 		"ParallelManagers": {
-			"Multiplicity": 100,
-			"Repeats": 1,
-			"Endpoint": "ParallelManagerIce:tcp -h 127.0.0.1 -p 10000"
+			"StartPerfTests": true,
+			"LogFile": "xxx_PM.log",
+			"Tests": [ 
+				{
+					"IceEndpoint"		: "NONE",
+					"TypesAndRepeats"	: 
+					[
+						{
+							"Type": "SingleCore", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 3 },
+								{"Multiplicity": 100,   "Repeats": 3 },
+								{"Multiplicity": 200,   "Repeats": 1 }
+							] 
+						},
+						{
+							"Type": "OpenMP", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 10},
+								{"Multiplicity": 100,   "Repeats": 10},
+								{"Multiplicity": 200,   "Repeats": 3 }
+							] 
+						},
+						{
+							"Type": "CUDA", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 10},
+								{"Multiplicity": 100,   "Repeats": 10},
+								{"Multiplicity": 100,   "Repeats": 10}
+							] 
+						}
+					]
+				},
+				{
+					"IceEndpoint"		: "ParallelManagerIce:tcp -h 127.0.0.1 -p 10000",
+					"TypesAndRepeats"	:
+					[
+						{
+							"Type": "OpenMP",
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 10},
+								{"Multiplicity": 100,   "Repeats": 10},
+								{"Multiplicity": 200,   "Repeats": 3 }
+							]
+						}
+					]
+				}
+			]			
 		},
 		"SLAE": {
-			"Multiplicity": 10,
-			"Repeats": 3,
-			"Endpoint": "SlaeSolverIceCVM:tcp -h 127.0.0.1 -p 10000"
+			"StartPerfTests": false,
+			"Multiplicity": 100,
+			"Repeats": 0,
+			"Endpoint": "SlaeSolverIceCVM:tcp -h 50.17.138.164 -p 10000"
 		},
 		"GTS": {
-			"NumberOfGtsToCount": 10,
-			"Endpoint" : "GasTransferSystemIceUsual:tcp -h 127.0.0.1 -p 10000",
-			"Repeats" : 3 
+			"StartPerfTests": false,
+			"NumberOfGtsToCount": 200,
+			"Repeats" : 1, 
+			"Endpoint" : "GasTransferSystemIceUsual:tcp -h 50.17.138.164 -p 10000"			
 		}
 	}	
 }
