@@ -5,6 +5,7 @@
 
 module Enisey {
   interface SlaeSolverIce {
+	idempotent void SetSolverType(string SolverType);
     idempotent void Solve(
 	    IntSequence AIndexes,
 		DoubleSequence AValues,
