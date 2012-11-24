@@ -56,6 +56,7 @@ ToDo:
 #include "parallel_manager_pipe_cuda.cuh"
 #include "parallel_manager_pipe_ice.h"
 
+#define foreach BOOST_FOREACH
 
 using std::shared_ptr;
 using std::make_shared;
@@ -188,15 +189,14 @@ TEST(ParallelManagerPerformance, Perf) {
 
   auto test_configs = pt.get_child("Performance.ParallelManagers.Tests");
 
-  BOOST_FOREACH(
-  ptree::value_type &test, test_configs) {
+  foreach(ptree::value_type &test, test_configs) {
     std::string ice_endpoint = test.second.get<string>("IceEndpoint");
 
-    BOOST_FOREACH(
+    foreach(
     ptree::value_type &type, test.second.get_child("TypesAndRepeats") ) {
       std::string manager_name = type.second.get<string>("Type");
 
-      BOOST_FOREACH(
+      foreach(
       ptree::value_type &repeat, type.second.get_child("Repeats") ) {
         int multiplicity  = repeat.second.get<int>("Multiplicity");
         int repeats       = repeat.second.get<int>("Repeats");
