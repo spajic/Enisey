@@ -92,6 +92,9 @@ void __patch__SlaeSolverIcePtr(void*, ::Ice::ObjectPtr&);
 namespace Enisey
 {
 
+class Callback_SlaeSolverIce_SetSolverType_Base : virtual public ::IceInternal::CallbackBase { };
+typedef ::IceUtil::Handle< Callback_SlaeSolverIce_SetSolverType_Base> Callback_SlaeSolverIce_SetSolverTypePtr;
+
 class Callback_SlaeSolverIce_Solve_Base : virtual public ::IceInternal::CallbackBase { };
 typedef ::IceUtil::Handle< Callback_SlaeSolverIce_Solve_Base> Callback_SlaeSolverIce_SolvePtr;
 
@@ -105,6 +108,54 @@ namespace Enisey
 
 class SlaeSolverIce : virtual public ::IceProxy::Ice::Object
 {
+public:
+
+    void SetSolverType(const ::std::string& SolverType)
+    {
+        SetSolverType(SolverType, 0);
+    }
+    void SetSolverType(const ::std::string& SolverType, const ::Ice::Context& __ctx)
+    {
+        SetSolverType(SolverType, &__ctx);
+    }
+
+    ::Ice::AsyncResultPtr begin_SetSolverType(const ::std::string& SolverType)
+    {
+        return begin_SetSolverType(SolverType, 0, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_SetSolverType(const ::std::string& SolverType, const ::Ice::Context& __ctx)
+    {
+        return begin_SetSolverType(SolverType, &__ctx, ::IceInternal::__dummyCallback, 0);
+    }
+
+    ::Ice::AsyncResultPtr begin_SetSolverType(const ::std::string& SolverType, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_SetSolverType(SolverType, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_SetSolverType(const ::std::string& SolverType, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_SetSolverType(SolverType, &__ctx, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_SetSolverType(const ::std::string& SolverType, const ::Enisey::Callback_SlaeSolverIce_SetSolverTypePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_SetSolverType(SolverType, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_SetSolverType(const ::std::string& SolverType, const ::Ice::Context& __ctx, const ::Enisey::Callback_SlaeSolverIce_SetSolverTypePtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_SetSolverType(SolverType, &__ctx, __del, __cookie);
+    }
+
+    void end_SetSolverType(const ::Ice::AsyncResultPtr&);
+    
+private:
+
+    void SetSolverType(const ::std::string&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_SetSolverType(const ::std::string&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    
 public:
 
     void Solve(const ::Enisey::IntSequence& AIndexes, const ::Enisey::DoubleSequence& AValues, const ::Enisey::DoubleSequence& B, ::Enisey::DoubleSequence& X)
@@ -368,6 +419,8 @@ class SlaeSolverIce : virtual public ::IceDelegate::Ice::Object
 {
 public:
 
+    virtual void SetSolverType(const ::std::string&, const ::Ice::Context*) = 0;
+
     virtual void Solve(const ::Enisey::IntSequence&, const ::Enisey::DoubleSequence&, const ::Enisey::DoubleSequence&, ::Enisey::DoubleSequence&, const ::Ice::Context*) = 0;
 };
 
@@ -386,6 +439,8 @@ class SlaeSolverIce : virtual public ::IceDelegate::Enisey::SlaeSolverIce,
 {
 public:
 
+    virtual void SetSolverType(const ::std::string&, const ::Ice::Context*);
+
     virtual void Solve(const ::Enisey::IntSequence&, const ::Enisey::DoubleSequence&, const ::Enisey::DoubleSequence&, ::Enisey::DoubleSequence&, const ::Ice::Context*);
 };
 
@@ -403,6 +458,8 @@ class SlaeSolverIce : virtual public ::IceDelegate::Enisey::SlaeSolverIce,
                       virtual public ::IceDelegateD::Ice::Object
 {
 public:
+
+    virtual void SetSolverType(const ::std::string&, const ::Ice::Context*);
 
     virtual void Solve(const ::Enisey::IntSequence&, const ::Enisey::DoubleSequence&, const ::Enisey::DoubleSequence&, ::Enisey::DoubleSequence&, const ::Ice::Context*);
 };
@@ -427,6 +484,9 @@ public:
     virtual ::std::vector< ::std::string> ice_ids(const ::Ice::Current& = ::Ice::Current()) const;
     virtual const ::std::string& ice_id(const ::Ice::Current& = ::Ice::Current()) const;
     static const ::std::string& ice_staticId();
+
+    virtual void SetSolverType(const ::std::string&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    ::Ice::DispatchStatus ___SetSolverType(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual void Solve(const ::Enisey::IntSequence&, const ::Enisey::DoubleSequence&, const ::Enisey::DoubleSequence&, ::Enisey::DoubleSequence&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___Solve(::IceInternal::Incoming&, const ::Ice::Current&);
@@ -456,6 +516,88 @@ inline bool operator<(const SlaeSolverIce& l, const SlaeSolverIce& r)
 
 namespace Enisey
 {
+
+template<class T>
+class CallbackNC_SlaeSolverIce_SetSolverType : public Callback_SlaeSolverIce_SetSolverType_Base, public ::IceInternal::OnewayCallbackNC<T>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception&);
+    typedef void (T::*Sent)(bool);
+    typedef void (T::*Response)();
+
+    CallbackNC_SlaeSolverIce_SetSolverType(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::OnewayCallbackNC<T>(obj, cb, excb, sentcb)
+    {
+    }
+};
+
+template<class T> Callback_SlaeSolverIce_SetSolverTypePtr
+newCallback_SlaeSolverIce_SetSolverType(const IceUtil::Handle<T>& instance, void (T::*cb)(), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_SlaeSolverIce_SetSolverType<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_SlaeSolverIce_SetSolverTypePtr
+newCallback_SlaeSolverIce_SetSolverType(const IceUtil::Handle<T>& instance, void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_SlaeSolverIce_SetSolverType<T>(instance, 0, excb, sentcb);
+}
+
+template<class T> Callback_SlaeSolverIce_SetSolverTypePtr
+newCallback_SlaeSolverIce_SetSolverType(T* instance, void (T::*cb)(), void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_SlaeSolverIce_SetSolverType<T>(instance, cb, excb, sentcb);
+}
+
+template<class T> Callback_SlaeSolverIce_SetSolverTypePtr
+newCallback_SlaeSolverIce_SetSolverType(T* instance, void (T::*excb)(const ::Ice::Exception&), void (T::*sentcb)(bool) = 0)
+{
+    return new CallbackNC_SlaeSolverIce_SetSolverType<T>(instance, 0, excb, sentcb);
+}
+
+template<class T, typename CT>
+class Callback_SlaeSolverIce_SetSolverType : public Callback_SlaeSolverIce_SetSolverType_Base, public ::IceInternal::OnewayCallback<T, CT>
+{
+public:
+
+    typedef IceUtil::Handle<T> TPtr;
+
+    typedef void (T::*Exception)(const ::Ice::Exception& , const CT&);
+    typedef void (T::*Sent)(bool , const CT&);
+    typedef void (T::*Response)(const CT&);
+
+    Callback_SlaeSolverIce_SetSolverType(const TPtr& obj, Response cb, Exception excb, Sent sentcb)
+        : ::IceInternal::OnewayCallback<T, CT>(obj, cb, excb, sentcb)
+    {
+    }
+};
+
+template<class T, typename CT> Callback_SlaeSolverIce_SetSolverTypePtr
+newCallback_SlaeSolverIce_SetSolverType(const IceUtil::Handle<T>& instance, void (T::*cb)(const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_SlaeSolverIce_SetSolverType<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_SlaeSolverIce_SetSolverTypePtr
+newCallback_SlaeSolverIce_SetSolverType(const IceUtil::Handle<T>& instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_SlaeSolverIce_SetSolverType<T, CT>(instance, 0, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_SlaeSolverIce_SetSolverTypePtr
+newCallback_SlaeSolverIce_SetSolverType(T* instance, void (T::*cb)(const CT&), void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_SlaeSolverIce_SetSolverType<T, CT>(instance, cb, excb, sentcb);
+}
+
+template<class T, typename CT> Callback_SlaeSolverIce_SetSolverTypePtr
+newCallback_SlaeSolverIce_SetSolverType(T* instance, void (T::*excb)(const ::Ice::Exception&, const CT&), void (T::*sentcb)(bool, const CT&) = 0)
+{
+    return new Callback_SlaeSolverIce_SetSolverType<T, CT>(instance, 0, excb, sentcb);
+}
 
 template<class T>
 class CallbackNC_SlaeSolverIce_Solve : public Callback_SlaeSolverIce_Solve_Base, public ::IceInternal::TwowayCallbackNC<T>

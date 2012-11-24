@@ -107,51 +107,51 @@ class GasTransferSystemIce : virtual public ::IceProxy::Ice::Object
 {
 public:
 
-    void PerformBalancing(const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, ::Enisey::StringSequence& ResultFile, ::Enisey::DoubleSequence& AbsDisbalances, ::Enisey::IntSequence& IntDisbalances)
+    void PerformBalancing(::Ice::Int NumberOfIterations, const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, ::Enisey::StringSequence& ResultFile, ::Enisey::DoubleSequence& AbsDisbalances, ::Enisey::IntSequence& IntDisbalances)
     {
-        PerformBalancing(MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, ResultFile, AbsDisbalances, IntDisbalances, 0);
+        PerformBalancing(NumberOfIterations, MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, ResultFile, AbsDisbalances, IntDisbalances, 0);
     }
-    void PerformBalancing(const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, ::Enisey::StringSequence& ResultFile, ::Enisey::DoubleSequence& AbsDisbalances, ::Enisey::IntSequence& IntDisbalances, const ::Ice::Context& __ctx)
+    void PerformBalancing(::Ice::Int NumberOfIterations, const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, ::Enisey::StringSequence& ResultFile, ::Enisey::DoubleSequence& AbsDisbalances, ::Enisey::IntSequence& IntDisbalances, const ::Ice::Context& __ctx)
     {
-        PerformBalancing(MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, ResultFile, AbsDisbalances, IntDisbalances, &__ctx);
-    }
-
-    ::Ice::AsyncResultPtr begin_PerformBalancing(const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile)
-    {
-        return begin_PerformBalancing(MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, 0, ::IceInternal::__dummyCallback, 0);
+        PerformBalancing(NumberOfIterations, MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, ResultFile, AbsDisbalances, IntDisbalances, &__ctx);
     }
 
-    ::Ice::AsyncResultPtr begin_PerformBalancing(const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, const ::Ice::Context& __ctx)
+    ::Ice::AsyncResultPtr begin_PerformBalancing(::Ice::Int NumberOfIterations, const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile)
     {
-        return begin_PerformBalancing(MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, &__ctx, ::IceInternal::__dummyCallback, 0);
+        return begin_PerformBalancing(NumberOfIterations, MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, 0, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_PerformBalancing(const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_PerformBalancing(::Ice::Int NumberOfIterations, const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, const ::Ice::Context& __ctx)
     {
-        return begin_PerformBalancing(MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, 0, __del, __cookie);
+        return begin_PerformBalancing(NumberOfIterations, MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, &__ctx, ::IceInternal::__dummyCallback, 0);
     }
 
-    ::Ice::AsyncResultPtr begin_PerformBalancing(const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_PerformBalancing(::Ice::Int NumberOfIterations, const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_PerformBalancing(MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, &__ctx, __del, __cookie);
+        return begin_PerformBalancing(NumberOfIterations, MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, 0, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_PerformBalancing(const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, const ::Enisey::Callback_GasTransferSystemIce_PerformBalancingPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_PerformBalancing(::Ice::Int NumberOfIterations, const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, const ::Ice::Context& __ctx, const ::Ice::CallbackPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_PerformBalancing(MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, 0, __del, __cookie);
+        return begin_PerformBalancing(NumberOfIterations, MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, &__ctx, __del, __cookie);
     }
 
-    ::Ice::AsyncResultPtr begin_PerformBalancing(const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, const ::Ice::Context& __ctx, const ::Enisey::Callback_GasTransferSystemIce_PerformBalancingPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    ::Ice::AsyncResultPtr begin_PerformBalancing(::Ice::Int NumberOfIterations, const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, const ::Enisey::Callback_GasTransferSystemIce_PerformBalancingPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
     {
-        return begin_PerformBalancing(MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, &__ctx, __del, __cookie);
+        return begin_PerformBalancing(NumberOfIterations, MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, 0, __del, __cookie);
+    }
+
+    ::Ice::AsyncResultPtr begin_PerformBalancing(::Ice::Int NumberOfIterations, const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, const ::Ice::Context& __ctx, const ::Enisey::Callback_GasTransferSystemIce_PerformBalancingPtr& __del, const ::Ice::LocalObjectPtr& __cookie = 0)
+    {
+        return begin_PerformBalancing(NumberOfIterations, MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, &__ctx, __del, __cookie);
     }
 
     void end_PerformBalancing(::Enisey::StringSequence& ResultFile, ::Enisey::DoubleSequence& AbsDisbalances, ::Enisey::IntSequence& IntDisbalances, const ::Ice::AsyncResultPtr&);
     
 private:
 
-    void PerformBalancing(const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, ::Enisey::StringSequence&, ::Enisey::DoubleSequence&, ::Enisey::IntSequence&, const ::Ice::Context*);
-    ::Ice::AsyncResultPtr begin_PerformBalancing(const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
+    void PerformBalancing(::Ice::Int, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, ::Enisey::StringSequence&, ::Enisey::DoubleSequence&, ::Enisey::IntSequence&, const ::Ice::Context*);
+    ::Ice::AsyncResultPtr begin_PerformBalancing(::Ice::Int, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Ice::Context*, const ::IceInternal::CallbackBasePtr&, const ::Ice::LocalObjectPtr& __cookie = 0);
     
 public:
     
@@ -368,7 +368,7 @@ class GasTransferSystemIce : virtual public ::IceDelegate::Ice::Object
 {
 public:
 
-    virtual void PerformBalancing(const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, ::Enisey::StringSequence&, ::Enisey::DoubleSequence&, ::Enisey::IntSequence&, const ::Ice::Context*) = 0;
+    virtual void PerformBalancing(::Ice::Int, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, ::Enisey::StringSequence&, ::Enisey::DoubleSequence&, ::Enisey::IntSequence&, const ::Ice::Context*) = 0;
 };
 
 }
@@ -386,7 +386,7 @@ class GasTransferSystemIce : virtual public ::IceDelegate::Enisey::GasTransferSy
 {
 public:
 
-    virtual void PerformBalancing(const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, ::Enisey::StringSequence&, ::Enisey::DoubleSequence&, ::Enisey::IntSequence&, const ::Ice::Context*);
+    virtual void PerformBalancing(::Ice::Int, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, ::Enisey::StringSequence&, ::Enisey::DoubleSequence&, ::Enisey::IntSequence&, const ::Ice::Context*);
 };
 
 }
@@ -404,7 +404,7 @@ class GasTransferSystemIce : virtual public ::IceDelegate::Enisey::GasTransferSy
 {
 public:
 
-    virtual void PerformBalancing(const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, ::Enisey::StringSequence&, ::Enisey::DoubleSequence&, ::Enisey::IntSequence&, const ::Ice::Context*);
+    virtual void PerformBalancing(::Ice::Int, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, ::Enisey::StringSequence&, ::Enisey::DoubleSequence&, ::Enisey::IntSequence&, const ::Ice::Context*);
 };
 
 }
@@ -428,7 +428,7 @@ public:
     virtual const ::std::string& ice_id(const ::Ice::Current& = ::Ice::Current()) const;
     static const ::std::string& ice_staticId();
 
-    virtual void PerformBalancing(const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, ::Enisey::StringSequence&, ::Enisey::DoubleSequence&, ::Enisey::IntSequence&, const ::Ice::Current& = ::Ice::Current()) = 0;
+    virtual void PerformBalancing(::Ice::Int, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, const ::Enisey::StringSequence&, ::Enisey::StringSequence&, ::Enisey::DoubleSequence&, ::Enisey::IntSequence&, const ::Ice::Current& = ::Ice::Current()) = 0;
     ::Ice::DispatchStatus ___PerformBalancing(::IceInternal::Incoming&, const ::Ice::Current&);
 
     virtual ::Ice::DispatchStatus __dispatch(::IceInternal::Incoming&, const ::Ice::Current&);

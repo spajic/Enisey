@@ -36,6 +36,8 @@
 #   endif
 #endif
 
+static const ::std::string __Enisey__SlaeSolverIce__SetSolverType_name = "SetSolverType";
+
 static const ::std::string __Enisey__SlaeSolverIce__Solve_name = "Solve";
 
 ::Ice::Object* IceInternal::upCast(::Enisey::SlaeSolverIce* p) { return p; }
@@ -55,6 +57,56 @@ Enisey::__read(::IceInternal::BasicStream* __is, ::Enisey::SlaeSolverIcePrx& v)
         v = new ::IceProxy::Enisey::SlaeSolverIce;
         v->__copyFrom(proxy);
     }
+}
+
+void
+IceProxy::Enisey::SlaeSolverIce::SetSolverType(const ::std::string& SolverType, const ::Ice::Context* __ctx)
+{
+    int __cnt = 0;
+    while(true)
+    {
+        ::IceInternal::Handle< ::IceDelegate::Ice::Object> __delBase;
+        try
+        {
+            __delBase = __getDelegate(false);
+            ::IceDelegate::Enisey::SlaeSolverIce* __del = dynamic_cast< ::IceDelegate::Enisey::SlaeSolverIce*>(__delBase.get());
+            __del->SetSolverType(SolverType, __ctx);
+            return;
+        }
+        catch(const ::IceInternal::LocalExceptionWrapper& __ex)
+        {
+            __handleExceptionWrapperRelaxed(__delBase, __ex, true, __cnt);
+        }
+        catch(const ::Ice::LocalException& __ex)
+        {
+            __handleException(__delBase, __ex, true, __cnt);
+        }
+    }
+}
+
+::Ice::AsyncResultPtr
+IceProxy::Enisey::SlaeSolverIce::begin_SetSolverType(const ::std::string& SolverType, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+{
+    ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Enisey__SlaeSolverIce__SetSolverType_name, __del, __cookie);
+    try
+    {
+        __result->__prepare(__Enisey__SlaeSolverIce__SetSolverType_name, ::Ice::Idempotent, __ctx);
+        ::IceInternal::BasicStream* __os = __result->__getOs();
+        __os->write(SolverType);
+        __os->endWriteEncaps();
+        __result->__send(true);
+    }
+    catch(const ::Ice::LocalException& __ex)
+    {
+        __result->__exceptionAsync(__ex);
+    }
+    return __result;
+}
+
+void
+IceProxy::Enisey::SlaeSolverIce::end_SetSolverType(const ::Ice::AsyncResultPtr& __result)
+{
+    __end(__result, __Enisey__SlaeSolverIce__SetSolverType_name);
 }
 
 void
@@ -172,6 +224,45 @@ IceProxy::Enisey::SlaeSolverIce::__newInstance() const
 }
 
 void
+IceDelegateM::Enisey::SlaeSolverIce::SetSolverType(const ::std::string& SolverType, const ::Ice::Context* __context)
+{
+    ::IceInternal::Outgoing __og(__handler.get(), __Enisey__SlaeSolverIce__SetSolverType_name, ::Ice::Idempotent, __context);
+    try
+    {
+        ::IceInternal::BasicStream* __os = __og.os();
+        __os->write(SolverType);
+    }
+    catch(const ::Ice::LocalException& __ex)
+    {
+        __og.abort(__ex);
+    }
+    bool __ok = __og.invoke();
+    if(!__og.is()->b.empty())
+    {
+        try
+        {
+            if(!__ok)
+            {
+                try
+                {
+                    __og.throwUserException();
+                }
+                catch(const ::Ice::UserException& __ex)
+                {
+                    ::Ice::UnknownUserException __uue(__FILE__, __LINE__, __ex.ice_name());
+                    throw __uue;
+                }
+            }
+            __og.is()->skipEmptyEncaps();
+        }
+        catch(const ::Ice::LocalException& __ex)
+        {
+            throw ::IceInternal::LocalExceptionWrapper(__ex, false);
+        }
+    }
+}
+
+void
 IceDelegateM::Enisey::SlaeSolverIce::Solve(const ::Enisey::IntSequence& AIndexes, const ::Enisey::DoubleSequence& AValues, const ::Enisey::DoubleSequence& B, ::Enisey::DoubleSequence& X, const ::Ice::Context* __context)
 {
     ::IceInternal::Outgoing __og(__handler.get(), __Enisey__SlaeSolverIce__Solve_name, ::Ice::Idempotent, __context);
@@ -230,6 +321,70 @@ IceDelegateM::Enisey::SlaeSolverIce::Solve(const ::Enisey::IntSequence& AIndexes
     catch(const ::Ice::LocalException& __ex)
     {
         throw ::IceInternal::LocalExceptionWrapper(__ex, false);
+    }
+}
+
+void
+IceDelegateD::Enisey::SlaeSolverIce::SetSolverType(const ::std::string& SolverType, const ::Ice::Context* __context)
+{
+    class _DirectI : public ::IceInternal::Direct
+    {
+    public:
+
+        _DirectI(const ::std::string& SolverType, const ::Ice::Current& __current) : 
+            ::IceInternal::Direct(__current),
+            _m_SolverType(SolverType)
+        {
+        }
+        
+        virtual ::Ice::DispatchStatus
+        run(::Ice::Object* object)
+        {
+            ::Enisey::SlaeSolverIce* servant = dynamic_cast< ::Enisey::SlaeSolverIce*>(object);
+            if(!servant)
+            {
+                throw ::Ice::OperationNotExistException(__FILE__, __LINE__, _current.id, _current.facet, _current.operation);
+            }
+            servant->SetSolverType(_m_SolverType, _current);
+            return ::Ice::DispatchOK;
+        }
+        
+    private:
+        
+        const ::std::string& _m_SolverType;
+    };
+    
+    ::Ice::Current __current;
+    __initCurrent(__current, __Enisey__SlaeSolverIce__SetSolverType_name, ::Ice::Idempotent, __context);
+    try
+    {
+        _DirectI __direct(SolverType, __current);
+        try
+        {
+            __direct.servant()->__collocDispatch(__direct);
+        }
+        catch(...)
+        {
+            __direct.destroy();
+            throw;
+        }
+        __direct.destroy();
+    }
+    catch(const ::Ice::SystemException&)
+    {
+        throw;
+    }
+    catch(const ::IceInternal::LocalExceptionWrapper&)
+    {
+        throw;
+    }
+    catch(const ::std::exception& __ex)
+    {
+        ::IceInternal::LocalExceptionWrapper::throwWrapper(__ex);
+    }
+    catch(...)
+    {
+        throw ::IceInternal::LocalExceptionWrapper(::Ice::UnknownException(__FILE__, __LINE__, "unknown c++ exception"), false);
     }
 }
 
@@ -341,6 +496,19 @@ Enisey::SlaeSolverIce::ice_staticId()
 }
 
 ::Ice::DispatchStatus
+Enisey::SlaeSolverIce::___SetSolverType(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
+{
+    __checkMode(::Ice::Idempotent, __current.mode);
+    ::IceInternal::BasicStream* __is = __inS.is();
+    __is->startReadEncaps();
+    ::std::string SolverType;
+    __is->read(SolverType);
+    __is->endReadEncaps();
+    SetSolverType(SolverType, __current);
+    return ::Ice::DispatchOK;
+}
+
+::Ice::DispatchStatus
 Enisey::SlaeSolverIce::___Solve(::IceInternal::Incoming& __inS, const ::Ice::Current& __current)
 {
     __checkMode(::Ice::Idempotent, __current.mode);
@@ -369,6 +537,7 @@ Enisey::SlaeSolverIce::___Solve(::IceInternal::Incoming& __inS, const ::Ice::Cur
 
 static ::std::string __Enisey__SlaeSolverIce_all[] =
 {
+    "SetSolverType",
     "Solve",
     "ice_id",
     "ice_ids",
@@ -379,7 +548,7 @@ static ::std::string __Enisey__SlaeSolverIce_all[] =
 ::Ice::DispatchStatus
 Enisey::SlaeSolverIce::__dispatch(::IceInternal::Incoming& in, const ::Ice::Current& current)
 {
-    ::std::pair< ::std::string*, ::std::string*> r = ::std::equal_range(__Enisey__SlaeSolverIce_all, __Enisey__SlaeSolverIce_all + 5, current.operation);
+    ::std::pair< ::std::string*, ::std::string*> r = ::std::equal_range(__Enisey__SlaeSolverIce_all, __Enisey__SlaeSolverIce_all + 6, current.operation);
     if(r.first == r.second)
     {
         throw ::Ice::OperationNotExistException(__FILE__, __LINE__, current.id, current.facet, current.operation);
@@ -389,21 +558,25 @@ Enisey::SlaeSolverIce::__dispatch(::IceInternal::Incoming& in, const ::Ice::Curr
     {
         case 0:
         {
-            return ___Solve(in, current);
+            return ___SetSolverType(in, current);
         }
         case 1:
         {
-            return ___ice_id(in, current);
+            return ___Solve(in, current);
         }
         case 2:
         {
-            return ___ice_ids(in, current);
+            return ___ice_id(in, current);
         }
         case 3:
         {
-            return ___ice_isA(in, current);
+            return ___ice_ids(in, current);
         }
         case 4:
+        {
+            return ___ice_isA(in, current);
+        }
+        case 5:
         {
             return ___ice_ping(in, current);
         }

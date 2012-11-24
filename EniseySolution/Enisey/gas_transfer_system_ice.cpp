@@ -58,7 +58,7 @@ Enisey::__read(::IceInternal::BasicStream* __is, ::Enisey::GasTransferSystemIceP
 }
 
 void
-IceProxy::Enisey::GasTransferSystemIce::PerformBalancing(const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, ::Enisey::StringSequence& ResultFile, ::Enisey::DoubleSequence& AbsDisbalances, ::Enisey::IntSequence& IntDisbalances, const ::Ice::Context* __ctx)
+IceProxy::Enisey::GasTransferSystemIce::PerformBalancing(::Ice::Int NumberOfIterations, const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, ::Enisey::StringSequence& ResultFile, ::Enisey::DoubleSequence& AbsDisbalances, ::Enisey::IntSequence& IntDisbalances, const ::Ice::Context* __ctx)
 {
     int __cnt = 0;
     while(true)
@@ -69,7 +69,7 @@ IceProxy::Enisey::GasTransferSystemIce::PerformBalancing(const ::Enisey::StringS
             __checkTwowayOnly(__Enisey__GasTransferSystemIce__PerformBalancing_name);
             __delBase = __getDelegate(false);
             ::IceDelegate::Enisey::GasTransferSystemIce* __del = dynamic_cast< ::IceDelegate::Enisey::GasTransferSystemIce*>(__delBase.get());
-            __del->PerformBalancing(MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, ResultFile, AbsDisbalances, IntDisbalances, __ctx);
+            __del->PerformBalancing(NumberOfIterations, MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, ResultFile, AbsDisbalances, IntDisbalances, __ctx);
             return;
         }
         catch(const ::IceInternal::LocalExceptionWrapper& __ex)
@@ -84,7 +84,7 @@ IceProxy::Enisey::GasTransferSystemIce::PerformBalancing(const ::Enisey::StringS
 }
 
 ::Ice::AsyncResultPtr
-IceProxy::Enisey::GasTransferSystemIce::begin_PerformBalancing(const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
+IceProxy::Enisey::GasTransferSystemIce::begin_PerformBalancing(::Ice::Int NumberOfIterations, const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, const ::Ice::Context* __ctx, const ::IceInternal::CallbackBasePtr& __del, const ::Ice::LocalObjectPtr& __cookie)
 {
     __checkAsyncTwowayOnly(__Enisey__GasTransferSystemIce__PerformBalancing_name);
     ::IceInternal::OutgoingAsyncPtr __result = new ::IceInternal::OutgoingAsync(this, __Enisey__GasTransferSystemIce__PerformBalancing_name, __del, __cookie);
@@ -92,6 +92,7 @@ IceProxy::Enisey::GasTransferSystemIce::begin_PerformBalancing(const ::Enisey::S
     {
         __result->__prepare(__Enisey__GasTransferSystemIce__PerformBalancing_name, ::Ice::Idempotent, __ctx);
         ::IceInternal::BasicStream* __os = __result->__getOs();
+        __os->write(NumberOfIterations);
         if(MatrixConnectionsFile.size() == 0)
         {
             __os->writeSize(0);
@@ -174,12 +175,13 @@ IceProxy::Enisey::GasTransferSystemIce::__newInstance() const
 }
 
 void
-IceDelegateM::Enisey::GasTransferSystemIce::PerformBalancing(const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, ::Enisey::StringSequence& ResultFile, ::Enisey::DoubleSequence& AbsDisbalances, ::Enisey::IntSequence& IntDisbalances, const ::Ice::Context* __context)
+IceDelegateM::Enisey::GasTransferSystemIce::PerformBalancing(::Ice::Int NumberOfIterations, const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, ::Enisey::StringSequence& ResultFile, ::Enisey::DoubleSequence& AbsDisbalances, ::Enisey::IntSequence& IntDisbalances, const ::Ice::Context* __context)
 {
     ::IceInternal::Outgoing __og(__handler.get(), __Enisey__GasTransferSystemIce__PerformBalancing_name, ::Ice::Idempotent, __context);
     try
     {
         ::IceInternal::BasicStream* __os = __og.os();
+        __os->write(NumberOfIterations);
         if(MatrixConnectionsFile.size() == 0)
         {
             __os->writeSize(0);
@@ -238,14 +240,15 @@ IceDelegateM::Enisey::GasTransferSystemIce::PerformBalancing(const ::Enisey::Str
 }
 
 void
-IceDelegateD::Enisey::GasTransferSystemIce::PerformBalancing(const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, ::Enisey::StringSequence& ResultFile, ::Enisey::DoubleSequence& AbsDisbalances, ::Enisey::IntSequence& IntDisbalances, const ::Ice::Context* __context)
+IceDelegateD::Enisey::GasTransferSystemIce::PerformBalancing(::Ice::Int NumberOfIterations, const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, ::Enisey::StringSequence& ResultFile, ::Enisey::DoubleSequence& AbsDisbalances, ::Enisey::IntSequence& IntDisbalances, const ::Ice::Context* __context)
 {
     class _DirectI : public ::IceInternal::Direct
     {
     public:
 
-        _DirectI(const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, ::Enisey::StringSequence& ResultFile, ::Enisey::DoubleSequence& AbsDisbalances, ::Enisey::IntSequence& IntDisbalances, const ::Ice::Current& __current) : 
+        _DirectI(::Ice::Int NumberOfIterations, const ::Enisey::StringSequence& MatrixConnectionsFile, const ::Enisey::StringSequence& InOutGRSFile, const ::Enisey::StringSequence& PipeLinesFile, ::Enisey::StringSequence& ResultFile, ::Enisey::DoubleSequence& AbsDisbalances, ::Enisey::IntSequence& IntDisbalances, const ::Ice::Current& __current) : 
             ::IceInternal::Direct(__current),
+            _m_NumberOfIterations(NumberOfIterations),
             _m_MatrixConnectionsFile(MatrixConnectionsFile),
             _m_InOutGRSFile(InOutGRSFile),
             _m_PipeLinesFile(PipeLinesFile),
@@ -263,12 +266,13 @@ IceDelegateD::Enisey::GasTransferSystemIce::PerformBalancing(const ::Enisey::Str
             {
                 throw ::Ice::OperationNotExistException(__FILE__, __LINE__, _current.id, _current.facet, _current.operation);
             }
-            servant->PerformBalancing(_m_MatrixConnectionsFile, _m_InOutGRSFile, _m_PipeLinesFile, _m_ResultFile, _m_AbsDisbalances, _m_IntDisbalances, _current);
+            servant->PerformBalancing(_m_NumberOfIterations, _m_MatrixConnectionsFile, _m_InOutGRSFile, _m_PipeLinesFile, _m_ResultFile, _m_AbsDisbalances, _m_IntDisbalances, _current);
             return ::Ice::DispatchOK;
         }
         
     private:
         
+        ::Ice::Int _m_NumberOfIterations;
         const ::Enisey::StringSequence& _m_MatrixConnectionsFile;
         const ::Enisey::StringSequence& _m_InOutGRSFile;
         const ::Enisey::StringSequence& _m_PipeLinesFile;
@@ -281,7 +285,7 @@ IceDelegateD::Enisey::GasTransferSystemIce::PerformBalancing(const ::Enisey::Str
     __initCurrent(__current, __Enisey__GasTransferSystemIce__PerformBalancing_name, ::Ice::Idempotent, __context);
     try
     {
-        _DirectI __direct(MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, ResultFile, AbsDisbalances, IntDisbalances, __current);
+        _DirectI __direct(NumberOfIterations, MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, ResultFile, AbsDisbalances, IntDisbalances, __current);
         try
         {
             __direct.servant()->__collocDispatch(__direct);
@@ -354,9 +358,11 @@ Enisey::GasTransferSystemIce::___PerformBalancing(::IceInternal::Incoming& __inS
     __checkMode(::Ice::Idempotent, __current.mode);
     ::IceInternal::BasicStream* __is = __inS.is();
     __is->startReadEncaps();
+    ::Ice::Int NumberOfIterations;
     ::Enisey::StringSequence MatrixConnectionsFile;
     ::Enisey::StringSequence InOutGRSFile;
     ::Enisey::StringSequence PipeLinesFile;
+    __is->read(NumberOfIterations);
     __is->read(MatrixConnectionsFile);
     __is->read(InOutGRSFile);
     __is->read(PipeLinesFile);
@@ -365,7 +371,7 @@ Enisey::GasTransferSystemIce::___PerformBalancing(::IceInternal::Incoming& __inS
     ::Enisey::StringSequence ResultFile;
     ::Enisey::DoubleSequence AbsDisbalances;
     ::Enisey::IntSequence IntDisbalances;
-    PerformBalancing(MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, ResultFile, AbsDisbalances, IntDisbalances, __current);
+    PerformBalancing(NumberOfIterations, MatrixConnectionsFile, InOutGRSFile, PipeLinesFile, ResultFile, AbsDisbalances, IntDisbalances, __current);
     if(ResultFile.size() == 0)
     {
         __os->writeSize(0);
