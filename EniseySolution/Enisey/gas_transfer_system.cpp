@@ -322,24 +322,24 @@ PROFILE_FUNC();
   VestaFilesData vsd;
 
   std::ofstream mco;
-  mco.open("MatrixConnectionsTemp.txt", std::ios_base::trunc);
+  mco.open("MatrixConnections.tmp", std::ios_base::trunc);
   VectorOfStringToStream(MatrixConnectionsFile, &mco);
   mco.close();
-  std::ifstream mci("MatrixConnectionsTemp.txt");
+  std::ifstream mci("MatrixConnections.tmp");
   LoadMatrixConnections(mci, &vsd);
 
   std::ofstream plo;
-  plo.open("PipeLineTemp.txt", std::ios_base::trunc);
+  plo.open("PipeLine.tmp", std::ios_base::trunc);
   VectorOfStringToStream(PipeLineFile, &plo);
   plo.close();
-  std::ifstream pli("PipeLineTemp.txt");
+  std::ifstream pli("PipeLine.tmp");
   LoadPipeLines(pli, &vsd);
 
   std::ofstream ioo;
-  ioo.open("InOutGRSTemp.txt", std::ios_base::trunc);
+  ioo.open("InOutGRS.tmp", std::ios_base::trunc);
   VectorOfStringToStream(InOutGRSFile, &ioo);
   ioo.close();
-  std::ifstream ioi("InOutGRSTemp.txt");
+  std::ifstream ioi("InOutGRS.tmp");
   LoadInOutGRS(ioi, &vsd);
 
   GraphBoostLoadFromVesta(g_, &vsd);
