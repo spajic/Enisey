@@ -12,6 +12,7 @@ public:
    SlaeSolverIceClient();
    SlaeSolverIceClient(std::string endpoint);
    ~SlaeSolverIceClient();
+   void SetSolverType(std::string const &solver_type);
   /** Решить СЛАУ AX = B. 
   Предполагаются разреженные СЛАУ, для этого передаётся вектор номеров 
   ненулевых коэффициентов A, в соответствующем векторе A_values - их

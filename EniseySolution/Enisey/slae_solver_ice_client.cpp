@@ -6,7 +6,7 @@
 #include <vector>
 
 SlaeSolverIceClient::SlaeSolverIceClient() {
-  Prepare("SlaeSolverIceCVM:default -p 10000");
+  Prepare("SlaeSolverIce:default -p 10000");
 }
 
 SlaeSolverIceClient::SlaeSolverIceClient(std::string endpoint) {
@@ -34,6 +34,10 @@ SlaeSolverIceClient::~SlaeSolverIceClient() {
       std::cerr << e << std::endl;
     }
   }
+}
+
+void SlaeSolverIceClient::SetSolverType(std::string const &solver_type) {
+  solver_proxy_->SetSolverType(solver_type);
 }
 
 void SlaeSolverIceClient::Solve(
