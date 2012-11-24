@@ -8,6 +8,9 @@
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/foreach.hpp>
+
+#define foreach BOOST_FOREACH
 
 #include <log4cplus/logger.h>
 #include <log4cplus/loggingmacros.h>
@@ -26,18 +29,32 @@
 #include "slae_solver_ice_client.h"
 #include "slae_solver_cusp.cuh"
 
-std::auto_ptr<SlaeSolverI> slae_factory(
-    std::string slae_type,
-    std::string endpoint) {
-  if(slae_type == "CVM") {
-    return std::auto_ptr<SlaeSolverI>(new SlaeSolverCVM);
+using namespace log4cplus;
+
+using std::string;
+using std::vector;
+
+typedef std::shared_ptr<SlaeSolverI> SlaeSolverIPtr;
+typedef std::shared_ptr<SlaeSolverIceClient> SlaeSolverIceClientPtr;
+
+SlaeSolverIPtr slae_factory(string slae_type, string endpoint) {
+  if(endpoint == "NONE") { // Локальный расчёт.
+    if(slae_type == "CVM") {
+      return std::make_shared<SlaeSolverCVM>();
+    }
+    if(slae_type == "CUSP") {
+      return std::make_shared<SlaeSolverCusp>();
+    }
+  }  
+  else {
+    SlaeSolverIceClientPtr solver = std::make_shared<SlaeSolverIceClient>();
+    solver->SetSolverType(slae_type);    
+    return solver;
   }
-  if(slae_type == "CUSP") {
-    return std::auto_ptr<SlaeSolverI>(new SlaeSolverCusp);
-  }
-  if(slae_type == "ICE") {
-    return std::auto_ptr<SlaeSolverI>(new SlaeSolverIceClient(endpoint) );
-  }
+  throw std::invalid_argument(
+      "Can't produce slae with type = " + slae_type + 
+      " and endpoint = " + endpoint
+  );
 }
 
 void test_slae(
@@ -60,7 +77,7 @@ void test_slae(
       &x_etalon,
       multiplicity);
 
-  std::auto_ptr<SlaeSolverI> slae = slae_factory(slae_type, ice_endpoint);
+  SlaeSolverIPtr slae = slae_factory(slae_type, ice_endpoint);
   LOG4CPLUS_INFO(log, 
       "SlaeType: "   << slae_type.c_str() <<
       "; endpoint: " << ice_endpoint.c_str() <<
@@ -79,22 +96,19 @@ void test_slae(
   }
   LOG4CPLUS_INFO(log, 
       "Solve - " << total_elapsed_secs / repeats << "s" << std::endl);
-    
 }
 
 TEST(SlaePerformance, Perf) {
   boost::property_tree::ptree pt;
   read_json("C:\\Enisey\\src\\config\\config.json", pt);
-  bool run_performance_tests = pt.get<bool>("Performance.StartPerfTests");
-  if(!run_performance_tests) return;
-  int repeats = pt.get<int>("Performance.SLAE.Repeats");
-  int multiplicity = pt.get<int>("Performance.SLAE.Multiplicity");
-  std::string ice_endpoint = pt.get<std::string>(
-      "Performance.SLAE.Endpoint");
 
-  log4cplus::SharedAppenderPtr myAppender(
-      new log4cplus::FileAppender(
-      LOG4CPLUS_TEXT("c:/Enisey/out/log/SLAE.log")));
+  bool run_performance_tests = pt.get<bool>("Performance.SLAE.StartPerfTests");
+  if(!run_performance_tests) return;
+
+  string  log_file = pt.get<string>("Performance.SLAE.LogFile"); 
+  tstring log_file_t( log_file.begin(), log_file.end() ); 
+  
+  SharedAppenderPtr myAppender( new FileAppender(log_file_t) );
   myAppender->setName(LOG4CPLUS_TEXT("First"));
   log4cplus::SharedAppenderPtr cAppender(new log4cplus::ConsoleAppender());
   cAppender->setName(LOG4CPLUS_TEXT("Second"));
@@ -110,7 +124,19 @@ TEST(SlaePerformance, Perf) {
   log.addAppender(cAppender);
   log.setLogLevel(log4cplus::DEBUG_LOG_LEVEL);
   
-  //test_slae("CVM", "None"       , repeats , multiplicity);
-  test_slae("CUSP","None"       , repeats , multiplicity);
-  //test_slae("ICE", ice_endpoint , repeats , multiplicity);
+  auto test_configs = pt.get_child("Performance.SLAE.Tests");
+  foreach(ptree::value_type &test, test_configs) {
+    string ice_endpoint = test.second.get<string>("IceEndpoint");
+
+    foreach(ptree::value_type &type, test.second.get_child("TypesAndRepeats")){
+      string solver_type = type.second.get<string>("Type");  
+      
+      foreach(ptree::value_type &repeat, type.second.get_child("Repeats") ) {
+        int multiplicity  = repeat.second.get<int>("Multiplicity");
+        int repeats       = repeat.second.get<int>("Repeats");
+
+        test_slae(solver_type, ice_endpoint, repeats, multiplicity);
+      }
+    }  
+  }
 }

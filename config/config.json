@@ -14,7 +14,7 @@
 	},
 	"Performance": {		
 		"ParallelManagers": {
-			"StartPerfTests": true,
+			"StartPerfTests": false,
 			"LogFile": "xxx_PM.log",
 			"Tests": [ 
 				{
@@ -72,10 +72,58 @@
 			]			
 		},
 		"SLAE": {
-			"StartPerfTests": false,
-			"Multiplicity": 100,
-			"Repeats": 0,
-			"Endpoint": "SlaeSolverIceCVM:tcp -h 50.17.138.164 -p 10000"
+			"StartPerfTests": true,
+			"LogFile": "xxx_SLAE.log",
+			"Tests": [ 
+				{
+					"IceEndpoint"		: "NONE",
+					"TypesAndRepeats"	: 
+					[
+						{
+							"Type": "CVM", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 3 }
+							] 
+						},
+						{
+							"Type": "CUSP", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 10},
+								{"Multiplicity": 100,   "Repeats": 10},
+								{"Multiplicity": 200,   "Repeats": 10}
+							] 
+						}						
+					]
+				},
+				{
+					"IceEndpoint"		: "SlaeSolverIce:tcp -h 127.0.0.1 -p 10000",
+					"TypesAndRepeats"	:
+					[
+						{
+							"Type": "CVM", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 3 }
+							] 
+						},
+						{
+							"Type": "CUSP", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 10},
+								{"Multiplicity": 100,   "Repeats": 10},
+								{"Multiplicity": 200,   "Repeats": 10}
+							] 
+						}						
+					]
+				}
+			]			
 		},
 		"GTS": {
 			"StartPerfTests": false,
