@@ -6,6 +6,8 @@
 #include "test_utils.h"
 
 #include "slae_solver_cusp.cuh"
+#include "slae_solver_ice_client.h"
+#include "slae_solver_cvm.h"
 
 template <typename T>
 class SlaeSolverTypedTest : public ::testing::Test {
