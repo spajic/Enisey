@@ -23,10 +23,8 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 #include "loader_vesta.h"
 #include "conio.h"
 
-
-#include "test_sparse_indices_multiplicator.cpp"
-#include "test_saratov_etalon_loader.cpp"
-
+// Исследование производительности классов ParallelManagerPipe.
+#include "performance_parallel_manager_pipe.cpp"
 
 // Исследование производительности классов SlaeSolver.
 #include "perf_slae.cpp"
@@ -34,8 +32,8 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 // Исследование производительности классов GasTransferSystemI
 #include "perf_gts.cpp"
 
-// Исследование производительности классов ParallelManagerPipe.
-#include "performance_parallel_manager_pipe.cpp"
+#include "test_sparse_indices_multiplicator.cpp"
+#include "test_saratov_etalon_loader.cpp"
 
 // Тесты класса SlaeSolverI.
 #include "test_slae_solver_i.cpp"
@@ -63,8 +61,6 @@ NEAR(val1, val2, abs_error) - c погрешностью abs_error.
 
 // Тесты класса GraphBoost.
 #include "test_graph_boost.cpp"
-
-
 
 Logger GasTransferSystem::log_ = 
   Logger::getInstance(LOG4CPLUS_TEXT("IceServer.Gts"));
