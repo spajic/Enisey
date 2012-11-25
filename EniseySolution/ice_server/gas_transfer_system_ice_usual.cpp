@@ -10,6 +10,13 @@ namespace Enisey {
 
 GasTransferSystemIceUsual::GasTransferSystemIceUsual() {
   log_ = Logger::getInstance( LOG4CPLUS_TEXT("IceServer.GtsServant") );
+  number_of_iterations_ = 1;
+}
+
+void GasTransferSystemIceUsual::SetNumberOfIterations(
+    int number_of_iterations,
+    const ::Ice::Current& /* = ::Ice::Current */) {
+  number_of_iterations_ = number_of_iterations;
 }
 
 void GasTransferSystemIceUsual::PerformBalancing(
@@ -22,8 +29,9 @@ void GasTransferSystemIceUsual::PerformBalancing(
     const ::Ice::Current& /* = ::Ice::Current */ ) {
   
 LOG4CPLUS_INFO(log_, "PerformBalancing start");  
-LOG4CPLUS_INFO(log_, "--Going to Perform balancing 10 times (hard-wired)");
-  for(int i = 0; i < 10; ++i) {
+LOG4CPLUS_INFO(log_, 
+    "--Going to Perform balancing " << number_of_iterations_ << " times.");
+  for(int i = 0; i < number_of_iterations_; ++i) {
     GasTransferSystem gts;    
     ResultFile.clear();
     AbsDisbalances.clear();

@@ -11,6 +11,10 @@ class GasTransferSystemIceUsual : public virtual GasTransferSystemIce {
   
 public:
   GasTransferSystemIceUsual();
+  virtual void SetNumberOfIterations( 
+      int number_of_iterations,      
+      const ::Ice::Current& /* = ::Ice::Current */
+  );
   virtual void PerformBalancing(
       const ::Enisey::StringSequence &MatrixConnectionsFile, 
       const ::Enisey::StringSequence &InOutGRSFile, 
@@ -23,6 +27,7 @@ public:
   void ActivateSelfInAdapter(const Ice::ObjectAdapterPtr &adapter);
 private:
   Logger log_;  
+  int number_of_iterations_;
 };
 
 typedef // Тип умного указателя на объект GasTransferSystemIceUsual.

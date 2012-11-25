@@ -39,6 +39,10 @@ void GasTransferSystemIceClient::Init(std::string endpoint) {
   } 
 }
 
+void GasTransferSystemIceClient::SetNumberOfIterations(int number_of_iterations) {
+  gts_proxy_->SetNumberOfIterations(number_of_iterations);
+}
+
 
 void GasTransferSystemIceClient::PeroformBalancing(
     const std::vector<std::string> &MatrixConnectionsFile, 

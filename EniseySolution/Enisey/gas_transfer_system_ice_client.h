@@ -12,13 +12,14 @@ public:
   GasTransferSystemIceClient();
   GasTransferSystemIceClient(std::string);
   ~GasTransferSystemIceClient();
-   virtual void PeroformBalancing(
-       const std::vector<std::string> &MatrixConnectionsFile,
-       const std::vector<std::string> &InOutGRSFile,
-       const std::vector<std::string> &PipeLinesFile,
-       std::vector<std::string> *ResultFile,
-       std::vector<double> *AbsDisbalances,
-       std::vector<int> *IntDisbalances);
+  void SetNumberOfIterations(int number_of_iterations);
+  virtual void PeroformBalancing(
+      const std::vector<std::string> &MatrixConnectionsFile,
+      const std::vector<std::string> &InOutGRSFile,
+      const std::vector<std::string> &PipeLinesFile,
+      std::vector<std::string> *ResultFile,
+      std::vector<double> *AbsDisbalances,
+      std::vector<int> *IntDisbalances);
 private:
   void Init(std::string endpoint);
   Ice::CommunicatorPtr ic_;

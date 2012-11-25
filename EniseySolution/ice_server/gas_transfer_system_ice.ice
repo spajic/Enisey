@@ -5,6 +5,7 @@
 
 module Enisey {
   interface GasTransferSystemIce {
+	idempotent void SetNumberOfIterations(int NumberOfIterations);
     idempotent void PerformBalancing(
 	    StringSequence MatrixConnectionsFile,
 		StringSequence InOutGRSFile,
