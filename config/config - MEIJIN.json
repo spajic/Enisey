@@ -1,0 +1,108 @@
+{
+	"Testing": {
+		"ParallelManagers": {
+			"Etalon": {
+				"RegenerateEtalon": false,
+				"Paths": {
+					"RootDir": "C:\\Enisey\\out\\Testing\\ParallelManagers\\Etalon\\",
+					"Passports": "Passports.xml",
+					"WorkParams": "WorkParams.xml",
+					"CalculatedParams": "CalculatedParams.xml"
+				}				
+			}
+		}
+	},
+	"Performance": {		
+		"ParallelManagers": {
+			"StartPerfTests": true,
+			"LogFile": "x_MEIJIN_PM.log",
+			"Tests": [ 
+				{
+					"IceEndpoint"		: "ParallelManagerIce:tcp -h 192.168.1.41 -p 10000",
+					"TypesAndRepeats"	: 
+					[
+						{
+							"Type": "SingleCore", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 3 },
+								{"Multiplicity": 100,   "Repeats": 3 }								
+							] 
+						},
+						{
+							"Type": "OpenMP", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 10},
+								{"Multiplicity": 100,   "Repeats": 10}								
+							] 
+						},
+						{
+							"Type": "CUDA", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 10},
+								{"Multiplicity": 100,   "Repeats": 10}								
+							] 
+						}
+					]
+				}				
+			]			
+		},
+		"SLAE": {
+			"StartPerfTests": true,
+			"LogFile": "x_MEIJIN_SLAE.log",
+			"Tests": [ 
+				{
+					"IceEndpoint"		: "SlaeSolverIce:tcp -h 192.168.1.41 -p 10000",
+					"TypesAndRepeats"	: 
+					[
+						{
+							"Type": "CVM", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 3 }
+							] 
+						},
+						{
+							"Type": "CUSP", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 10},
+								{"Multiplicity": 100,   "Repeats": 10},
+								{"Multiplicity": 200,   "Repeats": 10}
+							] 
+						}						
+					]
+				}				
+			]			
+		},
+		"GTS": {
+			"StartPerfTests": true,
+			"LogFile": "x_MEIJIN_GTS.log",
+			"Tests": [ 
+				{
+					"IceEndpoint"		: "GasTransferSystemIceUsual:tcp -h 192.168.1.41 -p 10000",
+					"TypesAndRepeats"	: 
+					[
+						{
+							"Type": "None", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 2 },
+								{"Multiplicity": 100, 	"Repeats": 1 },
+								{"Multiplicity": 200, 	"Repeats": 1 }
+							] 
+						}						
+					]
+				}				
+			]			
+		}
+	}	
+}
