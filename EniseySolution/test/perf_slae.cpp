@@ -47,7 +47,7 @@ SlaeSolverIPtr slae_factory(string slae_type, string endpoint) {
     }
   }  
   else {
-    SlaeSolverIceClientPtr solver = std::make_shared<SlaeSolverIceClient>();
+    SlaeSolverIceClientPtr solver = std::make_shared<SlaeSolverIceClient>(endpoint);
     solver->SetSolverType(slae_type);    
     return solver;
   }
