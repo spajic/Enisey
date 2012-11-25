@@ -72,7 +72,7 @@ void SlaeSolverCusp::Solve(
   // set stopping criteria:
   //  iteration_limit    = 100
   //  relative_tolerance = 1e-6
-  cusp::verbose_monitor<double> monitor(b_dev, 500, 1e-6);
+  cusp::default_monitor<double> monitor(b_dev, 500, 1e-6);
 
   //cusp::precond::smoothed_aggregation<int, double, cusp::device_memory> M(A_dev);
   cusp::precond::diagonal<double, cusp::device_memory> M(A_dev);
