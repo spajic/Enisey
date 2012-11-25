@@ -72,7 +72,7 @@
 			]			
 		},
 		"SLAE": {
-			"StartPerfTests": true,
+			"StartPerfTests": false,
 			"LogFile": "xxx_SLAE.log",
 			"Tests": [ 
 				{
@@ -127,9 +127,41 @@
 		},
 		"GTS": {
 			"StartPerfTests": false,
-			"NumberOfGtsToCount": 200,
-			"Repeats" : 1, 
-			"Endpoint" : "GasTransferSystemIceUsual:tcp -h 50.17.138.164 -p 10000"			
+			"LogFile": "xxx_GTS.log",
+			"Tests": [ 
+				{
+					"IceEndpoint"		: "NONE",
+					"TypesAndRepeats"	: 
+					[
+						{
+							"Type": "None", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 2 },
+								{"Multiplicity": 100, 	"Repeats": 1 },
+								{"Multiplicity": 200, 	"Repeats": 1 }
+							] 
+						}						
+					]
+				},
+				{
+					"IceEndpoint"		: "GasTransferSystemIceUsual:tcp -h 127.0.0.1 -p 10000",
+					"TypesAndRepeats"	:
+					[
+						{
+							"Type": "None", 
+							"Repeats": [
+								{"Multiplicity": 1, 	"Repeats": 10},
+								{"Multiplicity": 10, 	"Repeats": 10},
+								{"Multiplicity": 50, 	"Repeats": 2 },
+								{"Multiplicity": 100, 	"Repeats": 1 },
+								{"Multiplicity": 200, 	"Repeats": 1 }
+							] 
+						}						
+					]
+				}
+			]			
 		}
 	}	
 }
