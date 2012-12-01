@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gas_transfer_system_ice.h"
+#include "GasTransferSystemIce.h"
 
 #include <log4cplus/logger.h>
 using log4cplus::Logger;

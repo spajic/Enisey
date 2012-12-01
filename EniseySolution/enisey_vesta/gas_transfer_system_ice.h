@@ -34,7 +34,7 @@
 #include <Ice/Direct.h>
 #include <IceUtil/ScopedArray.h>
 #include <Ice/StreamF.h>
-#include <C:/Enisey/src/EniseySolution/ice_server/common_types.h>
+#include <C:/Enisey/src/EniseySolution/ice_server/CommonTypesIce.h>
 #include <Ice/UndefSysMacros.h>
 
 #ifndef ICE_IGNORE_VERSION

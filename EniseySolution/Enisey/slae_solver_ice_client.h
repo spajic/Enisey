@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <Ice/Ice.h>
-#include "slae_solver_ice.h"
+#include "SlaeSolverIce.h"
 
 class SlaeSolverIceClient : public SlaeSolverI {
 public:

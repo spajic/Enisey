@@ -112,7 +112,6 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="common_types.cpp" />
     <ClCompile Include="performance_parallel_manager_pipe.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -125,7 +124,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="slae_solver_ice.cpp" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="test_functions_gas.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -176,16 +174,12 @@
     <ClCompile Include="util_sparse_indices_multiplicator.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common_types.h" />
-    <ClInclude Include="slae_solver_ice.h" />
     <ClInclude Include="test_utils.h" />
     <ClInclude Include="util_saratov_etalon_loader.h" />
     <ClInclude Include="util_sparse_indices_multiplicator.h" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="impl_pipe_count_cuda.cu" />
-    <None Include="..\ice_server\common_types.ice" />
-    <None Include="..\ice_server\slae_solver_ice.ice" />
     <CudaCompile Include="impl_gas_count_functions_cuda.cu">
       <FileType>Document</FileType>
     </CudaCompile>

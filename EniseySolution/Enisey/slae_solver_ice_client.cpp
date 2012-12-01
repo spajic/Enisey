@@ -2,7 +2,7 @@
   Реализация SlaeSolverIceClient.*/
 #include "slae_solver_ice_client.h"
 #include "Ice/Ice.h"
-#include "slae_solver_ice.h"
+#include "SlaeSolverIce.h"
 #include <vector>
 
 SlaeSolverIceClient::SlaeSolverIceClient() {

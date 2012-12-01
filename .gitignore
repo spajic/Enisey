@@ -14,12 +14,12 @@ ipch/
 # ICE-generated files #
 ParallelManagerIceI.h
 ParallelManagerIceI.cpp
-common_types.h
-common_types.cpp
-slae_solver_ice.h
-slae_solver_ice.cpp
-gas_transfer_system_ice.h
-gas_transfer_system_ice.cpp
+CommonTypesIce.h
+CommonTypesIce.cpp
+SlaeSolverIce.h
+SlaeSolverIce.cpp
+GasTransferSystemIce.h
+GasTransferSystemIce.cpp
 
 # LOG #
 *.log

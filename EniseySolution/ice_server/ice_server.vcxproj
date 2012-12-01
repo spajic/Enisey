@@ -92,28 +92,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="common_types.cpp" />
-    <ClCompile Include="gas_transfer_system_ice.cpp" />
+    <ClCompile Include="CommonTypesIce.cpp" />
+    <ClCompile Include="GasTransferSystemIce.cpp" />
     <ClCompile Include="gas_transfer_system_ice_usual.cpp" />
     <ClCompile Include="ice_server.cpp" />
     <ClCompile Include="ParallelManagerIceI.cpp" />
     <ClCompile Include="parallel_manager_ice_servant.cpp" />
-    <ClCompile Include="slae_solver_ice.cpp" />
+    <ClCompile Include="SlaeSolverIce.cpp" />
     <ClCompile Include="slae_solver_ice_cvm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Enisey\ParallelManagerIceI.ice" />
-    <None Include="common_types.ice" />
-    <None Include="gas_transfer_system_ice.ice" />
-    <None Include="slae_solver_ice.ice" />
+    <None Include="CommonTypesIce.ice" />
+    <None Include="GasTransferSystemIce.ice" />
+    <None Include="SlaeSolverIce.ice" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common_types.h" />
-    <ClInclude Include="gas_transfer_system_ice.h" />
+    <ClInclude Include="CommonTypesIce.h" />
+    <ClInclude Include="GasTransferSystemIce.h" />
     <ClInclude Include="gas_transfer_system_ice_usual.h" />
     <ClInclude Include="ParallelManagerIceI.h" />
     <ClInclude Include="parallel_manager_ice_servant.h" />
-    <ClInclude Include="slae_solver_ice.h" />
+    <ClInclude Include="SlaeSolverIce.h" />
     <ClInclude Include="slae_solver_ice_cvm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

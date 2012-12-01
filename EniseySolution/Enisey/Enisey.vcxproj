@@ -120,9 +120,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </CudaCompile>
-    <None Include="..\ice_server\common_types.ice" />
-    <None Include="..\ice_server\gas_transfer_system_ice.ice" />
-    <None Include="..\ice_server\slae_solver_ice.ice" />
+    <None Include="..\ice_server\CommonTypesIce.ice" />
+    <None Include="..\ice_server\GasTransferSystemIce.ice" />
+    <None Include="..\ice_server\SlaeSolverIce.ice" />
     <None Include="ClassDiagram1.cd" />
     <None Include="edge_model_pipe_sequential_cuda.cuh">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -135,6 +135,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
+    <ClInclude Include="CommonTypesIce.h" />
+    <ClInclude Include="GasTransferSystemIce.h" />
     <ClInclude Include="gas_count_functions_cuda.cuh">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <FileType>Document</FileType>
@@ -149,11 +151,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="calculated_params.cpp" />
-    <ClCompile Include="common_types.cpp" />
+    <ClCompile Include="CommonTypesIce.cpp" />
     <ClCompile Include="functions_gas.cpp" />
     <ClCompile Include="functions_pipe.cpp" />
+    <ClCompile Include="GasTransferSystemIce.cpp" />
     <ClCompile Include="gas_transfer_system.cpp" />
-    <ClCompile Include="gas_transfer_system_ice.cpp" />
     <ClCompile Include="gas_transfer_system_ice_client.cpp" />
     <ClCompile Include="graph_boost_initial_approx.cpp" />
     <ClCompile Include="graph_boost_load_from_vesta.cpp" />
@@ -178,18 +180,16 @@
     <CudaCompile Include="slae_solver_cusp.cu">
       <FileType>CppCode</FileType>
     </CudaCompile>
+    <ClCompile Include="SlaeSolverIce.cpp" />
     <ClCompile Include="slae_solver_cvm.cpp" />
-    <ClCompile Include="slae_solver_ice.cpp" />
     <ClCompile Include="slae_solver_ice_client.cpp" />
     <ClCompile Include="work_params.cpp" />
     <ClCompile Include="writer_graphviz.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="calculated_params.h" />
-    <ClInclude Include="common_types.h" />
     <ClInclude Include="gas_transfer_system.h" />
     <ClInclude Include="gas_transfer_system_i.h" />
-    <ClInclude Include="gas_transfer_system_ice.h" />
     <ClInclude Include="gas_transfer_system_ice_client.h" />
     <ClInclude Include="graph_boost_initial_approx.h" />
     <ClInclude Include="graph_boost_load_from_vesta.h" />
@@ -222,10 +222,10 @@
     <ClInclude Include="parallel_manager_pipe_singlecore.h" />
     <ClInclude Include="passport_pipe.h" />
     <ClInclude Include="passport.h" />
+    <ClInclude Include="SlaeSolverIce.h" />
     <ClInclude Include="slae_solver_cusp.cuh" />
     <ClInclude Include="slae_solver_i.h" />
     <ClInclude Include="slae_solver_cvm.h" />
-    <ClInclude Include="slae_solver_ice.h" />
     <ClInclude Include="slae_solver_ice_client.h" />
     <ClInclude Include="work_params.h" />
     <ClInclude Include="writer_graphviz.h" />

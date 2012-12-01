@@ -1,5 +1,6 @@
 #include "gas_transfer_system_ice_usual.h"
 #include <Ice/Ice.h>
+#include "GasTransferSystemIce.h"
 #include "gas_transfer_system.h"
 
 #include <log4cplus/logger.h>
