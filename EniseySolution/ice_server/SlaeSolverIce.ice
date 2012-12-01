@@ -4,6 +4,7 @@
 #include <C:\Enisey\src\EniseySolution\ice_server\CommonTypesIce.ice>
 
 module Enisey {
+
   interface SlaeSolverIce {
 	idempotent void SetSolverType(string SolverType);
     idempotent void Solve(
@@ -12,6 +13,9 @@ module Enisey {
 		DoubleSequence B,
 		out DoubleSequence X);
   };
+
+  interface SlaeSolverIceCVM  extends SlaeSolverIce { };
+  interface SlaeSolverIceCusp extends SlaeSolverIce { };
 };
 
 #endif
