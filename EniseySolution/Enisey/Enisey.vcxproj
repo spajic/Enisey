@@ -58,7 +58,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Enisey\instruments\cusp;C:\Enisey\instruments\Shiny\include;C:\Enisey\instruments\log4cplus-1.1.0\include;$(CUDA_INC_PATH);C:\Enisey\src\EniseySolution\ice_server;C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir);$(IceHome)\include;.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Enisey\instruments\cusp;C:\Enisey\instruments\Shiny\include;C:\Enisey\instruments\log4cplus-1.1.0\include;$(CUDA_INC_PATH);C:\Enisey\src\EniseySolution\ice_server;C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir);.;$(IceHome)\include</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -88,7 +88,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Enisey\instruments\cusp;C:\Enisey\instruments\Shiny\include;C:\Enisey\instruments\log4cplus-1.1.0\include;$(CUDA_INC_PATH);C:\Enisey\src\EniseySolution\ice_server;C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir);$(IceHome)\include;.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Enisey\instruments\cusp;C:\Enisey\instruments\Shiny\include;C:\Enisey\instruments\log4cplus-1.1.0\include;$(CUDA_INC_PATH);C:\Enisey\src\EniseySolution\ice_server;C:\Enisey\instruments\CVM\cvmlib.6.0\cvm.6.0.src\cvm\src;C:\Enisey\instruments\boost\boost_1_49_0;C:\Enisey\instruments\opqit\include;%(AdditionalIncludeDirectories);$(CudaToolkitIncludeDir);.;$(IceHome)\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <OpenMPSupport>true</OpenMPSupport>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

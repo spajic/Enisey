@@ -99,7 +99,7 @@
     <ClCompile Include="ParallelManagerIce.cpp" />
     <ClCompile Include="parallel_manager_ice_servant.cpp" />
     <ClCompile Include="SlaeSolverIce.cpp" />
-    <ClCompile Include="slae_solver_ice_cvm.cpp" />
+    <ClCompile Include="slae_solver_cvm_servant.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Enisey\ParallelManagerIce.ice" />
@@ -114,7 +114,7 @@
     <ClInclude Include="ParallelManagerIce.h" />
     <ClInclude Include="parallel_manager_ice_servant.h" />
     <ClInclude Include="SlaeSolverIce.h" />
-    <ClInclude Include="slae_solver_ice_cvm.h" />
+    <ClInclude Include="slae_solver_cvm_servant.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

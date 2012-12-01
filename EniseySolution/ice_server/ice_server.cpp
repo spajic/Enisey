@@ -1,9 +1,9 @@
 /** file ice_server.cpp
 Точка входа для запуска сервера ICE.*/
 #include "Ice/Ice.h"
-#include "slae_solver_ice.h"
-#include "slae_solver_ice_cvm.h"
-#include "gas_transfer_system_ice.h"
+#include "SlaeSolverIce.h"
+#include "slae_solver_cvm_servant.h"
+#include "GasTransferSystemIce.h"
 #include "gas_transfer_system_ice_usual.h"
 #include "parallel_manager_ice_servant.h"
 

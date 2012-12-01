@@ -1,4 +1,4 @@
-#include "slae_solver_ice_cvm.h"
+#include "slae_solver_cvm_servant.h"
 #include <Ice/Ice.h>
 #include "slae_solver_cvm.h"
 #include "slae_solver_cusp.cuh"

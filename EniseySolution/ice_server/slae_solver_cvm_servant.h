@@ -1,6 +1,6 @@
 #pragma once
 
-#include "slae_solver_ice.h"
+#include "SlaeSolverIce.h"
 
 #include <log4cplus/logger.h>
 

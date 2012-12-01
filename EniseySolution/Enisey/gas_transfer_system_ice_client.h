@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <Ice/Ice.h>
-#include "gas_transfer_system_ice.h"
+#include "GasTransferSystemIce.h"
 
 class GasTransferSystemIceClient : public GasTransferSystemI {
 public:

@@ -2,7 +2,7 @@
   Реализация GasTransferSystemIceClient.*/
 #include "gas_transfer_system_ice_client.h"
 #include "Ice/Ice.h"
-#include "gas_transfer_system_ice.h"
+#include "GasTransferSystemIce.h"
 #include <vector>
 
 GasTransferSystemIceClient::GasTransferSystemIceClient() {

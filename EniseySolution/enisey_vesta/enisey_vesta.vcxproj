@@ -93,13 +93,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="enisey_vesta.cpp" />
-    <ClCompile Include="gas_transfer_system_ice.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\ice_server\gas_transfer_system_ice.ice" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="gas_transfer_system_ice.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
