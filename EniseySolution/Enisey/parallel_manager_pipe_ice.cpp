@@ -2,7 +2,7 @@
 Менеджер параллельного моделирования труб, использующий сервис ICE.*/
 #pragma once
 #include "parallel_manager_pipe_ice.h"
-#include "ParallelManagerIceI.h"
+#include "ParallelManagerIce.h"
 
 ParallelManagerPipeIce::ParallelManagerPipeIce() {
   try {
@@ -17,7 +17,7 @@ ParallelManagerPipeIce::ParallelManagerPipeIce() {
     ic = Ice::initialize(id);    
     Ice::ObjectPrx base = 
         ic->stringToProxy("ParallelManagerIce:tcp -h 127.0.0.1 -p 10000");
-    proxy = Enisey::ParallelManagerIceIPrx::checkedCast(base);
+    proxy = Enisey::ParallelManagerIcePrx::checkedCast(base);
     if(!proxy) {
       std::cout << "Invalid proxy ParallelManagerPipeIce" << std::cout;
     };
@@ -39,7 +39,7 @@ ParallelManagerPipeIce::ParallelManagerPipeIce(std::string endpoint) {
     ic = Ice::initialize(id); 
     Ice::ObjectPrx base = 
       ic->stringToProxy(endpoint);
-    proxy = Enisey::ParallelManagerIceIPrx::checkedCast(base);
+    proxy = Enisey::ParallelManagerIcePrx::checkedCast(base);
     if(!proxy) {
       std::cout << "Invalid proxy ParallelManagerPipeIce" << std::cout;
     };

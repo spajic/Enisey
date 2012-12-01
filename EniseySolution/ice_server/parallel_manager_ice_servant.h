@@ -2,7 +2,7 @@
 Класс ParallelManagerIce - реалиазация интерфейса ParallelManagerIceI*/
 #pragma once
 
-#include "ParallelManagerIceI.h"
+#include "ParallelManagerIce.h"
 #include "parallel_manager_pipe_i.h"
 #include "passport_pipe.h"
 #include "work_params.h"
@@ -12,7 +12,7 @@
 
 namespace Enisey {
 
-class ParallelManagerIceServant : public virtual ParallelManagerIceI {
+class ParallelManagerIceServant : public virtual ParallelManagerIce {
 public:
   ParallelManagerIceServant();
   ~ParallelManagerIceServant();

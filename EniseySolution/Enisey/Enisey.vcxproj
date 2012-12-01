@@ -146,7 +146,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </None>
     <None Include="model_pipe_sequential_functions_cuda.cuh" />
-    <None Include="ParallelManagerIceI.ice" />
+    <None Include="ParallelManagerIce.ice" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -172,7 +172,7 @@
     <CudaCompile Include="parallel_manager_pipe_cuda.cu">
       <FileType>CppCode</FileType>
     </CudaCompile>
-    <ClCompile Include="ParallelManagerIceI.cpp" />
+    <ClCompile Include="ParallelManagerIce.cpp" />
     <ClCompile Include="parallel_manager_pipe_ice.cpp" />
     <ClCompile Include="parallel_manager_pipe_openmp.cpp" />
     <ClCompile Include="parallel_manager_pipe_singlecore.cpp" />
@@ -212,7 +212,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="model_pipe_sequential.h" />
-    <ClInclude Include="ParallelManagerIceI.h" />
+    <ClInclude Include="ParallelManagerIce.h" />
     <ClInclude Include="parallel_manager_pipe_ice.h" />
     <ClInclude Include="parallel_manager_pipe_cuda.cuh">
       <FileType>CppHeader</FileType>
