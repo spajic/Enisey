@@ -16,18 +16,18 @@ typedef std::unique_ptr<SlaeSolverI> SlaeSolverIPtr;
 
 using namespace log4cplus;
 
-SlaeSolverIceCVM::SlaeSolverIceCVM() {
+SlaeSolverCvmServant::SlaeSolverCvmServant() {
   log = Logger::getInstance(LOG4CPLUS_TEXT("IceServer.SlaeServant"));
   solver_type_ = "CVM"; // По умолчанию - CVM.
 }
 
-void SlaeSolverIceCVM::SetSolverType(
+void SlaeSolverCvmServant::SetSolverType(
     const std::string &solver_type,
     const Ice::Current& current) {
   solver_type_ = solver_type;
 }
 
-void SlaeSolverIceCVM::Solve(
+void SlaeSolverCvmServant::Solve(
     const IntSequence &AIndexes, 
     const DoubleSequence &AValues, 
     const DoubleSequence &B, 
@@ -49,7 +49,7 @@ LOG4CPLUS_INFO(log,
 LOG4CPLUS_INFO(log, "End Solve");
 }
 
-void SlaeSolverIceCVM::ActivateSelfInAdapter(
+void SlaeSolverCvmServant::ActivateSelfInAdapter(
     const Ice::ObjectAdapterPtr &adapter) {
   // Структура Identity требуется для идентификации Servanta в адаптере ASM.
   Ice::Identity id;

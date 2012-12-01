@@ -7,9 +7,9 @@
 #include <string>
 
 namespace Enisey {
-class SlaeSolverIceCVM : public virtual SlaeSolverIce {
+class SlaeSolverCvmServant : public virtual SlaeSolverIceCvm {
 public:
-  SlaeSolverIceCVM();
+  SlaeSolverCvmServant();
   virtual void SetSolverType(
       const std::string  &solver_type, 
       const Ice::Current &current
@@ -25,6 +25,6 @@ private:
   log4cplus::Logger log;
   std::string solver_type_;
 };
-typedef IceUtil::Handle<SlaeSolverIceCVM> SlaeSolverIceCVMPtr;
+typedef IceUtil::Handle<SlaeSolverCvmServant> SlaeSolverCvmServantPtr;
 
-} // Конец namespace Enisey.
+} // РљРѕРЅРµС† namespace Enisey.

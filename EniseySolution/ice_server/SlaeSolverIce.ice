@@ -14,7 +14,7 @@ module Enisey {
 		out DoubleSequence X);
   };
 
-  interface SlaeSolverIceCVM  extends SlaeSolverIce { };
+  interface SlaeSolverIceCvm  extends SlaeSolverIce { };
   interface SlaeSolverIceCusp extends SlaeSolverIce { };
 };
 

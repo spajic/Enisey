@@ -40,9 +40,9 @@ private:
 void Server::
     RunSlaeSolverCvmServant(Ice::ObjectAdapterPtr *adapter) {
   // Создаём servant'а, реализующего интерфейс SlaeSolverIce.
-  Enisey::SlaeSolverIceCVMPtr slae_solver_ice_cvm = 
-    new Enisey::SlaeSolverIceCVM;
-  slae_solver_ice_cvm->ActivateSelfInAdapter(*adapter);
+  Enisey::SlaeSolverCvmServantPtr slae_solver_cvm_servant = 
+    new Enisey::SlaeSolverCvmServant;
+  slae_solver_cvm_servant->ActivateSelfInAdapter(*adapter);
   // Создаём servant'а, реализующего интерфейс SlaeSolverIce.
 LOG4CPLUS_INFO(log, "Run SlaeSolverServant");
 }

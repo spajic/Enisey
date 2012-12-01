@@ -19,7 +19,7 @@ SlaeSolverCvmSerivce::SlaeSolverCvmSerivce() {
   std::cout << "Hello from SlaeSolverCvmService constructor!\n";
 }
 
-SlaeSolverCvmSerivce::~SlaeSolverCvmService() {
+SlaeSolverCvmSerivce::~SlaeSolverCvmSerivce() {
   std::cout << "Goodbye from SlaeSolverCvmService destructor!\n";
 }
 
@@ -31,10 +31,10 @@ void SlaeSolverCvmSerivce::start(
   adapter_ = communicator->createObjectAdapter(name);
   //Demo::HelloPtr hello = new HelloI;
   //_adapter->add(hello, communicator->stringToIdentity("hello"));
-  _adapter->activate();
+  adapter_->activate();
 }
 
-void HelloServiceI::stop() {
+void SlaeSolverCvmSerivce::stop() {
   std::cout << "Stop SlaeSolverCvmService\n";
-  _adapter->destroy();
+  adapter_->destroy();
 }
